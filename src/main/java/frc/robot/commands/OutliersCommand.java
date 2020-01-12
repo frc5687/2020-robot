@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.util.ILoggingSource;
@@ -38,21 +39,21 @@ public abstract class OutliersCommand extends CommandBase implements ILoggingSou
 
     public void metric(String name, String value) {
         SmartDashboard.putString(getClass().getSimpleName() + "/" + name, value);
-        if (_metricTracker!=null) {
+        if (_metricTracker != null) {
             _metricTracker.put(name, value);
         }
     }
 
     public void metric(String name, double value) {
         SmartDashboard.putNumber(getClass().getSimpleName() + "/" + name, value);
-        if (_metricTracker!=null) {
+        if (_metricTracker != null) {
             _metricTracker.put(name, value);
         }
     }
 
     public void metric(String name, boolean value) {
         SmartDashboard.putBoolean(getClass().getSimpleName() + "/" + name, value);
-        if (_metricTracker!=null) {
+        if (_metricTracker != null) {
             _metricTracker.put(name, value);
         }
     }
@@ -65,7 +66,7 @@ public abstract class OutliersCommand extends CommandBase implements ILoggingSou
     @Override
     public void initialize() {
         super.initialize();
-        if (_metricTracker!=null) {
+        if (_metricTracker != null) {
             _metricTracker.resume();
         }
     }
@@ -73,10 +74,23 @@ public abstract class OutliersCommand extends CommandBase implements ILoggingSou
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        if (_metricTracker!=null) {
+        if (_metricTracker != null) {
             _metricTracker.pause();
         }
     }
 
-}
 
+    private long _start;
+
+    @Override
+    public void execute() {
+        if (_metricTracker != null && _metricTracker.isPaused()) {
+            _metricTracker.resume();
+        }
+
+    }
+
+    protected void innerExecute() {
+
+    }
+}
