@@ -1,11 +1,13 @@
 package org.frc5687.infiniterecharge.robot;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+
 public class Constants {
     public static final int CYCLES_PER_SECOND = 50;
     public static final int  TICKS_PER_UPDATE = 10;
     public static final double METRIC_FLUSH_PERIOD = 1.0;
 
-    public class DriveTrain {
+    public static class DriveTrain {
         public static final double DEADBAND = 0.25;
         public static final double SPEED_SENSITIVITY = 0.9;
         public static final double ROTATION_SENSITIVITY = 0.75;
@@ -20,14 +22,16 @@ public class Constants {
 
         public static final double WIDTH = .9;
 
-        public static final double KS_VOLTS = 0.18;
-        public static final double KV_VOLTSPR = 0.0192;
-        public static final double KA_VOLTSQPR = 0.00253;
+        public static final double KS_VOLTS = 0.172;
+        public static final double KV_VOLTSPR = 2.46;
+        public static final double KA_VOLTSQPR = 0.355;
 
         public static final double RAMSETE_B = 2;
         public static final double RAMETE_ZETA = 0.7;
 
-        public static final double KP_DRIVE_VELOCITY = 0.267;
+        public static final double KP_DRIVE_VELOCITY = 30.7;
+
+        public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(WIDTH);
 
 
 

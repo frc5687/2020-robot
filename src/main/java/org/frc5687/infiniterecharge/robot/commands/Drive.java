@@ -12,10 +12,12 @@ public class Drive extends OutliersCommand {
         _driveTrain = driveTrain;
         _oi = oi;
         addRequirements(_driveTrain);
+        logMetrics("X", "Y");
     }
 
     @Override
     public void initialize() {
+        SmartDashboard.putBoolean("MetricTracker/Drive", true);
         super.initialize();
     }
 
