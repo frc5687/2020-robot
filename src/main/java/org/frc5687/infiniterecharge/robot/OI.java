@@ -1,15 +1,16 @@
-package frc.robot;
+package org.frc5687.infiniterecharge.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.util.AxisButton;
-import frc.robot.util.Gamepad;
-import frc.robot.util.OutliersProxy;
-import frc.robot.util.POV;
+import org.frc5687.infiniterecharge.robot.subsytems.*;
+import org.frc5687.infiniterecharge.robot.util.AxisButton;
+import org.frc5687.infiniterecharge.robot.util.Gamepad;
+import org.frc5687.infiniterecharge.robot.util.OutliersProxy;
+import org.frc5687.infiniterecharge.robot.util.POV;
 
-import static frc.robot.util.Helpers.applyDeadband;
+import static org.frc5687.infiniterecharge.robot.util.Helpers.applyDeadband;
 
 public class OI extends OutliersProxy {
     protected Gamepad _driverGamepad;
@@ -50,7 +51,7 @@ public class OI extends OutliersProxy {
     }
 
 
-    public void initializeButtons(Robot robot){
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain){
     }
 
     public boolean isAutoTargetPressed() {

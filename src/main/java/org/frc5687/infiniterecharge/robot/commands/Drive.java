@@ -1,9 +1,7 @@
-package frc.robot.commands;
+package org.frc5687.infiniterecharge.robot.commands;
 
-import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.OI;
-import frc.robot.subsytems.DriveTrain;
+import org.frc5687.infiniterecharge.robot.OI;
+import org.frc5687.infiniterecharge.robot.subsytems.DriveTrain;
 
 public class Drive extends OutliersCommand {
 

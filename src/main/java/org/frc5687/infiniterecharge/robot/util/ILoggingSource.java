@@ -1,4 +1,4 @@
-package frc.robot.util;
+package org.frc5687.infiniterecharge.robot.util;
 
 public interface ILoggingSource {
     void error(String message);

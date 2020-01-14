@@ -1,27 +1,25 @@
-package frc.robot.subsytems;
+package org.frc5687.infiniterecharge.robot.subsytems;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
-import frc.robot.OI;
-import frc.robot.Robot;
-import frc.robot.RobotMap;
-import frc.robot.commands.Drive;
+import org.frc5687.infiniterecharge.robot.Constants;
+import org.frc5687.infiniterecharge.robot.OI;
+import org.frc5687.infiniterecharge.robot.Robot;
+import org.frc5687.infiniterecharge.robot.RobotMap;
+import org.frc5687.infiniterecharge.robot.commands.Drive;
+import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
-import static frc.robot.Constants.DriveTrain.CREEP_FACTOR;
-import static frc.robot.util.Helpers.applySensitivityFactor;
-import static frc.robot.util.Helpers.limit;
+import static org.frc5687.infiniterecharge.robot.Constants.DriveTrain.CREEP_FACTOR;
+import static org.frc5687.infiniterecharge.robot.util.Helpers.applySensitivityFactor;
+import static org.frc5687.infiniterecharge.robot.util.Helpers.limit;
 
 public class DriveTrain extends OutliersSubsystem {
     private CANSparkMax _leftMaster;
@@ -38,7 +36,6 @@ public class DriveTrain extends OutliersSubsystem {
 
     private OI _oi;
     private AHRS _imu;
-    private Robot _robot;
     private Shifter _shifter;
 
     private double _oldLeftSpeedFront;
@@ -47,11 +44,11 @@ public class DriveTrain extends OutliersSubsystem {
     private double _oldRightSpeedBack;
     private boolean _isPaused = false;
 
-    public DriveTrain(Robot robot) {
-        _oi = robot.getOI();
-        _imu = robot.getIMU();
-        _shifter = robot.getShifter();
-        _robot = robot;
+    public DriveTrain(OutliersContainer container, OI oi, AHRS imu, Shifter shifter)  {
+        super(container);
+        _oi = oi;
+        _imu = imu;
+        _shifter = shifter;
 
         try {
             debug("Allocating motor controllers");

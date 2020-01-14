@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot;
+package org.frc5687.infiniterecharge.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
 

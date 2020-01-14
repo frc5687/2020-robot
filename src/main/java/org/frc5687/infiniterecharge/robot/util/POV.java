@@ -1,4 +1,4 @@
-package frc.robot.util;
+package org.frc5687.infiniterecharge.robot.util;
     /**
      * Control type for the POV stick/DPAD, which is read as an angle by WPILib.
      *

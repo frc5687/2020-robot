@@ -1,9 +1,9 @@
-package frc.robot.commands;
+package org.frc5687.infiniterecharge.robot.commands;
 
 
-import frc.robot.Constants;
-import frc.robot.subsytems.DriveTrain;
-import frc.robot.subsytems.Shifter;
+import org.frc5687.infiniterecharge.robot.Constants;
+import org.frc5687.infiniterecharge.robot.subsytems.DriveTrain;
+import org.frc5687.infiniterecharge.robot.subsytems.Shifter;
 
 public class Shift extends OutliersCommand {
     private Shifter _shifter;

@@ -1,21 +1,21 @@
-package frc.robot.subsytems;
+package org.frc5687.infiniterecharge.robot.subsytems;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import frc.robot.Constants;
-import frc.robot.Robot;
-import frc.robot.RobotMap;
+import org.frc5687.infiniterecharge.robot.Constants;
+import org.frc5687.infiniterecharge.robot.Robot;
+import org.frc5687.infiniterecharge.robot.RobotMap;
+import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 public class Shifter extends OutliersSubsystem {
-    private Robot _robot;
 
     private DoubleSolenoid shifterSolenoid;
     private Compressor compressor;
     private long waitPeriodEndTime = 0;
     private boolean autShiftEnabled = false;
 
-    public Shifter(Robot robot) {
-        _robot = robot;
+    public Shifter(OutliersContainer container) {
+        super(container);
         shifterSolenoid = new DoubleSolenoid(RobotMap.PCM.SHIFTER_HIGH, RobotMap.PCM.SHIFTER_LOW);
     }
 
