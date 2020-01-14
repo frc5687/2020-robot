@@ -7,6 +7,6 @@ package org.frc5687.infiniterecharge.robot.util;
 
 public class Version {
     public static final String BRANCH = "DriveTrain/#2-CreateSubsystems";
-    public static final String REVISION = "5da2009";
+    public static final String REVISION = "525ff56";
     public static final String MODIFIED = " *";
 }

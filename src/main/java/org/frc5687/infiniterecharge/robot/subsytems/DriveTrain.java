@@ -43,7 +43,7 @@ public class DriveTrain extends OutliersSubsystem {
     private AHRS _imu;
 
     private Pose2d _pose;
-//    private Shifter _shifter;
+    private Shifter _shifter;
 
     private double _oldLeftSpeedFront;
     private double _oldLeftSpeedBack;

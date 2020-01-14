@@ -1,7 +1,6 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
 
-import org.frc5687.infiniterecharge.robot.Robot;
 import org.frc5687.infiniterecharge.robot.subsytems.DriveTrain;
 
 public class KillAll extends OutliersCommand {
