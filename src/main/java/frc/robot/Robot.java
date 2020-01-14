@@ -131,7 +131,7 @@ public class Robot extends TimedRobot implements ILoggingSource {
   public void autonomousInit() {
     _fmsConnected =  DriverStation.getInstance().isFMSAttached();
 //    _driveTrain.enableBrakeMode();
-    _autoCommand = getAutonomousCommand();
+//    _autoCommand = getAutonomousCommand();
 
     if (_autoCommand!=null) {
       _autoCommand.schedule();
@@ -317,49 +317,49 @@ public class Robot extends TimedRobot implements ILoggingSource {
     SmartDashboard.putNumber(getClass().getSimpleName() + "/" + name, value);
   }
 
-  public Command getAutonomousCommand() {
-    var autoVoltageConstraint =
-            new DifferentialDriveVoltageConstraint(
-                    new SimpleMotorFeedforward(Constants.DriveTrain.KS_VOLTS,
-                            Constants.DriveTrain.KV_VOLTSPR,
-                            Constants.DriveTrain.KA_VOLTSQPR),
-                    _driveTrain.getKinematics(),
-                    10
-            );
-    TrajectoryConfig config =
-            new TrajectoryConfig(Constants.DriveTrain.MAX_SPEED_MPS,
-                    Constants.DriveTrain.MAX_ACCEL_MPS)
-                    // Add kinematics to ensure max speed is actually obeyed
-                    .setKinematics(_driveTrain.getKinematics())
-                    // Apply the voltage constraint
-                    .addConstraint(autoVoltageConstraint);
-//    TrajectoryConfig config = new TrajectoryConfig(Constants.DriveTrain.MAX_SPEED_MPS,Constants.DriveTrain.MAX_ACCEL_MPS).setKinematics(Constants.DriveTrain.DRIVE_KINEMATICS);
-    Trajectory test = TrajectoryGenerator.generateTrajectory(
-            new Pose2d(0,0, new Rotation2d(0)),
-            List.of(
-                    new Translation2d(1,1),
-                    new Translation2d(2,-1)
-            ),
-            new Pose2d(3, 0, new Rotation2d(0)),
-            config
-    );
-    RamseteCommand ramseteCommand = new RamseteCommand(
-            test,
-            _driveTrain::getPose,
-            new RamseteController(Constants.DriveTrain.RAMSETE_B, Constants.DriveTrain.RAMETE_ZETA),
-            new SimpleMotorFeedforward(Constants.DriveTrain.KS_VOLTS,
-                    Constants.DriveTrain.KV_VOLTSPR,
-                    Constants.DriveTrain.KA_VOLTSQPR),
-            _driveTrain.getKinematics(),
-            _driveTrain::getWheelSpeeds,
-            new PIDController(Constants.DriveTrain.KP_DRIVE_VELOCITY, 0, 0),
-            new PIDController(Constants.DriveTrain.KP_DRIVE_VELOCITY, 0, 0),
-            // RamseteCommand passes volts to the callback
-            _driveTrain::tankDriveVolts,
-            _driveTrain
-    );
-
-    return ramseteCommand.andThen(() -> _driveTrain.tankDriveVolts(0, 0));
-
-  }
+//  public Command getAutonomousCommand() {
+//    var autoVoltageConstraint =
+//            new DifferentialDriveVoltageConstraint(
+//                    new SimpleMotorFeedforward(Constants.DriveTrain.KS_VOLTS,
+//                            Constants.DriveTrain.KV_VOLTSPR,
+//                            Constants.DriveTrain.KA_VOLTSQPR),
+//                    _driveTrain.getKinematics(),
+//                    10
+//            );
+//    TrajectoryConfig config =
+//            new TrajectoryConfig(Constants.DriveTrain.MAX_SPEED_MPS,
+//                    Constants.DriveTrain.MAX_ACCEL_MPS)
+//                    // Add kinematics to ensure max speed is actually obeyed
+//                    .setKinematics(_driveTrain.getKinematics())
+//                    // Apply the voltage constraint
+//                    .addConstraint(autoVoltageConstraint);
+////    TrajectoryConfig config = new TrajectoryConfig(Constants.DriveTrain.MAX_SPEED_MPS,Constants.DriveTrain.MAX_ACCEL_MPS).setKinematics(Constants.DriveTrain.DRIVE_KINEMATICS);
+//    Trajectory test = TrajectoryGenerator.generateTrajectory(
+//            new Pose2d(0,0, new Rotation2d(0)),
+//            List.of(
+//                    new Translation2d(1,1),
+//                    new Translation2d(2,-1)
+//            ),
+//            new Pose2d(3, 0, new Rotation2d(0)),
+//            config
+//    );
+//    RamseteCommand ramseteCommand = new RamseteCommand(
+//            test,
+//            _driveTrain::getPose,
+//            new RamseteController(Constants.DriveTrain.RAMSETE_B, Constants.DriveTrain.RAMETE_ZETA),
+//            new SimpleMotorFeedforward(Constants.DriveTrain.KS_VOLTS,
+//                    Constants.DriveTrain.KV_VOLTSPR,
+//                    Constants.DriveTrain.KA_VOLTSQPR),
+//            _driveTrain.getKinematics(),
+//            _driveTrain::getWheelSpeeds,
+//            new PIDController(Constants.DriveTrain.KP_DRIVE_VELOCITY, 0, 0),
+//            new PIDController(Constants.DriveTrain.KP_DRIVE_VELOCITY, 0, 0),
+//            // RamseteCommand passes volts to the callback
+//            _driveTrain::tankDriveVolts,
+//            _driveTrain
+//    );
+//
+//    return ramseteCommand.andThen(() -> _driveTrain.tankDriveVolts(0, 0));
+//
+//  }
 }
