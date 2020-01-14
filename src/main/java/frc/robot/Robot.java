@@ -60,7 +60,7 @@ public class Robot extends TimedRobot implements ILoggingSource {
 
   private AHRS _imu;
   private DriveTrain _driveTrain;
-  private Shifter _shifter;
+//  private Shifter _shifter;
 
   private PDP _pdp;
 
@@ -95,7 +95,7 @@ public class Robot extends TimedRobot implements ILoggingSource {
 
     // Then subsystems....
     _driveTrain = new DriveTrain(this);
-    _shifter = new Shifter(this);
+//    _shifter = new Shifter(this);
     // Must initialize buttons AFTER subsystems are allocated...
     _oi.initializeButtons(this);
 
@@ -281,7 +281,7 @@ public class Robot extends TimedRobot implements ILoggingSource {
   }
   public AHRS getIMU() { return _imu; }
   public DriveTrain getDriveTrain() { return _driveTrain; }
-  public Shifter getShifter() {return  _shifter;}
+//  public Shifter getShifter() {return  _shifter;}
   public PDP getPDP() { return _pdp; }
 
 
@@ -333,6 +333,7 @@ public class Robot extends TimedRobot implements ILoggingSource {
                     .setKinematics(_driveTrain.getKinematics())
                     // Apply the voltage constraint
                     .addConstraint(autoVoltageConstraint);
+//    TrajectoryConfig config = new TrajectoryConfig(Constants.DriveTrain.MAX_SPEED_MPS,Constants.DriveTrain.MAX_ACCEL_MPS).setKinematics(Constants.DriveTrain.DRIVE_KINEMATICS);
     Trajectory test = TrajectoryGenerator.generateTrajectory(
             new Pose2d(0,0, new Rotation2d(0)),
             List.of(

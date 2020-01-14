@@ -1,6 +1,7 @@
 package frc.robot.subsytems;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Units;
 import frc.robot.Constants;
 import frc.robot.OI;
 import frc.robot.Robot;
@@ -29,6 +31,9 @@ public class DriveTrain extends OutliersSubsystem {
     private CANSparkMax _rightMaster;
     private CANSparkMax _rightSlave;
 
+    private CANEncoder _leftEncoder;
+    private CANEncoder _rightEncoder;
+
 
     private DifferentialDriveOdometry _odometry;
     private DifferentialDriveKinematics _driveKinematics;
@@ -39,7 +44,9 @@ public class DriveTrain extends OutliersSubsystem {
     private OI _oi;
     private AHRS _imu;
     private Robot _robot;
-    private Shifter _shifter;
+
+    private Pose2d _pose;
+//    private Shifter _shifter;
 
     private double _oldLeftSpeedFront;
     private double _oldLeftSpeedBack;
@@ -50,16 +57,20 @@ public class DriveTrain extends OutliersSubsystem {
     public DriveTrain(Robot robot) {
         _oi = robot.getOI();
         _imu = robot.getIMU();
-        _shifter = robot.getShifter();
+//        _shifter = robot.getShifter();
         _robot = robot;
 
         try {
             debug("Allocating motor controllers");
             _leftMaster = new CANSparkMax(RobotMap.CAN.SPARKMAX.LEFT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
-            _leftSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.LEFT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
             _rightMaster = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
-            _rightSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
 
+            _leftSlave.follow(_leftMaster);
+            _rightSlave.follow(_rightMaster);
+
+
+            _leftEncoder = _leftMaster.getEncoder();
+            _rightEncoder = _rightMaster.getEncoder();
             _leftMaster.restoreFactoryDefaults();
             _leftSlave.restoreFactoryDefaults();
             _rightMaster.restoreFactoryDefaults();
@@ -104,7 +115,7 @@ public class DriveTrain extends OutliersSubsystem {
         resetDriveEncoders();
 
         _driveKinematics = new DifferentialDriveKinematics(Constants.DriveTrain.WIDTH);
-        _odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getYaw()));
+        _odometry = new DifferentialDriveOdometry(getHeading());
 
         logMetrics("X", "Y", "Heading");
     }
@@ -138,7 +149,7 @@ public class DriveTrain extends OutliersSubsystem {
 
         if (speed < Constants.DriveTrain.DEADBAND && speed > -Constants.DriveTrain.DEADBAND) {
             if (!override) {
-                rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.ROTATION_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.ROTATION_SENSITIVITY_LOW_GEAR);
+//                rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.ROTATION_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.ROTATION_SENSITIVITY_LOW_GEAR);
             }
             if (creep) {
                 //metric("Rot/Creep", creep);
@@ -158,7 +169,7 @@ public class DriveTrain extends OutliersSubsystem {
             metric("Str/Raw", speed);
             speed = Math.copySign(applySensitivityFactor(speed, Constants.DriveTrain.SPEED_SENSITIVITY), speed);
             if (!override) {
-                rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.TURNING_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.TURNING_SENSITIVITY_LOW_GEAR);
+//                rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.TURNING_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.TURNING_SENSITIVITY_LOW_GEAR);
             }
             metric("Str/Trans", speed);
             rotation = applySensitivityFactor(rotation, Constants.DriveTrain.ROTATION_SENSITIVITY);
@@ -184,12 +195,17 @@ public class DriveTrain extends OutliersSubsystem {
     }
     public void setPower(double leftSpeed, double rightSpeed, boolean override) {
         _leftMaster.set(leftSpeed);
-        _leftSlave.set (leftSpeed);
         _rightMaster.set(rightSpeed);
-        _rightSlave.set (rightSpeed);
         metric("Power/Right", rightSpeed);
         metric("Power/Left", leftSpeed);
     }
+    public double getNeoLeftEncoder() {
+        return _leftEncoder.getPosition();
+    }
+    public double getNeoRightEncoder() {
+        return _rightEncoder.getPosition();
+    }
+
 
     public void pauseMotors() {
         _oldLeftSpeedFront = _leftMaster.get();
@@ -213,7 +229,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void periodic() {
-        _odometry.update(Rotation2d.fromDegrees(getYaw()), _leftMagEncoder.getDistance()* 0.0254, _rightMagEncoder.getDistance()* 0.0254);
+        _pose = _odometry.update(getHeading(), Units.inchesToMeters(_leftMagEncoder.getDistance()), Units.inchesToMeters(_rightMagEncoder.getDistance()));
         setDefaultCommand(new Drive(this, _oi));
     }
 
@@ -223,14 +239,16 @@ public class DriveTrain extends OutliersSubsystem {
         metric("X", getPose().getTranslation().getX());
         metric("Y", getPose().getTranslation().getY());
         metric("Heading", getPose().getRotation().getDegrees());
+        metric("Right", getNeoRightEncoder());
+        metric("Left", getNeoLeftEncoder());
     }
 
     public DifferentialDriveKinematics getKinematics() {
         return _driveKinematics;
     }
 
-    public float getYaw() {
-        return _imu.getYaw();
+    public Rotation2d getHeading() {
+        return Rotation2d.fromDegrees(_imu.getYaw());
     }
     public Pose2d getPose() {
         return _odometry.getPoseMeters();
@@ -241,20 +259,21 @@ public class DriveTrain extends OutliersSubsystem {
     }
     public void resetOdometry(Pose2d pose) {
         resetDriveEncoders();
-        _odometry.resetPosition(pose, Rotation2d.fromDegrees(getYaw()));
+        _odometry.resetPosition(pose, getHeading());
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
-        _leftMaster.set(leftVolts);
-        _leftSlave.set(leftVolts);
-        _rightMaster.set(rightVolts);
-        _rightSlave.set(rightVolts);
+        _leftMaster.set(leftVolts/12);
+        _rightMaster.set(rightVolts/12);
+
     }
 
     public void resetDriveEncoders() {
         _leftMagEncoder.reset();
         _rightMagEncoder.reset();
     }
+
+
 
 
 
