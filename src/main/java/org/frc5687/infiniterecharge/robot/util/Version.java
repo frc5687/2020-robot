@@ -6,7 +6,7 @@ package org.frc5687.infiniterecharge.robot.util;
  */
 
 public class Version {
-    public static final String BRANCH = "master";
-    public static final String REVISION = "f3f0d86";
+    public static final String BRANCH = "DriveTrain/#10-TrajectoryFollowing";
+    public static final String REVISION = "51c6376";
     public static final String MODIFIED = " *";
 }
