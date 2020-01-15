@@ -56,6 +56,7 @@ public class RobotContainer extends OutliersContainer {
         _oi.initializeButtons(_shifter, _driveTrain);
 
         // Initialize the other stuff
+        _driveTrain.enableBrakeMode();
 
     }
 
