@@ -79,4 +79,9 @@ public class Constants {
         public static final long MANUAL_WAIT_PERIOD = 3000;
     }
 
+    public class Shooter {
+        public static final boolean LEFT_INVERTED = false;
+        public static final boolean RIGHT_INVERTED = false;
+        public static final double DEADBAND = 0.1;
+    }
 }
