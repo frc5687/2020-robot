@@ -64,8 +64,8 @@ public class DriveTrain extends OutliersSubsystem {
             _rightSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
             _leftSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.LEFT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
 
-            _leftSlave.follow(_leftMaster);
-            _rightSlave.follow(_rightMaster);
+//            _leftSlave.follow(_leftMaster);
+//            _rightSlave.follow(_rightMaster);
 
 
             _leftEncoder = _leftMaster.getEncoder();
@@ -195,6 +195,8 @@ public class DriveTrain extends OutliersSubsystem {
     public void setPower(double leftSpeed, double rightSpeed, boolean override) {
         _leftMaster.set(leftSpeed);
         _rightMaster.set(rightSpeed);
+        _leftSlave.set(leftSpeed);
+        _rightSlave.set(rightSpeed);
         metric("Power/Right", rightSpeed);
         metric("Power/Left", leftSpeed);
     }
@@ -264,7 +266,9 @@ public class DriveTrain extends OutliersSubsystem {
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
         _leftMaster.set(leftVolts/12);
-        _rightMaster.set(rightVolts/12);
+        _rightMaster.set(rightVolts/-12);
+        _rightSlave.set(rightVolts/-12);
+        _leftSlave.set(leftVolts/12);
 
     }
 
