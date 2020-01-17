@@ -14,11 +14,9 @@ public class RobotMap {
             public static final int RIGHT_MASTER = 5;
             public static final int LEFT_SLAVE = 9;
             public static final int RIGHT_SLAVE = 11;
-
-
-        /*  Example:
-                        public static final int LEFT_MASTER_SPARK= 1;
-                        */
+        }
+        public static class VICTORSPX {
+            public static final int HOOD_SPX = 8;
         }
     }
 
@@ -82,9 +80,10 @@ public class RobotMap {
             public static final int DRIVE_LEFT_A = 2;
             public static final int DRIVE_RIGHT_B = 0;
             public static final int DRIVE_RIGHT_A = 1;
-        /* Example:
-        public static final int ARM_FRONT_LIMIT = 0;
-        */
+            public static final int HOOD_ENCODER = 4;
+            /* Example:
+            public static final int ARM_FRONT_LIMIT = 0;
+            */
         }
  }
 

@@ -1,0 +1,32 @@
+package org.frc5687.infiniterecharge.robot.commands;
+
+import org.frc5687.infiniterecharge.robot.OI;
+import org.frc5687.infiniterecharge.robot.subsytems.Hood;
+
+public class DriveHood extends OutliersCommand {
+    private Hood _hood;
+    private OI _oi;
+
+    public DriveHood(Hood hood, OI oi) {
+        _hood = hood;
+        _oi = oi;
+        addRequirements(_hood);
+    }
+
+    @Override
+    public void initialize() {
+        super.initialize();
+    }
+
+    @Override
+    public void execute() {
+        super.execute();
+        double speed = _oi.getHoodSpeed();
+        _hood.setSpeed(speed);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+}

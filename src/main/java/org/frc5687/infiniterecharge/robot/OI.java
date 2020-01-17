@@ -70,6 +70,12 @@ public class OI extends OutliersProxy {
         return speed;
     }
 
+    public double getHoodSpeed() {
+        double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_X.getNumber());
+        speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
+        return speed;
+    }
+
     public int getOperatorPOV() {
         return POV.fromWPILIbAngle(0, _operatorGamepad.getPOV()).getDirectionValue();
     }
