@@ -1,4 +1,4 @@
-package org.frc5687.infiniterecharge.robot.subsytems;
+package org.frc5687.infiniterecharge.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
-import org.frc5687.infiniterecharge.robot.Robot;
 import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.commands.Drive;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;

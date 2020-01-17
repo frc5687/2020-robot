@@ -1,7 +1,8 @@
-package org.frc5687.deepspace.chassisbot.commands;
+package org.frc5687.infiniterecharge.robot.commands;
 
-import org.frc5687.deepspace.chassisbot.OI;
-import org.frc5687.deepspace.chassisbot.subsystems.Intake;
+import org.frc5687.infiniterecharge.robot.OI;
+import org.frc5687.infiniterecharge.robot.commands.OutliersCommand;
+import org.frc5687.infiniterecharge.robot.subsystems.Intake;
 
 public class IntakeSpin extends OutliersCommand {
     private OI _oi;
@@ -11,22 +12,22 @@ public class IntakeSpin extends OutliersCommand {
     public IntakeSpin(Intake intake, OI oi) {
         _intake = intake;
         _oi = oi;
-        requires(_intake);
+        addRequirements(_intake);
     }
 
     @Override
-    protected void initialize() {
+    public void initialize() {
         super.initialize();
     }
 
     @Override
-    protected void execute() {
+    public void execute() {
         double intakeSpeed = _oi.getIntakeSpeed();
         _intake.setSpeed(intakeSpeed);
     }
 
     @Override
-    protected boolean isFinished() {
+    public boolean isFinished() {
         return false;
     }
 }

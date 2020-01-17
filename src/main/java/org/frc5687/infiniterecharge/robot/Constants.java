@@ -7,6 +7,10 @@ public class Constants {
     public static final int  TICKS_PER_UPDATE = 10;
     public static final double METRIC_FLUSH_PERIOD = 1.0;
 
+    public class Intake {
+        public static final boolean INTAKE_MOTOR_INVERTED = true;
+    }
+
     public static class DriveTrain {
         public static final double DEADBAND = 0.25;
         public static final double SPEED_SENSITIVITY = 0.9;

@@ -1,15 +1,13 @@
-package org.frc5687.deepspace.chassisbot.subsystems;
+package org.frc5687.infiniterecharge.robot.subsystems;
 
 
-import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
-import org.frc5687.infiniterecharge.robot.subsytems.OutliersSubsystem;
-import org.frc5687.infiniterecharge.robot.subsytems.Shifter;
+import org.frc5687.infiniterecharge.robot.subsystems.OutliersSubsystem;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 public class Intake extends OutliersSubsystem {
@@ -64,7 +62,7 @@ public class Intake extends OutliersSubsystem {
     }
 
     @Override
-    protected void initDefaultCommand() {
+    public void periodic() {
         setDefaultCommand(null);
     }
 
