@@ -17,7 +17,7 @@ public class RobotMap {
             public static final int RIGHT_SLAVE = 11;
         }
         public static class TALONSRX {
-            public static final int TURRET = 5;
+            public static final int TURRET = 6;
         }
     }
 

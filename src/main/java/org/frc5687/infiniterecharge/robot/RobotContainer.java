@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import org.frc5687.infiniterecharge.robot.commands.KillAll;
 import org.frc5687.infiniterecharge.robot.subsytems.DriveTrain;
 import org.frc5687.infiniterecharge.robot.subsytems.Shifter;
+import org.frc5687.infiniterecharge.robot.subsytems.Turret;
+import org.frc5687.infiniterecharge.robot.util.Limelight;
 import org.frc5687.infiniterecharge.robot.util.MetricTracker;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 import org.frc5687.infiniterecharge.robot.util.PDP;
@@ -30,7 +32,10 @@ public class RobotContainer extends OutliersContainer {
 
     private AHRS _imu;
     private DriveTrain _driveTrain;
+    private Turret _turret;
     private Shifter _shifter;
+
+    private Limelight _limelight;
     private PDP _pdp;
 
     public RobotContainer(Robot robot) {
@@ -46,11 +51,13 @@ public class RobotContainer extends OutliersContainer {
 
         // then proxies...
         _pdp = new PDP();
+        _limelight = new Limelight("limelight");
 
 
         // Then subsystems....
         _shifter = new Shifter(this);
         _driveTrain = new DriveTrain(this, _oi, _imu, _shifter);
+        _turret = new Turret(this, _limelight, _oi);
 
         // Must initialize buttons AFTER subsystems are allocated...
         _oi.initializeButtons(_shifter, _driveTrain);
