@@ -2,21 +2,25 @@ package org.frc5687.infiniterecharge.robot.commands;
 
 
 import org.frc5687.infiniterecharge.robot.subsytems.DriveTrain;
+import org.frc5687.infiniterecharge.robot.subsytems.Shooter;
 
 public class KillAll extends OutliersCommand {
     private boolean _finished;
 
     private DriveTrain _driveTrain;
+    private Shooter _shooter;
 
-    public KillAll(DriveTrain driveTrain) {
+    public KillAll(DriveTrain driveTrain, Shooter shooter) {
         _driveTrain = driveTrain;
-        addRequirements(driveTrain);
+        _shooter = shooter;
+        addRequirements(driveTrain, shooter);
     }
 
     @Override
     public void initialize() {
         _finished = true;
         _driveTrain.enableBrakeMode();
+        _shooter.setSpeed(0);
         error("Initialize KillAll Command");
     }
 

@@ -29,6 +29,7 @@ public class Shooter extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
+        metric("Velocity", getVelocity());
     }
 
     @Override
@@ -39,7 +40,6 @@ public class Shooter extends OutliersSubsystem {
     public void setSpeed(double speed) {
         _rightShooter.set(TalonFXControlMode.PercentOutput, speed);
     }
-
 
     public double getPosition() {
         return _leftShooter.getSelectedSensorPosition();

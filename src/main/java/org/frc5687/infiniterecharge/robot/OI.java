@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import org.frc5687.infiniterecharge.robot.commands.ShootSpeedSetpoint;
 import org.frc5687.infiniterecharge.robot.subsytems.*;
 import org.frc5687.infiniterecharge.robot.util.AxisButton;
 import org.frc5687.infiniterecharge.robot.util.Gamepad;
@@ -23,6 +24,9 @@ public class OI extends OutliersProxy {
     private Button _driverLeftBumper;
 
     private Button _operatorAButton;
+    private Button _operatorBButton;
+    private Button _operatorXButton;
+    private Button _operatorYButton;
 
     private AxisButton _driverRightYAxisUpButton;
 
@@ -45,14 +49,20 @@ public class OI extends OutliersProxy {
         _operatorRightXAxisDownButton = new AxisButton(_operatorGamepad,Gamepad.Axes.RIGHT_Y.getNumber(), -.5);
         _operatorRightXAxisUpButton = new AxisButton(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber(), .5);
 
-        _operatorAButton = new JoystickButton(_driverGamepad,Gamepad.Buttons.A.getNumber());
-
-
+        _operatorAButton = new JoystickButton(_operatorGamepad,Gamepad.Buttons.A.getNumber());
+        _operatorBButton = new JoystickButton(_operatorGamepad,Gamepad.Buttons.B.getNumber());
+        _operatorXButton = new JoystickButton(_operatorGamepad,Gamepad.Buttons.X.getNumber());
+        _operatorYButton = new JoystickButton(_operatorGamepad,Gamepad.Buttons.Y.getNumber());
     }
 
 
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain){
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Shooter shooter){
+        _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 1));
+        _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
+        _operatorXButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .7));
+        _operatorYButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .8));
     }
+
 
     public boolean isAutoTargetPressed() {
         return _driverRightYAxisUpButton.get();

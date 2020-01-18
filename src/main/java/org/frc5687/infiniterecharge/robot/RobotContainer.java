@@ -56,7 +56,7 @@ public class RobotContainer extends OutliersContainer {
         _shooter = new Shooter(this, _oi);
 
         // Must initialize buttons AFTER subsystems are allocated...
-        _oi.initializeButtons(_shifter, _driveTrain);
+        _oi.initializeButtons(_shifter, _driveTrain, _shooter);
 
         // Initialize the other stuff
 
@@ -66,7 +66,7 @@ public class RobotContainer extends OutliersContainer {
     public void periodic() {
         _oi.poll();
         if (_oi.isKillAllPressed()) {
-            new KillAll(_driveTrain).schedule();
+            new KillAll(_driveTrain, _shooter).schedule();
         }
     }
 

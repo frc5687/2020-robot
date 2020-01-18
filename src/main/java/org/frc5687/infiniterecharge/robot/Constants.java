@@ -81,7 +81,7 @@ public class Constants {
 
     public class Shooter {
         public static final boolean LEFT_INVERTED = false;
-        public static final boolean RIGHT_INVERTED = false;
+        public static final boolean RIGHT_INVERTED = true;
         public static final double DEADBAND = 0.1;
     }
 }
