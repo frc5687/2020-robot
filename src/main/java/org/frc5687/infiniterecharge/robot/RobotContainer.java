@@ -64,7 +64,10 @@ public class RobotContainer extends OutliersContainer {
 
         // Initialize the other stuff
         _driveTrain.enableBrakeMode();
+    }
 
+    public void zeroSensors() {
+        _turret.zeroSensors();
     }
 
 

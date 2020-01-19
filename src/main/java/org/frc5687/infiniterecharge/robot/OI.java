@@ -53,7 +53,7 @@ public class OI extends OutliersProxy {
     }
 
     public boolean isAutoTargetPressed() {
-        return _driverRightYAxisUpButton.get();
+        return _driverLeftBumper.get();
     }
 
     public double getDriveSpeed() {

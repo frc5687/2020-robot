@@ -22,19 +22,26 @@ public class DriveTurret extends OutliersCommand {
     @Override
     public void initialize() {
         super.initialize();
+        _turret.zeroSensors();
     }
 
     @Override
     public void execute() {
         double turretSpeed = _oi.getTurretSpeed();
-        _turretPosition = _turret.getPosition();
-//        if (_turretPosition == 0 && (turretSpeed > 0)) {
-//            turretSpeed = 0;
-//        } else if (_turretPosition == 270 && (turretSpeed < 0)) {
-//            turretSpeed = 0;
-//        }
-
-        _turret.setSpeed(turretSpeed);
+        _turretPosition = _turret.getPositionDegrees();
+        if (_turretPosition >= 90 && (turretSpeed > 0)) {
+            turretSpeed = 0;
+        } else if (_turretPosition <= -180 && (turretSpeed < 0)) {
+            turretSpeed = 0;
+        }
+        metric("AutoPressed", _oi.isAutoTargetPressed());
+        if (_oi.isAutoTargetPressed()) {
+            _limelight.enableLEDs();
+            _turret.setSpeed(getTurnSpeed());
+        } else {
+            _limelight.disableLEDs();
+            _turret.setSpeed(turretSpeed);
+        }
 
     }
 
@@ -42,7 +49,10 @@ public class DriveTurret extends OutliersCommand {
         double distance = _limelight.getTargetDistance();
         double angle = _limelight.getHorizontalAngle();
         double targetAngle = angle - _turretPosition;
-        return targetAngle * 0.0012;
+        metric("targetAngle", targetAngle);
+        metric("TurretAngle", _turretPosition);
+        metric("limelight angle", angle);
+        return angle * 0.07;
     }
 
     @Override

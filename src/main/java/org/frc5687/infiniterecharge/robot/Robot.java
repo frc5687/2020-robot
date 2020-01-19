@@ -109,6 +109,7 @@ public class Robot extends OutliersRobot implements ILoggingSource {
     @Override
     public void autonomousInit() {
         _fmsConnected = DriverStation.getInstance().isFMSAttached();
+
         _autoCommand = _robotContainer.getAutonomousCommand();
 
         if (_autoCommand != null) {
@@ -119,6 +120,7 @@ public class Robot extends OutliersRobot implements ILoggingSource {
 
     public void teleopInit() {
         _fmsConnected = DriverStation.getInstance().isFMSAttached();
+        _robotContainer.zeroSensors();
         //_limelight.disableLEDs();
     }
 

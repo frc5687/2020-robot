@@ -48,6 +48,8 @@ public class Constants {
         public static final double DEADBAND = 0.1;
 
         public static final double TOLERANCE = 2;
+        public static final boolean SENSOR_PHASE_INVERTED = false;
+        public static final double TICKS_TO_DEGREES = 0.08695652173913;
     }
 
     public static class OI {
