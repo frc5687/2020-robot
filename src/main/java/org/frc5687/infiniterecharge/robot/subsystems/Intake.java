@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
+import org.frc5687.infiniterecharge.robot.commands.IntakeSpin;
 import org.frc5687.infiniterecharge.robot.subsystems.OutliersSubsystem;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
@@ -20,7 +21,7 @@ public class Intake extends OutliersSubsystem {
     public Intake(OutliersContainer container, OI oi) {
         super(container);
         _oi = oi;
-        _intakeSolenoid = new DoubleSolenoid(RobotMap.PCM.SHIFTER_HIGH, RobotMap.PCM.SHIFTER_LOW);//check if shifter high and shifter low should be changed
+        _intakeSolenoid = new DoubleSolenoid(RobotMap.PCM.INTAKE_HIGH, RobotMap.PCM.INTAKE_LOW);//check if shifter high and shifter low should be changed
 
         _intakeSpark = new CANSparkMax(RobotMap.CAN.SPARKMAX.INTAKE_NEO, CANSparkMaxLowLevel.MotorType.kBrushless);
         _intakeSpark.setInverted(Constants.Intake.INTAKE_MOTOR_INVERTED);
@@ -63,7 +64,7 @@ public class Intake extends OutliersSubsystem {
 
     @Override
     public void periodic() {
-        setDefaultCommand(null);
+        setDefaultCommand(new IntakeSpin(this, _oi));
     }
 
     public void raiseIntake() { _intakeSolenoid.set(DoubleSolenoid.Value.kReverse); }

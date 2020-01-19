@@ -51,7 +51,7 @@ public class OI extends OutliersProxy {
     }
 
 
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain){
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Intake intake){
     }
 
     public boolean isAutoTargetPressed() {

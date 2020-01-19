@@ -44,6 +44,8 @@ public class RobotMap {
         public static class PCM {
             public static final int SHIFTER_HIGH = 5;
             public static final int SHIFTER_LOW = 4;
+            public static final int INTAKE_HIGH = 7;
+            public static final int INTAKE_LOW = 6;
 
 
         /* Example:
@@ -87,5 +89,7 @@ public class RobotMap {
         public static final int ARM_FRONT_LIMIT = 0;
         */
         }
+
+
  }
 
