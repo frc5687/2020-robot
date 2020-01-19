@@ -21,6 +21,7 @@ import org.frc5687.infiniterecharge.robot.subsystems.Intake;
 import org.frc5687.infiniterecharge.robot.subsystems.Shifter;
 import org.frc5687.infiniterecharge.robot.subsystems.Turret;
 import org.frc5687.infiniterecharge.robot.util.Limelight;
+import org.frc5687.infiniterecharge.robot.subsytems.Spinner;
 import org.frc5687.infiniterecharge.robot.util.MetricTracker;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 import org.frc5687.infiniterecharge.robot.util.PDP;
@@ -36,6 +37,8 @@ public class RobotContainer extends OutliersContainer {
     private DriveTrain _driveTrain;
     private Turret _turret;
     private Shifter _shifter;
+    private PDP _pdp;
+    private Spinner _spinner;
 
     private Limelight _limelight;
     private PDP _pdp;
@@ -61,6 +64,7 @@ public class RobotContainer extends OutliersContainer {
         _intake = new Intake(this, _oi);
         _driveTrain = new DriveTrain(this, _oi, _imu, _shifter);
         _turret = new Turret(this, _limelight, _oi);
+        _spinner = new Spinner(this);
 
         // Must initialize buttons AFTER subsystems are allocated...
         _oi.initializeButtons(_shifter, _driveTrain, _intake);
