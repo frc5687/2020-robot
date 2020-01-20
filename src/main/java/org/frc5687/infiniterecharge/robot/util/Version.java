@@ -7,6 +7,6 @@ package org.frc5687.infiniterecharge.robot.util;
 
 public class Version {
     public static final String BRANCH = "master";
-    public static final String REVISION = "0993d4e";
-    public static final String MODIFIED = " *";
+    public static final String REVISION = "56cda47";
+    public static final String MODIFIED = "";
 }
