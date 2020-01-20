@@ -46,6 +46,14 @@ public class Constants {
         public static final double SECONDARY_LIMIT = 90;
     }
 
+    public static class Turret {
+        public static final double DEADBAND = 0.1;
+
+        public static final double TOLERANCE = 2;
+        public static final boolean SENSOR_PHASE_INVERTED = false;
+        public static final double TICKS_TO_DEGREES = 0.08695652173913;
+    }
+
     public static class OI {
         public static final double AXIS_BUTTON_THRESHHOLD = 0.2;
         public static final long RUMBLE_MILLIS = 250;
@@ -64,6 +72,12 @@ public class Constants {
 
         public static final long AUTO_WAIT_PERIOD = 500;
         public static final long MANUAL_WAIT_PERIOD = 3000;
+    }
+    public class Limelight {
+        public static final double TARGET_HEIGHT = 29;
+        public static final double LIMELIGHT_HEIGHT = 41.5;
+        public static final double LIMELIGHT_ANGLE = 20;
+        public static final double OVERALL_LATENCY_MILLIS = 11;
     }
 
 }
