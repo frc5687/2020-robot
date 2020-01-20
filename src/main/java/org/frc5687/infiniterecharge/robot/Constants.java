@@ -7,7 +7,7 @@ public class Constants {
     public static final int  TICKS_PER_UPDATE = 10;
     public static final double METRIC_FLUSH_PERIOD = 1.0;
 
-    public class Intake {
+    public static class Intake {
         public static final boolean INTAKE_MOTOR_INVERTED = true;
     }
 
@@ -55,7 +55,7 @@ public class Constants {
         public static final int OVERRIDE = 8;
     }
 
-    public class Shifter {
+    public static class Shifter {
         public static final long STOP_MOTOR_TIME = 60;
         public static final long SHIFT_TIME = 60;
 
