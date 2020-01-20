@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import org.frc5687.infiniterecharge.robot.subsytems.*;
+import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.AxisButton;
 import org.frc5687.infiniterecharge.robot.util.Gamepad;
 import org.frc5687.infiniterecharge.robot.util.OutliersProxy;
@@ -49,7 +49,7 @@ public class OI extends OutliersProxy {
     }
 
 
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain){
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Intake intake){
     }
 
     public boolean isAutoTargetPressed() {
@@ -71,6 +71,12 @@ public class OI extends OutliersProxy {
     public double getTurretSpeed() {
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.Turret.DEADBAND);
+        return speed;
+    }
+
+    public double getIntakeSpeed() {
+        double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber());
+        speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
         return speed;
     }
 

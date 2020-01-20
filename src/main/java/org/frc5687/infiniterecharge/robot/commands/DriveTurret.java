@@ -1,7 +1,7 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
 import org.frc5687.infiniterecharge.robot.OI;
-import org.frc5687.infiniterecharge.robot.subsytems.Turret;
+import org.frc5687.infiniterecharge.robot.subsystems.Turret;
 import org.frc5687.infiniterecharge.robot.util.Limelight;
 
 public class DriveTurret extends OutliersCommand {
