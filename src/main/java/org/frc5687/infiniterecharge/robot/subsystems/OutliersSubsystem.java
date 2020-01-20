@@ -1,4 +1,4 @@
-package org.frc5687.infiniterecharge.robot.subsytems;
+package org.frc5687.infiniterecharge.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
