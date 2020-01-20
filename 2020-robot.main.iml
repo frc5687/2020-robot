@@ -29,5 +29,27 @@
     <orderEntry type="library" name="Gradle: org.ejml:ejml-zdense:0.38" level="project" />
     <orderEntry type="library" name="Gradle: org.ejml:ejml-core:0.38" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:3.0.2" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibj-java/2020.2.2/54642b06b7c0e36c296e6e92fd6879b36ab85326/wpilibj-java-2020.2.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibj-java/2020.2.2/8dee1e19d0f236bf459bd77de457069acdbf7cd/wpilibj-java-2020.2.2-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibNewCommands/wpilibNewCommands-java/2020.1.2/878b9d75cf793a5f3793f3d88bbf6bec4641b241/wpilibNewCommands-java-2020.1.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibNewCommands/wpilibNewCommands-java/2020.1.2/cb68d02306b43fb592d4746a195a029b9b9dae07/wpilibNewCommands-java-2020.1.2-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>
