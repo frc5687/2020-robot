@@ -1,4 +1,4 @@
-package org.frc5687.infiniterecharge.robot.subsytems;
+package org.frc5687.infiniterecharge.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -20,7 +20,7 @@ public class Hood extends OutliersSubsystem {
         _oi = oi;
         try {
             debug("Allocating hood motor");
-            _hood = new VictorSPX(RobotMap.CAN.VICTORSPX.HOOD_SPX);
+            _hood = new VictorSPX(RobotMap.CAN.VICTORSPX.HOOD);
             _encoder = new DutyCycleEncoder(RobotMap.DIO.HOOD_ENCODER);
         } catch (Exception e) {
             error("Exception allocating hood motor" + e.getMessage());
@@ -38,8 +38,8 @@ public class Hood extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
+        metric("Position", getPosition());
     }
-
 
     public double getPosition() {
         return _encoder.getDistance();

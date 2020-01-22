@@ -1,7 +1,7 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
 import org.frc5687.infiniterecharge.robot.OI;
-import org.frc5687.infiniterecharge.robot.subsytems.Hood;
+import org.frc5687.infiniterecharge.robot.subsystems.Hood;
 
 public class DriveHood extends OutliersCommand {
     private Hood _hood;
