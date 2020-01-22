@@ -8,7 +8,10 @@ import org.frc5687.infiniterecharge.robot.commands.AutoTurretSetpoint;
 import org.frc5687.infiniterecharge.robot.commands.AutoTurretTracking;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.*;
-
+import org.frc5687.infiniterecharge.robot.util.AxisButton;
+import org.frc5687.infiniterecharge.robot.util.Gamepad;
+import org.frc5687.infiniterecharge.robot.util.OutliersProxy;
+import org.frc5687.infiniterecharge.robot.util.POV;
 import static org.frc5687.infiniterecharge.robot.util.Helpers.applyDeadband;
 
 public class OI extends OutliersProxy {
@@ -54,7 +57,6 @@ public class OI extends OutliersProxy {
 
     }
 
-
     public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight){
         _driverAButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 90));
         _driverBButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 0));
@@ -82,6 +84,12 @@ public class OI extends OutliersProxy {
     public double getTurretSpeed() {
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.Turret.DEADBAND);
+        return speed;
+    }
+
+    public double getIntakeSpeed() {
+        double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber());
+        speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
         return speed;
     }
 

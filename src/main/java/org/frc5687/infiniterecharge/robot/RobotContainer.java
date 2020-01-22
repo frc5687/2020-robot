@@ -12,16 +12,19 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import org.frc5687.infiniterecharge.robot.commands.KillAll;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
+import org.frc5687.infiniterecharge.robot.subsystems.Intake;
 import org.frc5687.infiniterecharge.robot.subsystems.Shifter;
 import org.frc5687.infiniterecharge.robot.subsystems.Turret;
 import org.frc5687.infiniterecharge.robot.util.Limelight;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 import org.frc5687.infiniterecharge.robot.util.PDP;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RobotContainer extends OutliersContainer {
@@ -35,7 +38,7 @@ public class RobotContainer extends OutliersContainer {
 
     private Limelight _limelight;
     private PDP _pdp;
-
+    private Intake _intake;
     public RobotContainer(Robot robot) {
 
     }
@@ -54,6 +57,7 @@ public class RobotContainer extends OutliersContainer {
 
         // Then subsystems....
         _shifter = new Shifter(this);
+        _intake = new Intake(this, _oi);
         _driveTrain = new DriveTrain(this, _oi, _imu, _shifter);
         _turret = new Turret(this, _driveTrain,_limelight, _oi);
 
@@ -62,6 +66,7 @@ public class RobotContainer extends OutliersContainer {
 
         // Initialize the other stuff
         _driveTrain.enableBrakeMode();
+        _driveTrain.resetOdometry(new Pose2d(0,0,new Rotation2d(0)));
     }
 
     public void zeroSensors() {
@@ -92,12 +97,13 @@ public class RobotContainer extends OutliersContainer {
                         .setKinematics(_driveTrain.getKinematics())
                         // Apply the voltage constraint
                         .addConstraint(autoVoltageConstraint);
+
+        var interiorPoints = new ArrayList<Translation2d>();
+        interiorPoints.add(new Translation2d(1,1));
+        interiorPoints.add(new Translation2d(2, -1));
         Trajectory test = TrajectoryGenerator.generateTrajectory(
                 new Pose2d(0, 0, new Rotation2d(0)),
-                List.of(
-                        new Translation2d(1, 1),
-                        new Translation2d(2, -1)
-                ),
+                interiorPoints,
                 new Pose2d(3, 0, new Rotation2d(0)),
                 config
         );

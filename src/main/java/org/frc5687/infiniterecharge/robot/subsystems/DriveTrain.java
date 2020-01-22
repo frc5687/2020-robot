@@ -263,7 +263,9 @@ public class DriveTrain extends OutliersSubsystem {
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
         _leftMaster.set(leftVolts/12);
-        _rightMaster.set(rightVolts/12);
+        _rightMaster.set(rightVolts/-12);
+        _rightSlave.set(rightVolts/-12);
+        _leftSlave.set(leftVolts/12);
 
     }
 

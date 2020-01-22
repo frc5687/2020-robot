@@ -2,14 +2,16 @@ package org.frc5687.infiniterecharge.robot;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.util.Units;
-import jdk.jshell.execution.Util;
 
 public class Constants {
     public static final int CYCLES_PER_SECOND = 50;
     public static final int  TICKS_PER_UPDATE = 10;
     public static final double METRIC_FLUSH_PERIOD = 1.0;
+
+    public static class Intake {
+        public static final boolean INTAKE_MOTOR_INVERTED = true;
+    }
 
     public static class DriveTrain {
         public static final double DEADBAND = 0.25;
@@ -91,7 +93,7 @@ public class Constants {
         public static final int OVERRIDE = 8;
     }
 
-    public class Shifter {
+    public static class Shifter {
         public static final long STOP_MOTOR_TIME = 60;
         public static final long SHIFT_TIME = 60;
 

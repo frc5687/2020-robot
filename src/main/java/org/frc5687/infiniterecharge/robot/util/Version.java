@@ -7,6 +7,6 @@ package org.frc5687.infiniterecharge.robot.util;
 
 public class Version {
     public static final String BRANCH = "Turret/#13-OdometryAndAutoTracking";
-    public static final String REVISION = "c43a127";
+    public static final String REVISION = "5541d1c";
     public static final String MODIFIED = " *";
 }
