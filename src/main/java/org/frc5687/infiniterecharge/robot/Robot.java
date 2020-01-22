@@ -7,34 +7,15 @@
 
 package org.frc5687.infiniterecharge.robot;
 
-import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import org.frc5687.infiniterecharge.robot.commands.KillAll;
-import org.frc5687.infiniterecharge.robot.subsytems.DriveTrain;
-import org.frc5687.infiniterecharge.robot.subsytems.Shifter;
 import org.frc5687.infiniterecharge.robot.util.*;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.List;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -109,6 +90,7 @@ public class Robot extends OutliersRobot implements ILoggingSource {
     @Override
     public void autonomousInit() {
         _fmsConnected = DriverStation.getInstance().isFMSAttached();
+
         _autoCommand = _robotContainer.getAutonomousCommand();
 
         if (_autoCommand != null) {
@@ -119,6 +101,7 @@ public class Robot extends OutliersRobot implements ILoggingSource {
 
     public void teleopInit() {
         _fmsConnected = DriverStation.getInstance().isFMSAttached();
+        _robotContainer.zeroSensors();
         //_limelight.disableLEDs();
     }
 
