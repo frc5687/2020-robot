@@ -4,11 +4,10 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import org.frc5687.infiniterecharge.robot.subsytems.*;
-import org.frc5687.infiniterecharge.robot.util.AxisButton;
-import org.frc5687.infiniterecharge.robot.util.Gamepad;
-import org.frc5687.infiniterecharge.robot.util.OutliersProxy;
-import org.frc5687.infiniterecharge.robot.util.POV;
+import org.frc5687.infiniterecharge.robot.commands.AutoTurretSetpoint;
+import org.frc5687.infiniterecharge.robot.commands.AutoTurretTracking;
+import org.frc5687.infiniterecharge.robot.subsystems.*;
+import org.frc5687.infiniterecharge.robot.util.*;
 
 import static org.frc5687.infiniterecharge.robot.util.Helpers.applyDeadband;
 
@@ -22,7 +21,10 @@ public class OI extends OutliersProxy {
     private Button _driverRightBumper;
     private Button _driverLeftBumper;
 
-    private Button _operatorAButton;
+    private Button _driverAButton;
+    private Button _driverBButton;
+    private Button _driverXButton;
+    private Button _driverYButton;
 
     private AxisButton _driverRightYAxisUpButton;
 
@@ -45,11 +47,20 @@ public class OI extends OutliersProxy {
         _operatorRightXAxisDownButton = new AxisButton(_operatorGamepad,Gamepad.Axes.RIGHT_Y.getNumber(), -.5);
         _operatorRightXAxisUpButton = new AxisButton(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber(), .5);
 
-        _operatorAButton = new JoystickButton(_driverGamepad,Gamepad.Buttons.A.getNumber());
+        _driverAButton = new JoystickButton(_driverGamepad,Gamepad.Buttons.A.getNumber());
+        _driverBButton = new JoystickButton(_driverGamepad,Gamepad.Buttons.B.getNumber());
+        _driverYButton = new JoystickButton(_driverGamepad,Gamepad.Buttons.Y.getNumber());
+        _driverXButton = new JoystickButton(_driverGamepad,Gamepad.Buttons.X.getNumber());
+
     }
 
 
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain){
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight){
+        _driverAButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 90));
+        _driverBButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 0));
+        _driverYButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -90));
+        _driverXButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -180));
+        _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this));
     }
 
     public boolean isAutoTargetPressed() {

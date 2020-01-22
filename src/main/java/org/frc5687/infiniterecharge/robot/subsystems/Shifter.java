@@ -1,9 +1,8 @@
-package org.frc5687.infiniterecharge.robot.subsytems;
+package org.frc5687.infiniterecharge.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.frc5687.infiniterecharge.robot.Constants;
-import org.frc5687.infiniterecharge.robot.Robot;
 import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
