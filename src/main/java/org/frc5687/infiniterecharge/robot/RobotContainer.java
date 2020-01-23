@@ -41,7 +41,6 @@ public class RobotContainer extends OutliersContainer {
     private Spinner _spinner;
 
     private Limelight _limelight;
-    private PDP _pdp;
     private Intake _intake;
     public RobotContainer(Robot robot) {
 
