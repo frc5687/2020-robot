@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import org.frc5687.infiniterecharge.robot.commands.DriveSpinner;
+import org.frc5687.infiniterecharge.robot.subsystems.OutliersSubsystem;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 public class Spinner extends OutliersSubsystem {
