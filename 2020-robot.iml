@@ -24,7 +24,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibj-java/2020.2.2/54642b06b7c0e36c296e6e92fd6879b36ab85326/wpilibj-java-2020.2.2.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibj-java/2020.2.2/54642b06b7c0e36c296e6e92fd6879b36ab85326/wpilibj-java-2020.2.2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
@@ -139,6 +139,17 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.10.0/379d754e510e25111a823428636be68773fc73c9/jackson-core-2.10.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.cuforge.libcu/LibCu-java/2020.2.1/36868255a2683021648982917ee0431e4dfbb8f8/LibCu-java-2020.2.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.cuforge.libcu/LibCu-java/2020.2.1/6defda94902c7053214e0f3f8e126fc55aba0790/LibCu-java-2020.2.1-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
