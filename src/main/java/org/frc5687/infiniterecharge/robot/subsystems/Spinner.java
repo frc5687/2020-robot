@@ -15,7 +15,7 @@ public class Spinner extends OutliersSubsystem {
     private ColorSensorV3 _colorSensor;
     private CANSparkMax _sparkMax;
 
-    public enum Color  {
+    public enum Color {
         red(0),
         green(1),
         blue(2),
@@ -38,14 +38,11 @@ public class Spinner extends OutliersSubsystem {
 
         // TODO(mike) do we need to move this to RobotMap? I think we only have one i2c bus?
         I2C.Port port = I2C.Port.kOnboard;
-        _colorSensor =  new ColorSensorV3(port);
+        _colorSensor = new ColorSensorV3(port);
         _sparkMax = new CANSparkMax(RobotMap.CAN.SPARKMAX.SPINNER, CANSparkMaxLowLevel.MotorType.kBrushed);
-    }
-
-    @Override
-    public void periodic() {
         setDefaultCommand(new DriveSpinner(this));
     }
+
 
     public Color getColor() {
         if (isBlue()) {
@@ -66,12 +63,15 @@ public class Spinner extends OutliersSubsystem {
     public boolean isYellow() {
         return false;
     }
+
     public boolean isRed() {
         return false;
     }
+
     public boolean isBlue() {
         return false;
     }
+
     public boolean isGreen() {
         return false;
     }
