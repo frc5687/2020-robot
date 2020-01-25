@@ -1,6 +1,6 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
-import org.frc5687.infiniterecharge.robot.subsytems.Spinner;
+import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 
 public class DriveSpinner extends OutliersCommand {
 

@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import org.frc5687.infiniterecharge.robot.commands.KillAll;
@@ -21,13 +20,11 @@ import org.frc5687.infiniterecharge.robot.subsystems.Intake;
 import org.frc5687.infiniterecharge.robot.subsystems.Shifter;
 import org.frc5687.infiniterecharge.robot.subsystems.Turret;
 import org.frc5687.infiniterecharge.robot.util.Limelight;
-import org.frc5687.infiniterecharge.robot.subsytems.Spinner;
-import org.frc5687.infiniterecharge.robot.util.MetricTracker;
+import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 import org.frc5687.infiniterecharge.robot.util.PDP;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RobotContainer extends OutliersContainer {
 

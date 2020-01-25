@@ -16,6 +16,7 @@ public class RobotMap {
             public static final int LEFT_SLAVE = 9;
             public static final int RIGHT_SLAVE = 11;
             public static final int INTAKE_NEO = 7;
+            public static final int SPINNER = 8;
 
 
         /*  Example:
