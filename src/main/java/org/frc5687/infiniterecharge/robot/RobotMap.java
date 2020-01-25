@@ -8,17 +8,23 @@ public class RobotMap {
      * Thus, you cannot have two SparkMax controllers with Id 0, but you can have a SparkMax with Id 0 and a TalonSRX with Id 0.
      */
     public static class CAN {
+
         public static class SPARKMAX {
 
             public static final int LEFT_MASTER = 14;
             public static final int RIGHT_MASTER = 5;
             public static final int LEFT_SLAVE = 9;
             public static final int RIGHT_SLAVE = 11;
+            public static final int INTAKE_NEO = 7;
+            public static final int CLIMBER_NEO = 8;
 
 
         /*  Example:
                         public static final int LEFT_MASTER_SPARK= 1;
                         */
+        }
+        public static class TALONSRX {
+            public static final int TURRET = 6;
         }
     }
 
@@ -43,6 +49,8 @@ public class RobotMap {
         public static class PCM {
             public static final int SHIFTER_HIGH = 5;
             public static final int SHIFTER_LOW = 4;
+            public static final int INTAKE_HIGH = 7;
+            public static final int INTAKE_LOW = 6;
 
 
         /* Example:
@@ -86,5 +94,7 @@ public class RobotMap {
         public static final int ARM_FRONT_LIMIT = 0;
         */
         }
+
+
  }
 
