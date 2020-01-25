@@ -57,3 +57,4 @@ run/
 gradle/.launch/
 !gradle/*/*.jar
 */Version.java
+src/main/java/org/frc5687/infiniterecharge/robot/util/Version.java
