@@ -156,22 +156,22 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/api-java/5.17.4/d0879b36fb87b5e2d06b528b2f09801da218c8cb/api-java-5.17.4.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/api-java/5.17.6/93b681d5cb19767a9bad0c72870abe1782f91b70/api-java-5.17.6.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/api-java/5.17.4/9c65a61fa76e6776db6cd979534a6ca783561c53/api-java-5.17.4-sources.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/api-java/5.17.6/176a456dc419110fef061b84f614a227c0be3f6d/api-java-5.17.6-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/wpiapi-java/5.17.4/33b32fb5e7f2eaf1970353876a742823b011568c/wpiapi-java-5.17.4.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/wpiapi-java/5.17.6/1c10a6274c96346267d265ccb96bd2916b859db4/wpiapi-java-5.17.6.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/wpiapi-java/5.17.4/3d2454bb85722b116a08624cf2c1680d03618ea6/wpiapi-java-5.17.4-sources.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/wpiapi-java/5.17.6/5594d83fe66973f8dbfd2f63a83b3042276a7976/wpiapi-java-5.17.6-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -200,11 +200,11 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibNewCommands/wpilibNewCommands-java/2020.1.2/878b9d75cf793a5f3793f3d88bbf6bec4641b241/wpilibNewCommands-java-2020.1.2.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibNewCommands/wpilibNewCommands-java/2020.2.2/67676c7925417547c608b6ce8125f27b0b148639/wpilibNewCommands-java-2020.2.2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibNewCommands/wpilibNewCommands-java/2020.1.2/cb68d02306b43fb592d4746a195a029b9b9dae07/wpilibNewCommands-java-2020.1.2-sources.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibNewCommands/wpilibNewCommands-java/2020.2.2/929ccb488bbc08a257e4c23b4f833a04cfc5235f/wpilibNewCommands-java-2020.2.2-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>

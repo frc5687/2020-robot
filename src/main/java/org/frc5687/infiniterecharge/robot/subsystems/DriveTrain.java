@@ -4,6 +4,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.cuforge.libcu.Lasershark;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -31,6 +32,7 @@ public class DriveTrain extends OutliersSubsystem {
     private CANEncoder _leftEncoder;
     private CANEncoder _rightEncoder;
 
+    private Lasershark _laserShark;
 
     private DifferentialDriveOdometry _odometry;
     private DifferentialDriveKinematics _driveKinematics;
