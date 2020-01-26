@@ -113,9 +113,9 @@ public class DriveTrain extends OutliersSubsystem {
         _leftMagEncoder.setDistancePerPulse(Constants.DriveTrain.LEFT_DISTANCE_PER_PULSE);
         _rightMagEncoder.setDistancePerPulse(Constants.DriveTrain.RIGHT_DISTANCE_PER_PULSE);
         resetDriveEncoders();
-
         _driveKinematics = new DifferentialDriveKinematics(Constants.DriveTrain.WIDTH);
         _odometry = new DifferentialDriveOdometry(getHeading());
+        _laserShark = new Lasershark(RobotMap.DIO.RANGE_FINDER);
 
         logMetrics("X", "Y", "Heading");
     }
@@ -208,6 +208,9 @@ public class DriveTrain extends OutliersSubsystem {
         return _rightEncoder.getPosition();
     }
 
+    public double getLaserDistance() {
+        return _laserShark.getDistanceInches();
+    }
 
     public void pauseMotors() {
         _oldLeftSpeedFront = _leftMaster.get();
@@ -237,12 +240,13 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        SmartDashboard.putBoolean("MetricTracker/Drive", true);
+//        SmartDashboard.putBoolean("MetricTracker/Drive", true);
         metric("X", getPose().getTranslation().getX());
         metric("Y", getPose().getTranslation().getY());
         metric("Heading", getPose().getRotation().getDegrees());
         metric("Right", getNeoRightEncoder());
         metric("Left", getNeoLeftEncoder());
+        metric("LaserDistance", getLaserDistance());
     }
 
     public DifferentialDriveKinematics getKinematics() {

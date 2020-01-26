@@ -18,7 +18,7 @@ public class Drive extends OutliersCommand {
 
     @Override
     public void initialize() {
-        SmartDashboard.putBoolean("MetricTracker/Drive", true);
+//        SmartDashboard.putBoolean("MetricTracker/Drive", true);
         super.initialize();
     }
 
@@ -35,6 +35,7 @@ public class Drive extends OutliersCommand {
         metric("X", _driveTrain.getPose().getTranslation().getX());
         metric("Y", _driveTrain.getPose().getTranslation().getY());
         metric("Heading", _driveTrain.getPose().getRotation().getDegrees());
+        metric("LaserDistance", _driveTrain.getLaserDistance());
     }
     @Override
     public boolean isFinished() {
