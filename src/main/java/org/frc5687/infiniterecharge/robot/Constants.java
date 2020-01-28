@@ -84,4 +84,8 @@ public class Constants {
         public static final boolean RIGHT_INVERTED = true;
         public static final double DEADBAND = 0.1;
     }
+
+    public class Indexer {
+        public static final boolean INVERTED = false;
+    }
 }

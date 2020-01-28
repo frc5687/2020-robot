@@ -20,7 +20,8 @@ public class KillAll extends OutliersCommand {
     public void initialize() {
         _finished = true;
         _driveTrain.enableBrakeMode();
-        _shooter.setSpeed(0);
+        _shooter.setShooterSpeed(0);
+        _shooter.setIndexerSpeed(0);
         error("Initialize KillAll Command");
     }
 

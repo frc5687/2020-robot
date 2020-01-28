@@ -3,14 +3,15 @@ package org.frc5687.infiniterecharge.robot.commands;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.subsytems.Shooter;
 
-public class Shoot extends OutliersCommand {
+public class DriveIndexer extends OutliersCommand {
+
     private Shooter _shooter;
     private OI _oi;
-    public Shoot(Shooter shooter, OI oi) {
+    public DriveIndexer(Shooter shooter, OI oi) {
         _shooter = shooter;
         _oi = oi;
-        addRequirements(_shooter);
     }
+
     @Override
     public void initialize() {
         super.initialize();
@@ -18,9 +19,8 @@ public class Shoot extends OutliersCommand {
 
     @Override
     public void execute() {
-        super.execute();
-        double speed = _oi.getShooterSpeed();
-        _shooter.setShooterSpeed(speed);
+        double speed = _oi.getIndexerSpeed();
+        _shooter.setIndexerSpeed(speed);
     }
 
     @Override
