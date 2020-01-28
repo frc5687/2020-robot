@@ -25,13 +25,14 @@ public class AutoTurretTracking extends OutliersCommand {
 
     @Override
     public void initialize() {
-        _limelight.enableLEDs();
+//        _limelight.enableLEDs();
         _turret.setControlMode(Turret.Control.MotionMagic);
     }
 
     @Override
     public void execute() {
-        double position = (_limelight.getHorizontalAngle() + _turret.getPositionDegrees()) /Constants.Turret.TICKS_TO_DEGREES;
+//        double position = (_limelight.getHorizontalAngle() + _turret.getPositionDegrees()) /Constants.Turret.TICKS_TO_DEGREES;
+        double position = _driveTrain.getAngleToTarget() / Constants.Turret.TICKS_TO_DEGREES;
 
        _turret.setMotionMagicSpeed(position);
     }

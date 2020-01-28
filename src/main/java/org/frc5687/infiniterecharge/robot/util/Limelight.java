@@ -75,6 +75,9 @@ public class Limelight extends OutliersProxy {
     public void disableLEDs() {
         _ledmode.setNumber(1);
     }
+
+
+
     public void blinkLEDs() {
         _ledmode.setNumber(2);
     }
@@ -105,6 +108,10 @@ public class Limelight extends OutliersProxy {
 
     public double getLatency() {
         return _tl.getDouble(0) + Constants.Limelight.OVERALL_LATENCY_MILLIS;
+    }
+
+    public double getSkew() {
+        return _ts.getDouble(0.0);
     }
 
     public double getCamTran(int variable) {

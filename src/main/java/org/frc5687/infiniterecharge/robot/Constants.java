@@ -59,7 +59,7 @@ public class Constants {
         public static final double MAX_VOLTAGE = 12.0;
         public static final int CRUISE_VELOCITY = 5000; // in ticks
         public static final int ACCELERATION = 16000; // in ticks
-        public static final double ABS_OFFSET = 226;// if the turret coasts this value changes, need to find a way to set this position.
+        public static final double ABS_OFFSET = 273;// if the turret coasts this value changes, need to find a way to set this position.
 
 
         public static class Position {
@@ -104,9 +104,9 @@ public class Constants {
         public static final long MANUAL_WAIT_PERIOD = 3000;
     }
     public class Limelight {
-        public static final double TARGET_HEIGHT = 29;
-        public static final double LIMELIGHT_HEIGHT = 41.5;
-        public static final double LIMELIGHT_ANGLE = 20;
+        public static final double TARGET_HEIGHT = 94;
+        public static final double LIMELIGHT_HEIGHT = 34;
+        public static final double LIMELIGHT_ANGLE = -1.57;
         public static final double OVERALL_LATENCY_MILLIS = 11;
     }
 
@@ -115,7 +115,7 @@ public class Constants {
         public static double MID_WIDTH_FIELD = WIDTH_FIELD / 2;
         public static double LENGTH_FIELD = Units.inchesToMeters(629.25);
         public static double MID_LENGTH_FIELD = LENGTH_FIELD / 2;
-        public static Pose2d TARGET_POSE = new Pose2d(MID_LENGTH_FIELD,1.700911, new Rotation2d(0));
+        public static Pose2d TARGET_POSE = new Pose2d(MID_LENGTH_FIELD,MID_LENGTH_FIELD - Units.inchesToMeters(94.66), new Rotation2d(0));
         public static Pose2d LOADING_STATION_POSE = new Pose2d(-MID_LENGTH_FIELD, 1.700911, new Rotation2d(0));
 
     }

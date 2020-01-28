@@ -43,8 +43,8 @@ public class DriveTurret extends OutliersCommand {
         }
         metric("AutoPressed", _oi.isAutoTargetPressed());
         if (_oi.isAutoTargetPressed()) {
-//            _limelight.enableLEDs();
-            _turret.setSpeed(getTurnSpeedTest());
+            _limelight.enableLEDs();
+            _turret.setSpeed(getTurnSpeed());
         } else {
             _limelight.disableLEDs();
             _turret.setSpeed(turretSpeed);

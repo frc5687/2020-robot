@@ -5,12 +5,18 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.util.Units;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.commands.DriveTurret;
 import org.frc5687.infiniterecharge.robot.util.Limelight;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
+
+import org.frc5687.infiniterecharge.robot.Constants.AutoPositions.*;
+
+
 
 public class Turret extends OutliersSubsystem {
 
@@ -94,8 +100,30 @@ public class Turret extends OutliersSubsystem {
         _turretController.setNeutralMode(NeutralMode.Coast);
     }
 
+    public Pose2d updatePose() {
+        double distance = Units.inchesToMeters(_limelight.getTargetDistance());
+        double alpha = (90 -(getPositionDegrees() + _limelight.getHorizontalAngle())) - _driveTrain.getHeading().getDegrees();
+        double x = Math.sin(Math.toRadians(alpha)) * distance;
+        double y = Math.cos(Math.toRadians(alpha)) * distance;
+        metric("Angle", alpha);
+        metric("X", x);
+        metric("Y", y);
+        metric("Skew", _limelight.getSkew());
+        double poseX = Constants.AutoPositions.TARGET_POSE.getTranslation().getX() - x;
+        double poseY = 0;
+        if (_limelight.getSkew() <= -45) {
+            poseY = Constants.AutoPositions.TARGET_POSE.getTranslation().getY() - y;
+        } else if (_limelight.getSkew() > -45) {
+            poseY = Constants.AutoPositions.TARGET_POSE.getTranslation().getY() + y;
+        }
+        return new Pose2d(poseX, poseY, _driveTrain.getHeading());
+    }
+
     @Override
     public void periodic() {
+        if (_limelight.isTargetSighted()) {
+            _driveTrain.resetOdometry(updatePose());
+        }
         setDefaultCommand(new DriveTurret(this,_driveTrain, _limelight, _oi));
     }
 
@@ -105,8 +133,10 @@ public class Turret extends OutliersSubsystem {
         metric("Position Degrees", getPositionDegrees());
         metric("Absolute Position raw" , getAbsoluteEncoderRawPosition());
         metric("Absolute Pos", getAbsoluteEncoderPosition());
-        metric("Velocity", getVelocityTicksPer100ms());
-        metric("Speed", _turretController.getMotorOutputVoltage());
+        metric("LLDistance", Units.inchesToMeters(_limelight.getTargetDistance()));
+//        metric("Velocity", getVelocityTicksPer100ms());
+//        metric("Speed", _turretController.getMotorOutputVoltage());
+//        metric("Limelight distance", _limelight.getTargetDistance());
     }
 
     public void zeroSensors() {
@@ -114,6 +144,7 @@ public class Turret extends OutliersSubsystem {
         _position = _position/Constants.Turret.TICKS_TO_DEGREES;
         _turretController.setSelectedSensorPosition((int) _position);
     }
+
 
     public int getPositionTicks() {
         return _turretController.getSelectedSensorPosition(0);

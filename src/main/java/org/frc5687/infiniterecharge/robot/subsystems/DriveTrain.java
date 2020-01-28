@@ -204,7 +204,6 @@ public class DriveTrain extends OutliersSubsystem {
         return _rightEncoder.getPosition();
     }
 
-
     public void pauseMotors() {
         _oldLeftSpeedFront = _leftMaster.get();
         _oldLeftSpeedBack = _leftSlave.get();
@@ -293,7 +292,7 @@ public class DriveTrain extends OutliersSubsystem {
         if (_yLength > 0) {
             angle = (90 - Math.toDegrees(Math.asin(_xLength / distanceToTarget())) - getHeading().getDegrees());
         } else if (_yLength < 0){
-            angle =  (Math.toDegrees(Math.asin(_xLength / distanceToTarget())) -90) - getHeading().getDegrees();
+            angle =  (Math.toDegrees(Math.asin(_xLength / distanceToTarget())) - 90) - getHeading().getDegrees();
         }
         return angle;
     }
