@@ -57,12 +57,12 @@ public class OI extends OutliersProxy {
 
     }
 
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight){
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker){
         _driverAButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 90));
         _driverBButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 0));
         _driverYButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -90));
         _driverXButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -180));
-        _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this));
+        _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this, poseTracker));
     }
 
     public boolean isAutoTargetPressed() {

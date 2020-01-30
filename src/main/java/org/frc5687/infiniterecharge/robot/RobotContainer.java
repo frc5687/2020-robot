@@ -20,14 +20,12 @@ import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
 import org.frc5687.infiniterecharge.robot.subsystems.Intake;
 import org.frc5687.infiniterecharge.robot.subsystems.Shifter;
 import org.frc5687.infiniterecharge.robot.subsystems.Turret;
-import org.frc5687.infiniterecharge.robot.util.Limelight;
-import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
-import org.frc5687.infiniterecharge.robot.util.PDP;
+import org.frc5687.infiniterecharge.robot.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RobotContainer extends OutliersContainer {
+public class RobotContainer extends OutliersContainer implements IPoseTrackable {
 
     private OI _oi;
 
@@ -39,11 +37,14 @@ public class RobotContainer extends OutliersContainer {
     private Limelight _limelight;
     private PDP _pdp;
     private Intake _intake;
+    private PoseTracker _poseTracker;
+
     public RobotContainer(Robot robot) {
 
     }
 
     public void init() {
+
         // OI must be first...
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 100);
@@ -61,8 +62,10 @@ public class RobotContainer extends OutliersContainer {
         _driveTrain = new DriveTrain(this, _oi, _imu, _shifter);
         _turret = new Turret(this, _driveTrain,_limelight, _oi);
 
+        _poseTracker = new PoseTracker(this);
+
         // Must initialize buttons AFTER subsystems are allocated...
-        _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight);
+        _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker);
 
         // Initialize the other stuff
         _driveTrain.enableBrakeMode();
@@ -79,6 +82,11 @@ public class RobotContainer extends OutliersContainer {
         if (_oi.isKillAllPressed()) {
             new KillAll(_driveTrain).schedule();
         }
+    }
+
+    @Override
+    public Pose getPose() {
+        return new TurretPose(_turret.getPositionDegrees());
     }
 
     public Command getAutonomousCommand() {
