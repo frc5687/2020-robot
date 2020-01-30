@@ -1,13 +1,15 @@
 package org.frc5687.infiniterecharge.robot;
 
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.util.Units;
-import jdk.jshell.execution.Util;
 
 public class Constants {
     public static final int CYCLES_PER_SECOND = 50;
     public static final int  TICKS_PER_UPDATE = 10;
     public static final double METRIC_FLUSH_PERIOD = 1.0;
+
+    public static class Intake {
+        public static final boolean INTAKE_MOTOR_INVERTED = true;
+    }
 
     public static class DriveTrain {
         public static final double DEADBAND = 0.25;
@@ -44,6 +46,14 @@ public class Constants {
         public static final double SECONDARY_LIMIT = 90;
     }
 
+    public static class Turret {
+        public static final double DEADBAND = 0.1;
+
+        public static final double TOLERANCE = 2;
+        public static final boolean SENSOR_PHASE_INVERTED = false;
+        public static final double TICKS_TO_DEGREES = 0.08695652173913;
+    }
+
     public static class OI {
         public static final double AXIS_BUTTON_THRESHHOLD = 0.2;
         public static final long RUMBLE_MILLIS = 250;
@@ -53,7 +63,7 @@ public class Constants {
         public static final int OVERRIDE = 8;
     }
 
-    public class Shifter {
+    public static class Shifter {
         public static final long STOP_MOTOR_TIME = 60;
         public static final long SHIFT_TIME = 60;
 
@@ -63,5 +73,14 @@ public class Constants {
         public static final long AUTO_WAIT_PERIOD = 500;
         public static final long MANUAL_WAIT_PERIOD = 3000;
     }
+    public class Limelight {
+        public static final double TARGET_HEIGHT = 29;
+        public static final double LIMELIGHT_HEIGHT = 41.5;
+        public static final double LIMELIGHT_ANGLE = 20;
+        public static final double OVERALL_LATENCY_MILLIS = 11;
+    }
 
+    public class Spinner {
+        public static final double SPEED = 0.5;
+    }
 }

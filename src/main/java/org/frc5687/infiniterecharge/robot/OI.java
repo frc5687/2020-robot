@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import org.frc5687.infiniterecharge.robot.subsytems.*;
+import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.AxisButton;
 import org.frc5687.infiniterecharge.robot.util.Gamepad;
 import org.frc5687.infiniterecharge.robot.util.OutliersProxy;
@@ -46,16 +46,14 @@ public class OI extends OutliersProxy {
         _operatorRightXAxisUpButton = new AxisButton(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber(), .5);
 
         _operatorAButton = new JoystickButton(_driverGamepad,Gamepad.Buttons.A.getNumber());
-
-
     }
 
 
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain){
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Intake intake){
     }
 
     public boolean isAutoTargetPressed() {
-        return _driverRightYAxisUpButton.get();
+        return _driverLeftBumper.get();
     }
 
     public double getDriveSpeed() {
@@ -66,6 +64,18 @@ public class OI extends OutliersProxy {
 
     public double getDriveRotation() {
         double speed = getSpeedFromAxis(_driverGamepad, Gamepad.Axes.RIGHT_X.getNumber());
+        speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
+        return speed;
+    }
+
+    public double getTurretSpeed() {
+        double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
+        speed = applyDeadband(speed, Constants.Turret.DEADBAND);
+        return speed;
+    }
+
+    public double getIntakeSpeed() {
+        double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber());
         speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
         return speed;
     }

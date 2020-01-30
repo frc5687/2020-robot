@@ -1,8 +1,7 @@
 package org.frc5687.infiniterecharge.robot.util;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import org.frc5687.infiniterecharge.robot.subsytems.OutliersSubsystem;
+import org.frc5687.infiniterecharge.robot.subsystems.OutliersSubsystem;
 
 import java.util.LinkedList;
 import java.util.List;
