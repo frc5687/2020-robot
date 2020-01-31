@@ -63,7 +63,7 @@ public class RobotContainer extends OutliersContainer {
         _spinner = new Spinner(this);
 
         // Must initialize buttons AFTER subsystems are allocated...
-        _oi.initializeButtons(_shifter, _driveTrain, _intake);
+        _oi.initializeButtons(_shifter, _driveTrain, _intake, _imu);
 
         // Initialize the other stuff
         _driveTrain.enableBrakeMode();

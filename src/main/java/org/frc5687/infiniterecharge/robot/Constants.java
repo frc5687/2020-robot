@@ -15,12 +15,9 @@ public class Constants {
         public static final double DEADBAND = 0.25;
         public static final double SPEED_SENSITIVITY = 0.9;
         public static final double ROTATION_SENSITIVITY = 0.75;
-
         public static final double CREEP_FACTOR = 0.25;
-        public static final double LEFT_DISTANCE_PER_PULSE = 0.0286206896551724;
-        public static final double RIGHT_DISTANCE_PER_PULSE = 0.0286206896551724;
-
-        public static final double WIDTH = Units.inchesToMeters(27.0);
+        public static final double WIDTH = 27.0;
+        public static final int CPR = 8192;
 
         public static final double KS_VOLTS = 0.172;
         public static final double KV_VOLTSPR = 2.46;
@@ -34,7 +31,7 @@ public class Constants {
         public static final boolean LEFT_MOTORS_INVERTED = true;
         public static final boolean RIGHT_MOTORS_INVERTED = false;
 
-        public static final double MAX_SPEED_IPS = 156.0;
+        public static final double MAX_SPEED_IPS = 172.0;
         public static final double MAX_SPEED_MPS = Units.inchesToMeters(MAX_SPEED_IPS);
         public static final double CAP_SPEED_IPS = .8 * MAX_SPEED_IPS;
         public static final double MAX_ACCELERATION_IPSS = CAP_SPEED_IPS / 2;
@@ -44,6 +41,7 @@ public class Constants {
         public static final int STALL_CURRENT_LIMIT = 50;
         public static final int FREE_CURRENT_LIMIT = 60;
         public static final double SECONDARY_LIMIT = 90;
+        public static final double WHEEL_DIAMETER = 4; //inches
     }
 
     public static class Turret {
@@ -82,5 +80,9 @@ public class Constants {
 
     public class Spinner {
         public static final double SPEED = 0.5;
+    }
+
+    public class AutoDrivePath {
+        public static final double K_TURN = 0.1;
     }
 }

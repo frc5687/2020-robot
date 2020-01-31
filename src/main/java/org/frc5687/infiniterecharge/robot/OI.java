@@ -1,9 +1,11 @@
 package org.frc5687.infiniterecharge.robot;
 
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import org.frc5687.infiniterecharge.robot.commands.AutoDrivePath;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.AxisButton;
 import org.frc5687.infiniterecharge.robot.util.Gamepad;
@@ -49,7 +51,13 @@ public class OI extends OutliersProxy {
     }
 
 
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Intake intake){
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Intake intake, AHRS imu){
+        try {
+            _operatorAButton.whenPressed(new AutoDrivePath(driveTrain, imu, "MidShieldGeneratorBalls", 0, true));
+        } catch(Exception e) {
+            error("Error Generating Paths :" + e.getMessage());
+        }
+
     }
 
     public boolean isAutoTargetPressed() {
