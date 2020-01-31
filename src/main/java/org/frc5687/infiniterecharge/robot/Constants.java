@@ -83,4 +83,7 @@ public class Constants {
         public static final double OVERALL_LATENCY_MILLIS = 11;
     }
 
+    public class Spinner {
+        public static final double SPEED = 0.5;
+    }
 }

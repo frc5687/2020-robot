@@ -15,6 +15,12 @@ public class RobotMap {
             public static final int LEFT_SLAVE = 9;
             public static final int RIGHT_SLAVE = 11;
             public static final int INTAKE_NEO = 7;
+            public static final int SPINNER = 8;
+
+
+        /*  Example:
+                        public static final int LEFT_MASTER_SPARK= 1;
+                        */
         }
         public static class TALONSRX {
             public static final int TURRET = 6;
