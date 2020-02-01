@@ -3,6 +3,7 @@ package org.frc5687.infiniterecharge.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.ColorSensorV3;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc5687.infiniterecharge.robot.Constants;
@@ -14,6 +15,7 @@ import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 public class Spinner extends OutliersSubsystem {
     private ColorSensorV3 _colorSensor;
     private CANSparkMax _sparkMax;
+    private DoubleSolenoid _solenoid;
 
     public enum Color {
         red(0),
@@ -31,6 +33,30 @@ public class Spinner extends OutliersSubsystem {
         public int getValue() {
             return _value;
         }
+    }
+
+    public void raiseArm() {
+        _solenoid.set(DoubleSolenoid.Value.kForward);
+    }
+
+    public void lowerArm(){
+        _solenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+
+    public boolean isRaised(){
+        return _solenoid.get().equals(DoubleSolenoid.Value.kForward);
+    }
+
+    public boolean isLowered(){
+        return _solenoid.get().equals(DoubleSolenoid.Value.kReverse);
+    }
+
+    public boolean isOff(){
+        return _solenoid.get().equals(DoubleSolenoid.Value.kOff);
+    }
+
+    public void off(){
+        _solenoid.set(DoubleSolenoid.Value.kOff);
     }
 
     public Spinner(OutliersContainer container) {
