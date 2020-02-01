@@ -11,6 +11,10 @@ public class Constants {
         public static final boolean INTAKE_MOTOR_INVERTED = true;
     }
 
+    public static class Climber {
+        public static final boolean CLIMBER_MOTOR_INVERTED = true;
+    }
+
     public static class DriveTrain {
         public static final double DEADBAND = 0.25;
         public static final double SPEED_SENSITIVITY = 0.9;
@@ -86,4 +90,9 @@ public class Constants {
     public class Spinner {
         public static final double MOTOR_PERCENT_SPEED = 0.5;
     }
+
+    public class RotarySwitch {
+        public static final double TOLERANCE = 0.02;
+    }
+
 }

@@ -15,12 +15,8 @@ import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConst
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import org.frc5687.infiniterecharge.robot.commands.KillAll;
-import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
-import org.frc5687.infiniterecharge.robot.subsystems.Intake;
-import org.frc5687.infiniterecharge.robot.subsystems.Shifter;
-import org.frc5687.infiniterecharge.robot.subsystems.Turret;
+import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.Limelight;
-import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 import org.frc5687.infiniterecharge.robot.util.PDP;
 
@@ -36,6 +32,7 @@ public class RobotContainer extends OutliersContainer {
     private Shifter _shifter;
     private PDP _pdp;
     private Spinner _spinner;
+    private Climber _climber;
 
     private Limelight _limelight;
     private Intake _intake;
@@ -51,23 +48,26 @@ public class RobotContainer extends OutliersContainer {
         _imu.zeroYaw();
 
         // then proxies...
-        _pdp = new PDP();
         _limelight = new Limelight("limelight");
 
 
         // Then subsystems....
-        _shifter = new Shifter(this);
-        _intake = new Intake(this, _oi);
-        _driveTrain = new DriveTrain(this, _oi, _imu, _shifter);
-        _turret = new Turret(this, _limelight, _oi);
-        _spinner = new Spinner(this);
+        if (Robot.identityMode!= Robot.IdentityMode.programming) {
+            _pdp = new PDP();
+            _shifter = new Shifter(this);
+            _intake = new Intake(this, _oi);
+            _driveTrain = new DriveTrain(this, _oi, _imu, _shifter);
+            _turret = new Turret(this, _limelight, _oi);
+            _spinner = new Spinner(this);
+            _climber = new Climber(this, _oi);
 
-        // Must initialize buttons AFTER subsystems are allocated...
-        _oi.initializeButtons(_shifter, _driveTrain, _intake);
+            // Must initialize buttons AFTER subsystems are allocated...
+            _oi.initializeButtons(_shifter, _driveTrain, _intake, _climber);
 
-        // Initialize the other stuff
-        _driveTrain.enableBrakeMode();
-        _driveTrain.resetOdometry(new Pose2d(0,0,new Rotation2d(0)));
+            // Initialize the other stuff
+            _driveTrain.enableBrakeMode();
+            _driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
+        }
     }
 
     public void zeroSensors() {
@@ -128,4 +128,9 @@ public class RobotContainer extends OutliersContainer {
 
     }
 
+    @Override
+    public void updateDashboard() {
+        super.updateDashboard();
+        _oi.updateDashboard();
+    }
 }

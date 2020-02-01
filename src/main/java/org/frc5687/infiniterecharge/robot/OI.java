@@ -5,10 +5,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
-import org.frc5687.infiniterecharge.robot.util.AxisButton;
-import org.frc5687.infiniterecharge.robot.util.Gamepad;
-import org.frc5687.infiniterecharge.robot.util.OutliersProxy;
-import org.frc5687.infiniterecharge.robot.util.POV;
+import org.frc5687.infiniterecharge.robot.util.*;
 
 import static org.frc5687.infiniterecharge.robot.util.Helpers.applyDeadband;
 
@@ -29,8 +26,10 @@ public class OI extends OutliersProxy {
     private AxisButton _operatorRightXAxisUpButton;
     private AxisButton _operatorRightXAxisDownButton;
 
+    private RotarySwitch _subsystemSelector;
 
     public OI(){
+        _subsystemSelector = new RotarySwitch(RobotMap.Analog.SUBSYSTEM_SELECTOR,  Constants.RotarySwitch.TOLERANCE, 0.07692, 0.15384, 0.23076, 0.30768, 0.3846, 0.46152, 0.53844, 0.61536, 0.69228, 0.7692, 0.84612, 0.92304);
         _driverGamepad = new Gamepad(0);
         _operatorGamepad = new Gamepad(1);
         _driverRightStickButton = new JoystickButton(_driverGamepad, Gamepad.Buttons.RIGHT_STICK.getNumber());
@@ -49,7 +48,7 @@ public class OI extends OutliersProxy {
     }
 
 
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Intake intake){
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Intake intake, Climber climber){
     }
 
     public boolean isAutoTargetPressed() {
@@ -69,18 +68,32 @@ public class OI extends OutliersProxy {
     }
 
     public double getTurretSpeed() {
+        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
+
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.Turret.DEADBAND);
         return speed;
     }
 
     public double getIntakeSpeed() {
+        if (getSubSystem()!=SubSystem.Intake) { return 0; }
+
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber());
         speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
         return speed;
     }
 
+    public double getClimberSpeed() {
+        if (getSubSystem()!=SubSystem.Climber) { return 0; }
+
+        double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_X.getNumber());
+        speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
+        return speed;
+    }
+
     public double getHoodSpeed() {
+        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
+
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_Y.getNumber());
         speed = applyDeadband(speed, Constants.Hood.DEADBAND);
         return speed;
@@ -99,7 +112,7 @@ public class OI extends OutliersProxy {
 
     @Override
     public void updateDashboard() {
-
+        metric("SubSytemSelector", getSubSystem().toString());
     }
 
     private int _driverRumbleCount = 0;
@@ -164,5 +177,25 @@ public class OI extends OutliersProxy {
     public boolean isCreepPressed() {
         return  _driverRightStickButton.get();
     }
+
+    private SubSystem getSubSystem() {
+        switch (_subsystemSelector.get()) {
+            case 1: return SubSystem.Intake;
+            case 2: return SubSystem.Shooter;
+            case 3: return SubSystem.Spinner;
+            case 4: return SubSystem.Climber;
+            default: return SubSystem.None;
+        }
+
+    }
+
+    private enum SubSystem {
+        None,
+        Intake,
+        Shooter,
+        Spinner,
+        Climber
+    }
+
 }
 

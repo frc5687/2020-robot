@@ -10,18 +10,17 @@ public class RobotMap {
     public static class CAN {
 
         public static class SPARKMAX {
+            /*  Example:
+                public static final int LEFT_MASTER_SPARK= 1;
+                */
             public static final int LEFT_MASTER = 14;
             public static final int RIGHT_MASTER = 5;
             public static final int LEFT_SLAVE = 9;
             public static final int RIGHT_SLAVE = 11;
             public static final int INTAKE_NEO = 7;
-            public static final int SPINNER = 8;
-
-
-        /*  Example:
-                        public static final int LEFT_MASTER_SPARK= 1;
-                        */
+            public static final int CLIMBER_NEO = 8;
         }
+
         public static class TALONSRX {
             public static final int SPINNER = 5;
             public static final int TURRET = 6;
@@ -80,6 +79,7 @@ public class RobotMap {
          */
         public static class Analog {
             public static final int MODE_SWITCH = 0;
+            public static final int SUBSYSTEM_SELECTOR = 1;
         /*
         public static final int ARM_POTENTIOMETER = 7;
          */
