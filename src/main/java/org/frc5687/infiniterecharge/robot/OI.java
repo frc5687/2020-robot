@@ -48,7 +48,7 @@ public class OI extends OutliersProxy {
     }
 
 
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Intake intake){
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Intake intake, Climber climber){
     }
 
     public boolean isAutoTargetPressed() {
@@ -79,6 +79,14 @@ public class OI extends OutliersProxy {
         if (getSubSystem()!=SubSystem.Intake) { return 0; }
 
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber());
+        speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
+        return speed;
+    }
+
+    public double getClimberSpeed() {
+        if (getSubSystem()!=SubSystem.Climber) { return 0; }
+
+        double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_X.getNumber());
         speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
         return speed;
     }
