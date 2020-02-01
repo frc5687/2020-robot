@@ -10,7 +10,6 @@ public class RobotMap {
     public static class CAN {
 
         public static class SPARKMAX {
-
             public static final int LEFT_MASTER = 14;
             public static final int RIGHT_MASTER = 5;
             public static final int LEFT_SLAVE = 9;
@@ -26,6 +25,10 @@ public class RobotMap {
         public static class TALONSRX {
             public static final int TURRET = 6;
         }
+        public static class VICTORSPX {
+            public static final int HOOD = 10;
+        }
+
     }
 
         /**
@@ -90,6 +93,7 @@ public class RobotMap {
             public static final int DRIVE_LEFT_A = 2;
             public static final int DRIVE_RIGHT_B = 0;
             public static final int DRIVE_RIGHT_A = 1;
+            public static final int HOOD_ENCODER = 4;
         /* Example:
         public static final int ARM_FRONT_LIMIT = 0;
         */

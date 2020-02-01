@@ -15,7 +15,6 @@ public class DriveTurret extends OutliersCommand {
         _turret = turret;
         _limelight = limelight;
         _oi = oi;
-
         addRequirements(_turret);
     }
 
