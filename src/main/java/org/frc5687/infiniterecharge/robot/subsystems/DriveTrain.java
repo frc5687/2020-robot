@@ -108,7 +108,7 @@ public class DriveTrain extends OutliersSubsystem {
         _driveKinematics = new DifferentialDriveKinematics(Constants.DriveTrain.WIDTH);
         _odometry = new DifferentialDriveOdometry(getHeading());
 
-        logMetrics("X", "Y", "Heading");
+//        logMetrics("X", "Y", "Heading");
     }
 
     public void enableBrakeMode() {
@@ -244,10 +244,10 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        SmartDashboard.putBoolean("MetricTracker/Drive", true);
-        metric("X", getPose().getTranslation().getX());
-        metric("Y", getPose().getTranslation().getY());
-        metric("Heading", getPose().getRotation().getDegrees());
+//        SmartDashboard.putBoolean("MetricTracker/Drive", true);
+//        metric("X", getPose().getTranslation().getX());
+//        metric("Y", getPose().getTranslation().getY());
+//        metric("Heading", getPose().getRotation().getDegrees());
         metric("Distance/Left", getLeftDistance());
         metric("Distance/Right", getRightDistance());
     }
