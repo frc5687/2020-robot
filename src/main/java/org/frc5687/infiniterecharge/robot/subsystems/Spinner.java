@@ -73,16 +73,20 @@ public class Spinner extends OutliersSubsystem {
         return false;
     }
 
-    public boolean isRed() {
-        return false;
+    public int getNormalizedRed() {
+        return _colorSensor.getRed() / getColorSum();
     }
 
-    public boolean isBlue() {
-        return false;
+    public int getNormalizedGreen() {
+        return _colorSensor.getGreen() / getColorSum();
     }
 
-    public boolean isGreen() {
-        return false;
+    public int getNormalizedBlue() {
+        return _colorSensor.getBlue() / getColorSum();
+    }
+
+    public int getColorSum() {
+        return _colorSensor.getRed() + _colorSensor.getGreen() + _colorSensor.getBlue();
     }
 
     public void spin() {
