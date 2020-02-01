@@ -88,7 +88,7 @@ public class Constants {
     }
 
     public class Spinner {
-        public static final double SPEED = 0.5;
+        public static final double MOTOR_PERCENT_SPEED = 0.5;
     }
 
     public class RotarySwitch {

@@ -1,62 +1,71 @@
 package org.frc5687.infiniterecharge.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.ColorSensorV3;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.commands.DriveSpinner;
-import org.frc5687.infiniterecharge.robot.subsystems.OutliersSubsystem;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 public class Spinner extends OutliersSubsystem {
     private ColorSensorV3 _colorSensor;
-    private CANSparkMax _sparkMax;
+    private TalonSRX _motorController;
+    private DoubleSolenoid _solenoid;
 
-    public enum Color {
-        red(0),
-        green(1),
-        blue(2),
-        yellow(3),
-        unknown(4);
+    public void raiseArm() {
+        _solenoid.set(DoubleSolenoid.Value.kForward);
+    }
 
-        private int _value;
+    public void lowerArm(){
+        _solenoid.set(DoubleSolenoid.Value.kReverse);
+    }
 
-        Color(int value) {
-            this._value = value;
-        }
+    public boolean isRaised(){
+        return _solenoid.get().equals(DoubleSolenoid.Value.kForward);
+    }
 
-        public int getValue() {
-            return _value;
-        }
+    public boolean isLowered(){
+        return _solenoid.get().equals(DoubleSolenoid.Value.kReverse);
+    }
+
+    public boolean isArmOff(){
+        return _solenoid.get().equals(DoubleSolenoid.Value.kOff);
+    }
+
+    public void armOff(){
+        _solenoid.set(DoubleSolenoid.Value.kOff);
     }
 
     public Spinner(OutliersContainer container) {
         super(container);
 
-        // TODO(mike) do we need to move this to RobotMap? I think we only have one i2c bus?
-        I2C.Port port = I2C.Port.kOnboard;
-        _colorSensor = new ColorSensorV3(port);
-        _sparkMax = new CANSparkMax(RobotMap.CAN.TALONSRX.SPINNER, CANSparkMaxLowLevel.MotorType.kBrushed);
-        setDefaultCommand(new DriveSpinner(this));
-    }
-
-
-    public Color getColor() {
-        if (isBlue()) {
-            return Color.blue;
-        } else if (isRed()) {
-            return Color.red;
-        } else if (isBlue()) {
-            return Color.blue;
-        } else if (isGreen()) {
-            return Color.green;
-        } else if (isYellow()) {
-            return Color.yellow;
+        try {
+            debug("allocating spinner color sensor");
+            I2C.Port port = I2C.Port.kOnboard;
+            _colorSensor = new ColorSensorV3(port);
+        } catch (Exception e) {
+            error("error allocating color sensor: " + e.getMessage());
+            e.printStackTrace();
         }
-        return Color.unknown;
+
+        try {
+            debug("allocating spinner motor controller");
+            _motorController = new TalonSRX(RobotMap.CAN.TALONSRX.SPINNER);
+            _motorController.setNeutralMode(NeutralMode.Brake);
+            // TODO: Not sure if this is really what we want, just stole from turret...
+            _motorController.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,100);
+        } catch (Exception e) {
+            error("error allocating spinner motor controller: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        setDefaultCommand(new DriveSpinner(this));
     }
 
     // TODO Fill these in based on measured results.
@@ -77,21 +86,23 @@ public class Spinner extends OutliersSubsystem {
     }
 
     public void spin() {
-        _sparkMax.set(Constants.Spinner.SPEED);
+        _motorController.set(ControlMode.PercentOutput, Constants.Spinner.MOTOR_PERCENT_SPEED);
     }
 
     public void stop() {
-        _sparkMax.stopMotor();
+        _motorController.set(ControlMode.PercentOutput, 0);
     }
 
     @Override
     public void updateDashboard() {
-        SmartDashboard.putNumber("Spinner/Red", _colorSensor.getRed());
-        SmartDashboard.putNumber("Spinner/Green", _colorSensor.getGreen());
-        SmartDashboard.putNumber("Spinner/Blue", _colorSensor.getBlue());
-        SmartDashboard.putNumber("Spinner/IR", _colorSensor.getIR());
-        SmartDashboard.putNumber("Spinner/Proximity", _colorSensor.getProximity());
-        SmartDashboard.putNumber("Spinner/Color", getColor().getValue());
-        SmartDashboard.putNumber("Spinner/SpinnerSpeed", _sparkMax.get());
+        metric("Spinner/Red", _colorSensor.getRed());
+        metric("Spinner/Green", _colorSensor.getGreen());
+        metric("Spinner/Blue", _colorSensor.getBlue());
+        metric("Spinner/IR", _colorSensor.getIR());
+        metric("Spinner/Proximity", _colorSensor.getProximity());
+        metric("Spinner/ArmIsRaised", isRaised());
+        metric("Spinner/ArmIsLowered", isLowered());
+        metric("Spinner/ArmIsOff", isArmOff());
+        metric("Spinner/SpinnerSpeed", _motorController.getSelectedSensorVelocity()); // units per 100ms
     }
 }
