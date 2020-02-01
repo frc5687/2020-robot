@@ -104,7 +104,7 @@ public class OI extends OutliersProxy {
 
     @Override
     public void updateDashboard() {
-
+        metric("SubSytemSelector", getSubSystem().toString());
     }
 
     private int _driverRumbleCount = 0;
