@@ -77,16 +77,21 @@ public class Spinner extends OutliersSubsystem {
         return _colorSensor.getRed() / getColorSum();
     }
 
-    public int getNormalizedGreen() {
-        return _colorSensor.getGreen() / getColorSum();
+    public Color getColor() {
+        if (redDetected() && !greenDetected()) {
+            return Color.red;
+        } else if (greenDetected() && !redDetected() && !blueDetected()) {
+            return Color.green;
+        } else if (blueDetected()) {
+            return Color.blue;
+        } else if (redDetected() && greenDetected() && !blueDetected()) {
+            return Color.yellow;
+        }
+        return Color.unknown;
     }
 
-    public int getNormalizedBlue() {
-        return _colorSensor.getBlue() / getColorSum();
-    }
-
-    public int getColorSum() {
-        return _colorSensor.getRed() + _colorSensor.getGreen() + _colorSensor.getBlue();
+    private boolean redDetected() {
+        return _colorSensor.getColor().red >= Constants.Spinner.RED_DETECTION_THRESHOLD;
     }
 
     public void spin() {
@@ -95,6 +100,15 @@ public class Spinner extends OutliersSubsystem {
 
     public void stop() {
         _motorController.set(ControlMode.PercentOutput, 0);
+    }
+
+    private boolean greenDetected() {
+        return _colorSensor.getColor().green >= Constants.Spinner.GREEN_DETECTION_THRESHOLD;
+
+    }
+
+    private boolean blueDetected() {
+        return _colorSensor.getColor().blue >= Constants.Spinner.BLUE_DETECTION_THRESHOLD;
     }
 
     @Override
