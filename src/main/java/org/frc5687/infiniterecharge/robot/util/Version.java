@@ -6,7 +6,7 @@ package org.frc5687.infiniterecharge.robot.util;
  */
 
 public class Version {
-    public static final String BRANCH = "OI/#26-SelectorSwitch";
-    public static final String REVISION = "4fcd810";
+    public static final String BRANCH = "Climber/#5-CreateSubsystem";
+    public static final String REVISION = "69e9237";
     public static final String MODIFIED = " *";
 }

@@ -84,6 +84,8 @@ public class OI extends OutliersProxy {
     }
 
     public double getClimberSpeed() {
+        if (getSubSystem()!=SubSystem.Climber) { return 0; }
+
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_X.getNumber());
         speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
         return speed;

@@ -39,7 +39,7 @@ public class Spinner extends OutliersSubsystem {
         // TODO(mike) do we need to move this to RobotMap? I think we only have one i2c bus?
         I2C.Port port = I2C.Port.kOnboard;
         _colorSensor = new ColorSensorV3(port);
-        _sparkMax = new CANSparkMax(RobotMap.CAN.SPARKMAX.SPINNER, CANSparkMaxLowLevel.MotorType.kBrushed);
+        _sparkMax = new CANSparkMax(RobotMap.CAN.TALONSRX.SPINNER, CANSparkMaxLowLevel.MotorType.kBrushed);
         setDefaultCommand(new DriveSpinner(this));
     }
 
