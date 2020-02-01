@@ -51,23 +51,25 @@ public class RobotContainer extends OutliersContainer {
         _imu.zeroYaw();
 
         // then proxies...
-        _pdp = new PDP();
         _limelight = new Limelight("limelight");
 
 
         // Then subsystems....
-        _shifter = new Shifter(this);
-        _intake = new Intake(this, _oi);
-        _driveTrain = new DriveTrain(this, _oi, _imu, _shifter);
-        _turret = new Turret(this, _limelight, _oi);
-        _spinner = new Spinner(this);
+        if (Robot.identityMode!= Robot.IdentityMode.programming) {
+            _pdp = new PDP();
+            _shifter = new Shifter(this);
+            _intake = new Intake(this, _oi);
+            _driveTrain = new DriveTrain(this, _oi, _imu, _shifter);
+            _turret = new Turret(this, _limelight, _oi);
+            _spinner = new Spinner(this);
 
-        // Must initialize buttons AFTER subsystems are allocated...
-        _oi.initializeButtons(_shifter, _driveTrain, _intake);
+            // Must initialize buttons AFTER subsystems are allocated...
+            _oi.initializeButtons(_shifter, _driveTrain, _intake);
 
-        // Initialize the other stuff
-        _driveTrain.enableBrakeMode();
-        _driveTrain.resetOdometry(new Pose2d(0,0,new Rotation2d(0)));
+            // Initialize the other stuff
+            _driveTrain.enableBrakeMode();
+            _driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
+        }
     }
 
     public void zeroSensors() {
@@ -128,4 +130,9 @@ public class RobotContainer extends OutliersContainer {
 
     }
 
+    @Override
+    public void updateDashboard() {
+        super.updateDashboard();
+        _oi.updateDashboard();
+    }
 }

@@ -86,4 +86,9 @@ public class Constants {
     public class Spinner {
         public static final double SPEED = 0.5;
     }
+
+    public class RotarySwitch {
+        public static final double TOLERANCE = 0.02;
+    }
+
 }
