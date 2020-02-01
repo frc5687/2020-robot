@@ -79,6 +79,7 @@ public class RobotMap {
          */
         public static class Analog {
             public static final int MODE_SWITCH = 0;
+            public static final int SUBSYSTEM_SELECTOR = 1;
         /*
         public static final int ARM_POTENTIOMETER = 7;
          */
