@@ -52,10 +52,13 @@ public class Constants {
 
     public static class Turret {
         public static final double DEADBAND = 0.1;
-
         public static final double TOLERANCE = 2;
         public static final boolean SENSOR_PHASE_INVERTED = false;
         public static final double TICKS_TO_DEGREES = 0.08695652173913;
+    }
+
+    public static class Hood {
+        public static final double DEADBAND = 0.1;
     }
 
     public static class OI {
@@ -84,4 +87,7 @@ public class Constants {
         public static final double OVERALL_LATENCY_MILLIS = 11;
     }
 
+    public class Spinner {
+        public static final double SPEED = 0.5;
+    }
 }
