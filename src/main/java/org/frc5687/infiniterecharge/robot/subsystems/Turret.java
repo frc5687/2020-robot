@@ -16,6 +16,7 @@ import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 import org.frc5687.infiniterecharge.robot.Constants.AutoPositions.*;
 
+import java.lang.annotation.Target;
 
 
 public class Turret extends OutliersSubsystem {
@@ -102,7 +103,9 @@ public class Turret extends OutliersSubsystem {
 
     public Pose2d updatePose() {
         double distance = Units.inchesToMeters(_limelight.getTargetDistance());
-        double alpha = (90 -(getPositionDegrees() + _limelight.getHorizontalAngle())) - _driveTrain.getHeading().getDegrees();
+        // big dumb turret angle doesn't effect pose.
+//        double alpha = (90 -(getPositionDegrees() + _limelight.getHorizontalAngle())) - _driveTrain.getHeading().getDegrees();
+        double alpha = 90 - Math.abs(_limelight.getHorizontalAngle());
         double x = Math.sin(Math.toRadians(alpha)) * distance;
         double y = Math.cos(Math.toRadians(alpha)) * distance;
         metric("Angle", alpha);
@@ -113,7 +116,7 @@ public class Turret extends OutliersSubsystem {
         double poseY = 0;
         if (_limelight.getSkew() <= -45) {
             poseY = Constants.AutoPositions.TARGET_POSE.getTranslation().getY() - y;
-        } else if (_limelight.getSkew() > -45) {
+        } else if (_limelight. getSkew() > -45) {
             poseY = Constants.AutoPositions.TARGET_POSE.getTranslation().getY() + y;
         }
         return new Pose2d(poseX, poseY, _driveTrain.getHeading());
