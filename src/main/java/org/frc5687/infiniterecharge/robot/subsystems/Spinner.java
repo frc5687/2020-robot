@@ -87,8 +87,6 @@ public class Spinner extends OutliersSubsystem {
             e.printStackTrace();
         }
 
-        setDefaultCommand(new DriveSpinner(this));
-
         // TODO(mike) might want to move to Constants.java ?
         _swatches.put(Color.red, new Rgb(0.60, 0.31, 0.08));
         _swatches.put(Color.yellow, new Rgb(0.40, 0.49, 0.10));

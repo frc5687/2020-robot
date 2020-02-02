@@ -229,7 +229,6 @@ public class DriveTrain extends OutliersSubsystem {
     @Override
     public void periodic() {
         _pose = _odometry.update(getHeading(), Units.inchesToMeters(_leftMagEncoder.getDistance()), Units.inchesToMeters(_rightMagEncoder.getDistance()));
-        setDefaultCommand(new Drive(this, _oi));
     }
 
     @Override
