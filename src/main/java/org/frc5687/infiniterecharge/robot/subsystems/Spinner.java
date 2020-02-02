@@ -34,30 +34,6 @@ public class Spinner extends OutliersSubsystem {
         }
     }
 
-    public void raiseArm() {
-        _solenoid.set(DoubleSolenoid.Value.kForward);
-    }
-
-    public void lowerArm(){
-        _solenoid.set(DoubleSolenoid.Value.kReverse);
-    }
-
-    public boolean isRaised(){
-        return _solenoid.get().equals(DoubleSolenoid.Value.kForward);
-    }
-
-    public boolean isLowered(){
-        return _solenoid.get().equals(DoubleSolenoid.Value.kReverse);
-    }
-
-    public boolean isArmOff(){
-        return _solenoid.get().equals(DoubleSolenoid.Value.kOff);
-    }
-
-    public void armOff() {
-        _solenoid.set(DoubleSolenoid.Value.kOff);
-    }
-
     public enum Color {
         red(0),
         green(1),
@@ -71,6 +47,20 @@ public class Spinner extends OutliersSubsystem {
         }
         public int getValue() {
             return _value;
+        }
+        public String toString() {
+            switch (_value) {
+                case 0:
+                    return "red";
+                case 1:
+                    return "green";
+                case 2:
+                    return "blue";
+                case 3:
+                    return "yellow";
+                default:
+                    return "unknown";
+            }
         }
     }
 
@@ -100,10 +90,10 @@ public class Spinner extends OutliersSubsystem {
         setDefaultCommand(new DriveSpinner(this));
 
         // TODO(mike) might want to move to Constants.java ?
-        _swatches.put(Color.red, new Rgb(0.58, 0.31, 0.10));
-        _swatches.put(Color.yellow, new Rgb(0.36, 0.53, 0.10));
+        _swatches.put(Color.red, new Rgb(0.60, 0.31, 0.08));
+        _swatches.put(Color.yellow, new Rgb(0.40, 0.49, 0.10));
         _swatches.put(Color.green, new Rgb(0.21, 0.56, 0.23));
-        _swatches.put(Color.blue, new Rgb(0.15, 0.43, 0.45));
+        _swatches.put(Color.blue, new Rgb(0.21, 0.45, 0.35));
     }
 
     public Color getColor() {
@@ -117,6 +107,30 @@ public class Spinner extends OutliersSubsystem {
             return Color.yellow;
         }
         return Color.unknown;
+    }
+
+    public void raiseArm() {
+        _solenoid.set(DoubleSolenoid.Value.kForward);
+    }
+
+    public void lowerArm(){
+        _solenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+
+    public boolean isRaised(){
+        return _solenoid.get().equals(DoubleSolenoid.Value.kForward);
+    }
+
+    public boolean isLowered(){
+        return _solenoid.get().equals(DoubleSolenoid.Value.kReverse);
+    }
+
+    public boolean isArmOff(){
+        return _solenoid.get().equals(DoubleSolenoid.Value.kOff);
+    }
+
+    public void armOff() {
+        _solenoid.set(DoubleSolenoid.Value.kOff);
     }
 
     public void spin() {
@@ -142,7 +156,7 @@ public class Spinner extends OutliersSubsystem {
         metric("Spinner/NormRed", _colorSensor.getColor().red);
         metric("Spinner/NormGreen", _colorSensor.getColor().green);
         metric("Spinner/NormBlue", _colorSensor.getColor().blue);
-        metric("Spinner/Color", getColor().getValue());
+        metric("Spinner/Color", getColor().toString());
         metric("Spinner/IR", _colorSensor.getIR());
         metric("Spinner/Proximity", _colorSensor.getProximity());
         metric("Spinner/ArmIsRaised", isRaised());
