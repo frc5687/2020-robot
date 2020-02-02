@@ -33,6 +33,7 @@ public class RobotContainer extends OutliersContainer {
     private AHRS _imu;
     private DriveTrain _driveTrain;
     private Turret _turret;
+    private Indexer _indexer;
     private Shooter _shooter;
     private Shifter _shifter;
     private PDP _pdp;
@@ -66,6 +67,7 @@ public class RobotContainer extends OutliersContainer {
             _spinner = new Spinner(this);
             _climber = new Climber(this, _oi);
             _shooter = new Shooter(this, _oi);
+            _indexer = new Indexer(this);
 
             // Must initialize buttons AFTER subsystems are allocated...
             _oi.initializeButtons( _driveTrain, _shifter, _intake, _shooter, _climber);
@@ -84,7 +86,7 @@ public class RobotContainer extends OutliersContainer {
     public void periodic() {
         _oi.poll();
         if (_oi.isKillAllPressed()) {
-            new KillAll(_driveTrain, _shooter).schedule();
+            new KillAll(_driveTrain, _shooter, _indexer).schedule();
         }
     }
 

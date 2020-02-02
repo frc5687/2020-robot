@@ -27,6 +27,10 @@ public class Intake extends OutliersSubsystem {
         _intakeSpark.setInverted(Constants.Intake.INTAKE_MOTOR_INVERTED);
     }
 
+    public boolean isRunning() {
+        return getIntakePower()!=0;
+    }
+
     public enum Position {
         UNKNOWN(DoubleSolenoid.Value.kOff),
         HIGH(DoubleSolenoid.Value.kReverse),
