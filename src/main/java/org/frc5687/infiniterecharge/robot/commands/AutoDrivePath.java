@@ -33,7 +33,7 @@ public class AutoDrivePath extends OutliersCommand {
     private boolean _backwards;
     private int _direction;
 
-    public AutoDrivePath(DriveTrain driveTrain, AHRS imu, String path, int trackingSegments, boolean backwards) throws IOException {
+    public AutoDrivePath(DriveTrain driveTrain, AHRS imu, String path, int trackingSegments, boolean backwards) {
         addRequirements(driveTrain);
         _driveTrain = driveTrain;
         _imu = imu;
@@ -42,9 +42,13 @@ public class AutoDrivePath extends OutliersCommand {
         _direction = backwards ? -1 : 1;
 
         _path = path;
-        info("Loading trajectories for " + path);
-        _leftTrajectory = PathfinderFRC.getTrajectory(_path + ".right");
-        _rightTrajectory = PathfinderFRC.getTrajectory(_path + ".left");
+        try {
+            info("Loading trajectories for " + path);
+            _leftTrajectory = PathfinderFRC.getTrajectory(_path + ".right");
+            _rightTrajectory = PathfinderFRC.getTrajectory(_path + ".left");
+        } catch (Exception e) {
+            error("Error Generating Paths :" + e.getMessage());
+        }
         info("Left has " + _leftTrajectory.length() + " segments.");
         info("Right has " + _rightTrajectory.length() + " segments.");
         _trackingThreshold = _leftTrajectory.length() - trackingSegments;

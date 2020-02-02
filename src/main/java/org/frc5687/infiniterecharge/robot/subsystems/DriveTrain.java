@@ -19,7 +19,7 @@ import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.commands.Drive;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
-import static org.frc5687.infiniterecharge.robot.Constants.DriveTrain.CREEP_FACTOR;
+import static org.frc5687.infiniterecharge.robot.Constants.DriveTrain.*;
 import static org.frc5687.infiniterecharge.robot.util.Helpers.applySensitivityFactor;
 import static org.frc5687.infiniterecharge.robot.util.Helpers.limit;
 
@@ -107,7 +107,7 @@ public class DriveTrain extends OutliersSubsystem {
         debug("Configuring mag encoders");
         resetDriveEncoders();
 
-        _driveKinematics = new DifferentialDriveKinematics(Constants.DriveTrain.WIDTH);
+        _driveKinematics = new DifferentialDriveKinematics(Units.inchesToMeters(WIDTH));
         _odometry = new DifferentialDriveOdometry(getHeading());
         _rightEncoder.setInverted(false);
         _leftEncoder.setInverted(true);
@@ -212,10 +212,10 @@ public class DriveTrain extends OutliersSubsystem {
         return (getLeftDistance() + getRightDistance()) / 2;
     }
     public double getLeftVelocity() {
-        return _leftEncoder.getVelocity(); //RPM
+        return _leftEncoder.getVelocity() * ENCODER_CONVERSION/60; //RPM
     }
     public double getRightVelocity() {
-        return _rightEncoder.getVelocity(); //RPM
+        return _rightEncoder.getVelocity() * ENCODER_CONVERSION/60; //RPM
     }
 
 
@@ -256,6 +256,7 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Distance/Right", getRightDistance());
         metric("Distance/RawLeft", getRawLeftEncoder());
         metric("Distance/RawRight", getRawRightEncoder());
+        metric("yaw", _imu.getYaw());
     }
 
     public DifferentialDriveKinematics getKinematics() {
@@ -271,7 +272,7 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightVelocity());
+        return new DifferentialDriveWheelSpeeds(Units.inchesToMeters(getLeftVelocity()),Units.inchesToMeters(getRightVelocity()));
     }
     public void resetOdometry(Pose2d pose) {
         resetDriveEncoders();

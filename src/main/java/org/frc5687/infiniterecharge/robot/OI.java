@@ -52,12 +52,7 @@ public class OI extends OutliersProxy {
 
 
     public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Intake intake, AHRS imu){
-        try {
-            _operatorAButton.whenPressed(new AutoDrivePath(driveTrain, imu, "MidShieldGeneratorBalls", 0, true));
-        } catch(Exception e) {
-            error("Error Generating Paths :" + e.getMessage());
-        }
-
+//        _operatorAButton.whenPressed(new AutoDrivePath(driveTrain, imu, "MidShieldGeneratorBalls", 0, true));
     }
 
     public boolean isAutoTargetPressed() {
