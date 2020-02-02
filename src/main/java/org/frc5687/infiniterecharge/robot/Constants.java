@@ -88,8 +88,8 @@ public class Constants {
     }
 
     public class Spinner {
-<<<<<<< HEAD
-        public static final double MOTOR_PERCENT_SPEED = 0.5;
+        public static final double MOTOR_PERCENT_SPEED = 0.5; // TODO: Need a real value here!
+        public static final double COLOR_TOLERANCE = 0.15;
     }
 
     public class RotarySwitch {
@@ -105,15 +105,5 @@ public class Constants {
     public class Indexer {
         public static final boolean INVERTED = false;
         public static final double ADVANCE_SPEED = 0.5; // TODO: Need a real value here!
-
-        public static final double SPEED = 0.5;
-        // TODO We may prefer these to be a single constant we can tweak?
-        public static final double RED_DETECTION_THRESHOLD = 0.31;
-        public static final double GREEN_DETECTION_THRESHOLD = 0.37;
-        public static final double BLUE_DETECTION_THRESHOLD = 0.26;
-
-        //public static final double HAS_COLOR_THRESHOLD = 0.27;
-        //public static final double LACKS_COLOR_THRESHOLD = 0.18;
-
     }
 }

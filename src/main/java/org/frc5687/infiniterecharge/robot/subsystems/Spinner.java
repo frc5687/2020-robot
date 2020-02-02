@@ -8,15 +8,31 @@ import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.commands.DriveSpinner;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Spinner extends OutliersSubsystem {
     private ColorSensorV3 _colorSensor;
     private TalonSRX _motorController;
     private DoubleSolenoid _solenoid;
+    private Map<Color, Rgb> _swatches = new HashMap<>();
+
+    public static class Rgb {
+        private double red;
+        private double green;
+        private double blue;
+        public Rgb(double red, double green, double blue) {
+            this.red = red;
+            this.green = green;
+            this.blue = blue;
+        }
+    }
 
     public void raiseArm() {
         _solenoid.set(DoubleSolenoid.Value.kForward);
@@ -38,8 +54,24 @@ public class Spinner extends OutliersSubsystem {
         return _solenoid.get().equals(DoubleSolenoid.Value.kOff);
     }
 
-    public void armOff(){
+    public void armOff() {
         _solenoid.set(DoubleSolenoid.Value.kOff);
+    }
+
+    public enum Color {
+        red(0),
+        green(1),
+        blue(2),
+        yellow(3),
+        unknown(4);
+
+        private int _value;
+        Color(int value) {
+            this._value = value;
+        }
+        public int getValue() {
+            return _value;
+        }
     }
 
     public Spinner(OutliersContainer container) {
@@ -66,32 +98,25 @@ public class Spinner extends OutliersSubsystem {
         }
 
         setDefaultCommand(new DriveSpinner(this));
-    }
 
-    // TODO Fill these in based on measured results.
-    public boolean isYellow() {
-        return false;
-    }
-
-    public int getNormalizedRed() {
-        return _colorSensor.getRed() / getColorSum();
+        // TODO(mike) might want to move to Constants.java ?
+        _swatches.put(Color.red, new Rgb(0.58, 0.31, 0.10));
+        _swatches.put(Color.yellow, new Rgb(0.36, 0.53, 0.10));
+        _swatches.put(Color.green, new Rgb(0.21, 0.56, 0.23));
+        _swatches.put(Color.blue, new Rgb(0.15, 0.43, 0.45));
     }
 
     public Color getColor() {
-        if (redDetected() && !greenDetected()) {
+        if (closeEnoughTo(_swatches.get(Color.red))) {
             return Color.red;
-        } else if (greenDetected() && !redDetected() && !blueDetected()) {
+        } else if (closeEnoughTo(_swatches.get(Color.green))) {
             return Color.green;
-        } else if (blueDetected()) {
+        } else if (closeEnoughTo(_swatches.get(Color.blue))) {
             return Color.blue;
-        } else if (redDetected() && greenDetected() && !blueDetected()) {
+        } else if (closeEnoughTo(_swatches.get(Color.yellow))) {
             return Color.yellow;
         }
         return Color.unknown;
-    }
-
-    private boolean redDetected() {
-        return _colorSensor.getColor().red >= Constants.Spinner.RED_DETECTION_THRESHOLD;
     }
 
     public void spin() {
@@ -102,20 +127,22 @@ public class Spinner extends OutliersSubsystem {
         _motorController.set(ControlMode.PercentOutput, 0);
     }
 
-    private boolean greenDetected() {
-        return _colorSensor.getColor().green >= Constants.Spinner.GREEN_DETECTION_THRESHOLD;
-
-    }
-
-    private boolean blueDetected() {
-        return _colorSensor.getColor().blue >= Constants.Spinner.BLUE_DETECTION_THRESHOLD;
+    private boolean closeEnoughTo(Rgb swatch) {
+        edu.wpi.first.wpilibj.util.Color readColor = _colorSensor.getColor();
+        return Math.abs(readColor.red - swatch.red) <= Constants.Spinner.COLOR_TOLERANCE &&
+                Math.abs(readColor.green - swatch.green) <= Constants.Spinner.COLOR_TOLERANCE &&
+                Math.abs(readColor.blue - swatch.blue) <= Constants.Spinner.COLOR_TOLERANCE;
     }
 
     @Override
     public void updateDashboard() {
-        metric("Spinner/Red", _colorSensor.getRed());
-        metric("Spinner/Green", _colorSensor.getGreen());
-        metric("Spinner/Blue", _colorSensor.getBlue());
+        metric("Spinner/RawRed", _colorSensor.getRed());
+        metric("Spinner/RawGreen", _colorSensor.getGreen());
+        metric("Spinner/RawBlue", _colorSensor.getBlue());
+        metric("Spinner/NormRed", _colorSensor.getColor().red);
+        metric("Spinner/NormGreen", _colorSensor.getColor().green);
+        metric("Spinner/NormBlue", _colorSensor.getColor().blue);
+        metric("Spinner/Color", getColor().getValue());
         metric("Spinner/IR", _colorSensor.getIR());
         metric("Spinner/Proximity", _colorSensor.getProximity());
         metric("Spinner/ArmIsRaised", isRaised());
