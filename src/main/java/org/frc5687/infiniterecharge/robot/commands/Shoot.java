@@ -1,7 +1,7 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
 import org.frc5687.infiniterecharge.robot.OI;
-import org.frc5687.infiniterecharge.robot.subsytems.Shooter;
+import org.frc5687.infiniterecharge.robot.subsystems.Shooter;
 
 public class Shoot extends OutliersCommand {
     private Shooter _shooter;

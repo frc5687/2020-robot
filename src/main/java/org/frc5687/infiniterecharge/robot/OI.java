@@ -57,7 +57,7 @@ public class OI extends OutliersProxy {
         _operatorXButton = new JoystickButton(_operatorGamepad,Gamepad.Buttons.X.getNumber());
         _operatorYButton = new JoystickButton(_operatorGamepad,Gamepad.Buttons.Y.getNumber());
     }
-    public void initializeButtons(DriveTrain driveTrain, Shifter shifter,  Intake intake, org.frc5687.infiniterecharge.robot.subsytems.Shooter shooter, Climber climber){
+    public void initializeButtons(DriveTrain driveTrain, Shifter shifter,  Intake intake, Shooter shooter, Climber climber){
         if (getSubSystem()==SubSystem.Shooter) {
             _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 1));
             _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
@@ -145,7 +145,7 @@ public class OI extends OutliersProxy {
 
     @Override
     public void updateDashboard() {
-        metric("SubSytemSelector", getSubSystem().toString());
+        metric("SubSystemSelector", getSubSystem().toString());
     }
 
     private int _driverRumbleCount = 0;

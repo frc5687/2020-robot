@@ -7,6 +7,6 @@ package org.frc5687.infiniterecharge.robot.util;
 
 public class Version {
     public static final String BRANCH = "Shooter/#3-CreateSubsystem";
-    public static final String REVISION = "e66e9f3";
+    public static final String REVISION = "a9bf3a3";
     public static final String MODIFIED = " *";
 }

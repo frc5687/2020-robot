@@ -2,7 +2,7 @@ package org.frc5687.infiniterecharge.robot.commands;
 
 
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
-import org.frc5687.infiniterecharge.robot.subsytems.Shooter;
+import org.frc5687.infiniterecharge.robot.subsystems.Shooter;
 
 public class KillAll extends OutliersCommand {
     private boolean _finished;

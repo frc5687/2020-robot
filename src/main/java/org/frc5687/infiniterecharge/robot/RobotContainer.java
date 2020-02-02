@@ -19,7 +19,7 @@ import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.Limelight;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
 import org.frc5687.infiniterecharge.robot.subsystems.Shifter;
-import org.frc5687.infiniterecharge.robot.subsytems.Shooter;
+import org.frc5687.infiniterecharge.robot.subsystems.Shooter;
 import org.frc5687.infiniterecharge.robot.util.MetricTracker;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 import org.frc5687.infiniterecharge.robot.util.PDP;
