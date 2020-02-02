@@ -2,7 +2,7 @@ package org.frc5687.infiniterecharge.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc5687.infiniterecharge.robot.OI;
-import org.frc5687.infiniterecharge.robot.subsytems.DriveTrain;
+import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
 
 public class Drive extends OutliersCommand {
 

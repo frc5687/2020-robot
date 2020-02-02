@@ -10,11 +10,15 @@ public class RobotMap {
     public static class CAN {
 
         public static class SPARKMAX {
-
+            /*  Example:
+                public static final int LEFT_MASTER_SPARK= 1;
+                */
             public static final int LEFT_MASTER = 14;
             public static final int RIGHT_MASTER = 5;
             public static final int LEFT_SLAVE = 9;
             public static final int RIGHT_SLAVE = 11;
+            public static final int INTAKE_NEO = 7;
+            public static final int CLIMBER_NEO = 8;
             public static final int INDEXER = 1;
         }
 
@@ -22,6 +26,14 @@ public class RobotMap {
             public static final int RIGHT_SHOOTER = 6;
             public static final int LEFT_SHOOTER = 7;
         }
+        public static class TALONSRX {
+            public static final int SPINNER = 5;
+            public static final int TURRET = 6;
+        }
+        public static class VICTORSPX {
+            public static final int HOOD = 10;
+        }
+
     }
 
         /**
@@ -45,6 +57,8 @@ public class RobotMap {
         public static class PCM {
             public static final int SHIFTER_HIGH = 5;
             public static final int SHIFTER_LOW = 4;
+            public static final int INTAKE_HIGH = 7;
+            public static final int INTAKE_LOW = 6;
 
 
         /* Example:
@@ -70,6 +84,7 @@ public class RobotMap {
          */
         public static class Analog {
             public static final int MODE_SWITCH = 0;
+            public static final int SUBSYSTEM_SELECTOR = 1;
         /*
         public static final int ARM_POTENTIOMETER = 7;
          */
@@ -84,6 +99,7 @@ public class RobotMap {
             public static final int DRIVE_LEFT_A = 2;
             public static final int DRIVE_RIGHT_B = 0;
             public static final int DRIVE_RIGHT_A = 1;
+            public static final int HOOD_ENCODER = 4;
             public static final int BOTTOM_IR = 6;
             public static final int MID_IR = 7;
             public static final int TOP_IR = 8;
@@ -92,5 +108,7 @@ public class RobotMap {
         public static final int ARM_FRONT_LIMIT = 0;
         */
         }
+
+
  }
 
