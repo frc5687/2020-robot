@@ -53,11 +53,6 @@ public class Turret extends OutliersSubsystem {
     }
 
     @Override
-    public void periodic() {
-        setDefaultCommand(new DriveTurret(this, _limelight, _oi));
-    }
-
-    @Override
     public void updateDashboard() {
         metric("Position Ticks", getPositionTicks());
         metric("Position Degrees", getPositionDegrees());

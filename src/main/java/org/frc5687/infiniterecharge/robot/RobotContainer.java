@@ -13,8 +13,9 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import org.frc5687.infiniterecharge.robot.commands.KillAll;
+import org.frc5687.infiniterecharge.robot.commands.*;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.Limelight;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
@@ -39,6 +40,7 @@ public class RobotContainer extends OutliersContainer {
     private PDP _pdp;
     private Spinner _spinner;
     private Climber _climber;
+    private Hood _hood;
 
     private Limelight _limelight;
     private Intake _intake;
@@ -68,6 +70,7 @@ public class RobotContainer extends OutliersContainer {
             _climber = new Climber(this, _oi);
             _shooter = new Shooter(this, _oi);
             _indexer = new Indexer(this);
+            _hood = new Hood(this, _oi);
 
             // Must initialize buttons AFTER subsystems are allocated...
             _oi.initializeButtons( _driveTrain, _shifter, _intake, _shooter, _climber);
@@ -75,6 +78,16 @@ public class RobotContainer extends OutliersContainer {
             // Initialize the other stuff
             _driveTrain.enableBrakeMode();
             _driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
+
+            // Now setup the default commands:
+            CommandScheduler s = CommandScheduler.getInstance();
+            s.setDefaultCommand(_hood, new DriveHood(_hood, _oi));
+            s.setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
+            s.setDefaultCommand(_climber, new Climb(_climber, _oi));
+            s.setDefaultCommand(_intake, new IntakeSpin(_intake, _oi));
+            s.setDefaultCommand(_shooter, new Shoot(_shooter, _oi));
+            s.setDefaultCommand(_spinner, new DriveSpinner(_spinner));
+            s.setDefaultCommand(_turret, new DriveTurret(_turret, _limelight, _oi));
         }
     }
 

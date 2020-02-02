@@ -66,10 +66,6 @@ public class Intake extends OutliersSubsystem {
         metric("INTAKE POSITION", getPosition()== Intake.Position.HIGH ? "Intake from Human Player" : (getPosition() == Intake.Position.LOW ? "Intake from Ground" : "Unknown"));
     }
 
-    @Override
-    public void periodic() {
-        setDefaultCommand(new IntakeSpin(this, _oi));
-    }
 
     public void raiseIntake() { _intakeSolenoid.set(DoubleSolenoid.Value.kReverse); }
 

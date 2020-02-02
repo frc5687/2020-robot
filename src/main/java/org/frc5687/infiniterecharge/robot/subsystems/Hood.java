@@ -31,10 +31,6 @@ public class Hood extends OutliersSubsystem {
         _hood.set(ControlMode.PercentOutput, speed);
     }
 
-    @Override
-    public void periodic() {
-        setDefaultCommand(new DriveHood(this, _oi));
-    }
 
     @Override
     public void updateDashboard() {

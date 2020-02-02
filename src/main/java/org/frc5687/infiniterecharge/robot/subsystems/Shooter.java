@@ -36,10 +36,6 @@ public class Shooter extends OutliersSubsystem {
         metric("Velocity", getVelocity());
     }
 
-    @Override
-    public void periodic() {
-        setDefaultCommand(new Shoot(this, _oi));
-    }
 
     public void setShooterSpeed(double speed) {
         _shooterRight.set(TalonFXControlMode.PercentOutput, speed);
