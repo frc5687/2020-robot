@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.frc5687.infiniterecharge.robot.util.*;
 import org.frc5687.infiniterecharge.robot.commands.ShootSpeedSetpoint;
-import org.frc5687.infiniterecharge.robot.subsytems.*;
+import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.AxisButton;
 import org.frc5687.infiniterecharge.robot.util.Gamepad;
 import org.frc5687.infiniterecharge.robot.util.OutliersProxy;
@@ -57,11 +57,13 @@ public class OI extends OutliersProxy {
         _operatorXButton = new JoystickButton(_operatorGamepad,Gamepad.Buttons.X.getNumber());
         _operatorYButton = new JoystickButton(_operatorGamepad,Gamepad.Buttons.Y.getNumber());
     }
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Shooter shooter, Climber climber){
-        _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 1));
-        _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
-        _operatorXButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .7));
-        _operatorYButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .8));
+    public void initializeButtons(DriveTrain driveTrain, Shifter shifter,  Intake intake, org.frc5687.infiniterecharge.robot.subsytems.Shooter shooter, Climber climber){
+        if (getSubSystem()==SubSystem.Shooter) {
+            _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 1));
+            _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
+            _operatorXButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .7));
+            _operatorYButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .8));
+        }
     }
 
 

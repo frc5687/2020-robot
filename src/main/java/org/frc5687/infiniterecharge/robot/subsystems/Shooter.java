@@ -9,6 +9,7 @@ import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.Robot;
 import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.commands.Shoot;
+import org.frc5687.infiniterecharge.robot.subsystems.OutliersSubsystem;
 import org.frc5687.infiniterecharge.robot.util.DigitalIR;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 

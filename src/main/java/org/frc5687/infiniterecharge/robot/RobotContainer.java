@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import org.frc5687.infiniterecharge.robot.commands.KillAll;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.Limelight;
-import org.frc5687.infiniterecharge.robot.subsytems.DriveTrain;
-import org.frc5687.infiniterecharge.robot.subsytems.Shifter;
+import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
+import org.frc5687.infiniterecharge.robot.subsystems.Shifter;
 import org.frc5687.infiniterecharge.robot.subsytems.Shooter;
 import org.frc5687.infiniterecharge.robot.util.MetricTracker;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
@@ -65,10 +65,10 @@ public class RobotContainer extends OutliersContainer {
             _turret = new Turret(this, _limelight, _oi);
             _spinner = new Spinner(this);
             _climber = new Climber(this, _oi);
-        _shooter = new Shooter(this, _oi);
+            _shooter = new Shooter(this, _oi);
 
             // Must initialize buttons AFTER subsystems are allocated...
-            _oi.initializeButtons(_shifter, _driveTrain, _intake, _climber, _shooter);
+            _oi.initializeButtons( _driveTrain, _shifter, _intake, _shooter, _climber);
 
             // Initialize the other stuff
             _driveTrain.enableBrakeMode();
