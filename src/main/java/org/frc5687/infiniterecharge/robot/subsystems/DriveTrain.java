@@ -60,12 +60,11 @@ public class DriveTrain extends OutliersSubsystem {
             debug("Allocating motor controllers");
             _leftMaster = new CANSparkMax(RobotMap.CAN.SPARKMAX.LEFT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
             _rightMaster = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
-            _rightSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
             _leftSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.LEFT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
+            _rightSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
 
 //            _leftSlave.follow(_leftMaster);
 //            _rightSlave.follow(_rightMaster);
-
 
             _leftEncoder = _leftMaster.getEncoder();
             _rightEncoder = _rightMaster.getEncoder();

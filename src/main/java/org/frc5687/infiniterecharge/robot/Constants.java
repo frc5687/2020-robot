@@ -95,4 +95,14 @@ public class Constants {
         public static final double TOLERANCE = 0.02;
     }
 
+    public class Shooter {
+        public static final boolean LEFT_INVERTED = false;
+        public static final boolean RIGHT_INVERTED = true;
+        public static final double DEADBAND = 0.1;
+    }
+
+    public class Indexer {
+        public static final boolean INVERTED = false;
+        public static final double ADVANCE_SPEED = 0.5; // TODO: Need a real value here!
+    }
 }

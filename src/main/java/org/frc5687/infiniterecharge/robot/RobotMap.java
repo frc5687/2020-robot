@@ -19,8 +19,13 @@ public class RobotMap {
             public static final int RIGHT_SLAVE = 11;
             public static final int INTAKE_NEO = 7;
             public static final int CLIMBER_NEO = 8;
+            public static final int INDEXER = 1;
         }
 
+        public static class TALONFX {
+            public static final int RIGHT_SHOOTER = 6;
+            public static final int LEFT_SHOOTER = 7;
+        }
         public static class TALONSRX {
             public static final int SPINNER = 5;
             public static final int TURRET = 6;
@@ -95,6 +100,10 @@ public class RobotMap {
             public static final int DRIVE_RIGHT_B = 0;
             public static final int DRIVE_RIGHT_A = 1;
             public static final int HOOD_ENCODER = 4;
+            public static final int BOTTOM_IR = 6;
+            public static final int MID_IR = 7;
+            public static final int TOP_IR = 8;
+
         /* Example:
         public static final int ARM_FRONT_LIMIT = 0;
         */
