@@ -66,6 +66,8 @@ public class DriveTrain extends OutliersSubsystem {
 
             _leftEncoder = _leftMaster.getAlternateEncoder(AlternateEncoderType.kQuadrature, Constants.DriveTrain.CPR);
             _rightEncoder = _rightMaster.getAlternateEncoder(AlternateEncoderType.kQuadrature, Constants.DriveTrain.CPR);
+//            _leftEncoder = _leftMaster.getEncoder();
+//            _rightEncoder = _rightMaster.getEncoder();
             _leftMaster.restoreFactoryDefaults();
             _leftSlave.restoreFactoryDefaults();
             _rightMaster.restoreFactoryDefaults();
@@ -107,6 +109,8 @@ public class DriveTrain extends OutliersSubsystem {
 
         _driveKinematics = new DifferentialDriveKinematics(Constants.DriveTrain.WIDTH);
         _odometry = new DifferentialDriveOdometry(getHeading());
+        _rightEncoder.setInverted(false);
+        _leftEncoder.setInverted(true);
 
 //        logMetrics("X", "Y", "Heading");
     }
@@ -199,10 +203,10 @@ public class DriveTrain extends OutliersSubsystem {
         return _rightEncoder.getPosition();
     }
     public double getLeftDistance() {
-        return getRawLeftEncoder() * Math.PI * Constants.DriveTrain.WHEEL_DIAMETER;
+        return getRawLeftEncoder() * Constants.DriveTrain.ENCODER_CONVERSION;
     }
     public double getRightDistance() {
-        return getRawRightEncoder() * Math.PI * Constants.DriveTrain.WHEEL_DIAMETER;
+        return getRawRightEncoder() * Constants.DriveTrain.ENCODER_CONVERSION;
     }
     public double getDistance() {
         return (getLeftDistance() + getRightDistance()) / 2;
@@ -250,6 +254,8 @@ public class DriveTrain extends OutliersSubsystem {
 //        metric("Heading", getPose().getRotation().getDegrees());
         metric("Distance/Left", getLeftDistance());
         metric("Distance/Right", getRightDistance());
+        metric("Distance/RawLeft", getRawLeftEncoder());
+        metric("Distance/RawRight", getRawRightEncoder());
     }
 
     public DifferentialDriveKinematics getKinematics() {

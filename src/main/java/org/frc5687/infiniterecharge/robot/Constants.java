@@ -18,7 +18,7 @@ public class Constants {
         public static final double CREEP_FACTOR = 0.25;
         public static final double WIDTH = 27.0;
         public static final int CPR = 8192;
-
+        public static final double ENCODER_CONVERSION = 6.85714286;
         public static final double KS_VOLTS = 0.172;
         public static final double KV_VOLTSPR = 2.46;
         public static final double KA_VOLTSQPR = 0.355;
@@ -28,8 +28,8 @@ public class Constants {
 
         public static final double KP_DRIVE_VELOCITY = 13.2;
 
-        public static final boolean LEFT_MOTORS_INVERTED = true;
-        public static final boolean RIGHT_MOTORS_INVERTED = false;
+        public static final boolean LEFT_MOTORS_INVERTED = false;
+        public static final boolean RIGHT_MOTORS_INVERTED = true;
 
         public static final double MAX_SPEED_IPS = 172.0;
         public static final double MAX_SPEED_MPS = Units.inchesToMeters(MAX_SPEED_IPS);

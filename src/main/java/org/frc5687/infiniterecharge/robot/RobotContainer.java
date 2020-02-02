@@ -57,10 +57,10 @@ public class RobotContainer extends OutliersContainer {
 
         // Then subsystems....
         _shifter = new Shifter(this);
-        _intake = new Intake(this, _oi);
+//        _intake = new Intake(this, _oi);
         _driveTrain = new DriveTrain(this, _oi, _imu, _shifter);
         _turret = new Turret(this, _limelight, _oi);
-        _spinner = new Spinner(this);
+//        _spinner = new Spinner(this);
 
         // Must initialize buttons AFTER subsystems are allocated...
         _oi.initializeButtons(_shifter, _driveTrain, _intake, _imu);
@@ -78,7 +78,7 @@ public class RobotContainer extends OutliersContainer {
     public void periodic() {
         _oi.poll();
         if (_oi.isKillAllPressed()) {
-            new KillAll(_driveTrain).schedule();
+//            new KillAll(_driveTrain).schedule();
         }
     }
 
