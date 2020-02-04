@@ -6,12 +6,14 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.util.Units;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
@@ -34,6 +36,8 @@ public class DriveTrain extends OutliersSubsystem {
 
     private DifferentialDriveOdometry _odometry;
     private DifferentialDriveKinematics _driveKinematics;
+    private SimpleMotorFeedforward _driveFeedForward;
+    private TrajectoryConfig _driveConfig;
 
     private OI _oi;
     private AHRS _imu;
@@ -60,14 +64,9 @@ public class DriveTrain extends OutliersSubsystem {
             _rightSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
             _leftSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.LEFT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
 
-//            _leftSlave.follow(_leftMaster);
-//            _rightSlave.follow(_rightMaster);
-
-
             _leftEncoder = _leftMaster.getAlternateEncoder(AlternateEncoderType.kQuadrature, Constants.DriveTrain.CPR);
             _rightEncoder = _rightMaster.getAlternateEncoder(AlternateEncoderType.kQuadrature, Constants.DriveTrain.CPR);
-//            _leftEncoder = _leftMaster.getEncoder();
-//            _rightEncoder = _rightMaster.getEncoder();
+
             _leftMaster.restoreFactoryDefaults();
             _leftSlave.restoreFactoryDefaults();
             _rightMaster.restoreFactoryDefaults();
@@ -103,14 +102,16 @@ public class DriveTrain extends OutliersSubsystem {
         } catch (Exception e) {
             error("Exception allocating drive motor controllers: " + e.getMessage());
         }
-
-        debug("Configuring mag encoders");
+        _rightEncoder.setInverted(false);
+        _leftEncoder.setInverted(true);
+        _leftSlave.follow(_leftMaster);
+        _rightSlave.follow(_rightMaster);
         resetDriveEncoders();
 
         _driveKinematics = new DifferentialDriveKinematics(Units.inchesToMeters(WIDTH));
-        _odometry = new DifferentialDriveOdometry(getHeading());
-        _rightEncoder.setInverted(false);
-        _leftEncoder.setInverted(true);
+        _odometry = new DifferentialDriveOdometry(getHeading(), new Pose2d(0,0, new Rotation2d(0)));
+        _driveFeedForward = new SimpleMotorFeedforward(KS_VOLTS, KV_VOLTSPR, KA_VOLTSQPR);
+        _driveConfig = new TrajectoryConfig(MAX_ACCEL_MPS, MAX_ACCEL_MPS).setKinematics(_driveKinematics);
 
 //        logMetrics("X", "Y", "Heading");
     }
@@ -212,10 +213,10 @@ public class DriveTrain extends OutliersSubsystem {
         return (getLeftDistance() + getRightDistance()) / 2;
     }
     public double getLeftVelocity() {
-        return _leftEncoder.getVelocity() * ENCODER_CONVERSION/60; //RPM
+        return _leftEncoder.getVelocity() * 2 * Math.PI * Units.inchesToMeters(2) / 60; //Meters Per Sec
     }
     public double getRightVelocity() {
-        return _rightEncoder.getVelocity() * ENCODER_CONVERSION/60; //RPM
+        return _rightEncoder.getVelocity() * 2 * Math.PI * Units.inchesToMeters(2.0) / 60 ; //Meters Per Sec
     }
 
 
@@ -256,7 +257,7 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Distance/Right", getRightDistance());
         metric("Distance/RawLeft", getRawLeftEncoder());
         metric("Distance/RawRight", getRawRightEncoder());
-        metric("yaw", _imu.getYaw());
+        metric("Heading", getPose().getRotation().getDegrees());
     }
 
     public DifferentialDriveKinematics getKinematics() {
@@ -264,7 +265,7 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public Rotation2d getHeading() {
-        return Rotation2d.fromDegrees(_imu.getYaw());
+        return Rotation2d.fromDegrees(-_imu.getYaw());
     }
 
     public Pose2d getPose() {
@@ -272,8 +273,16 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(Units.inchesToMeters(getLeftVelocity()),Units.inchesToMeters(getRightVelocity()));
+        return new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightVelocity());
     }
+
+    public SimpleMotorFeedforward getDriveTrainFeedForward() {
+        return _driveFeedForward;
+    }
+    public TrajectoryConfig getDriveConfig(boolean reversed) {
+        return _driveConfig.setReversed(reversed);
+    }
+
     public void resetOdometry(Pose2d pose) {
         resetDriveEncoders();
         _odometry.resetPosition(pose, getHeading());
@@ -281,10 +290,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
         _leftMaster.set(leftVolts/12);
-        _rightMaster.set(rightVolts/-12);
-        _rightSlave.set(rightVolts/-12);
-        _leftSlave.set(leftVolts/12);
-
+        _rightMaster.set(rightVolts/12);
     }
 
     public void resetDriveEncoders() {

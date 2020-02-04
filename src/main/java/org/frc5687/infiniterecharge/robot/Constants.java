@@ -16,17 +16,17 @@ public class Constants {
         public static final double SPEED_SENSITIVITY = 0.9;
         public static final double ROTATION_SENSITIVITY = 0.75;
         public static final double CREEP_FACTOR = 0.25;
-        public static final double WIDTH = 27.0;
+        public static final double WIDTH = 27.5;
         public static final int CPR = 8192;
         public static final double ENCODER_CONVERSION = 6.85714286;
-        public static final double KS_VOLTS = 0.172;
-        public static final double KV_VOLTSPR = 2.46;
-        public static final double KA_VOLTSQPR = 0.355;
+        public static final double KS_VOLTS = 0.196;
+        public static final double KV_VOLTSPR = 0.11;
+        public static final double KA_VOLTSQPR = 0.0163;
 
         public static final double RAMSETE_B = 2;
-        public static final double RAMETE_ZETA = 0.7;
+        public static final double RAMSETE_ZETA = 0.7;
 
-        public static final double KP_DRIVE_VELOCITY = 13.2;
+        public static final double KP_DRIVE_VELOCITY = 3;
 
         public static final boolean LEFT_MOTORS_INVERTED = false;
         public static final boolean RIGHT_MOTORS_INVERTED = true;
