@@ -104,6 +104,6 @@ public class Constants {
 
     public class Indexer {
         public static final boolean INVERTED = false;
-        public static final double ADVANCE_SPEED = 0.5; // TODO: Need a real value here!
+        public static final double ADVANCE_SPEED = 0.75; // TODO: Need a real value here!
     }
 }

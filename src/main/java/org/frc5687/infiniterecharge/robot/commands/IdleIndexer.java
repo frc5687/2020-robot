@@ -58,7 +58,8 @@ public class IdleIndexer extends OutliersCommand {
             metric("State", "Intaking, Advancing");
             speed = Constants.Indexer.ADVANCE_SPEED;
         } else {
-            metric("State", "Idle, Stopping");
+            metric("State", "Intaking, Advancing");
+            speed = Constants.Indexer.ADVANCE_SPEED;
         }
         _indexer.setIndexerSpeed(speed);
     }

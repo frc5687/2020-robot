@@ -22,8 +22,8 @@ public class Indexer extends OutliersSubsystem {
         super(container);
 
         _indexerNeo = new CANSparkMax(RobotMap.CAN.SPARKMAX.INDEXER, CANSparkMaxLowLevel.MotorType.kBrushless);
-
         _indexerNeo.setInverted(Constants.Indexer.INVERTED);
+        _indexerNeo.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
         _bottomIR = new DigitalIR(RobotMap.DIO.BOTTOM_IR);
         _midIR = new DigitalIR(RobotMap.DIO.MID_IR);
@@ -48,7 +48,9 @@ public class Indexer extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-
+        metric("IR1", _topIR.get());
+        metric("IR2", _midIR.get());
+        metric("IR3", _bottomIR.get());
     }
 
     public boolean anyBallsDetected() {
