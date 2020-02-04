@@ -80,19 +80,34 @@ public class RobotContainer extends OutliersContainer {
             _driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
 
             // Now setup the default commands:
-            CommandScheduler s = CommandScheduler.getInstance();
-            s.setDefaultCommand(_hood, new DriveHood(_hood, _oi));
-            s.setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
-            s.setDefaultCommand(_climber, new Climb(_climber, _oi));
-            s.setDefaultCommand(_intake, new IntakeSpin(_intake, _oi));
-            s.setDefaultCommand(_shooter, new Shoot(_shooter, _oi));
-            s.setDefaultCommand(_spinner, new DriveSpinner(_spinner));
-            s.setDefaultCommand(_turret, new DriveTurret(_turret, _limelight, _oi));
+            setDefaultCommand(_hood, new DriveHood(_hood, _oi));
+            setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
+            setDefaultCommand(_climber, new Climb(_climber, _oi));
+            setDefaultCommand(_intake, new IntakeSpin(_intake, _oi));
+            setDefaultCommand(_indexer, new IdleIndexer(_indexer, _intake));
+            setDefaultCommand(_shooter, new Shoot(_shooter, _oi));
+            setDefaultCommand(_spinner, new DriveSpinner(_spinner));
+            setDefaultCommand(_turret, new DriveTurret(_turret, _limelight, _oi));
         }
     }
 
+    /**
+     * Helper function to wrap CommandScheduler.setDefaultCommand.  This allows us to pass nulls during initial development
+     * without breaking.
+     * @param subSystem
+     * @param command
+     */
+    private void setDefaultCommand(OutliersSubsystem subSystem, OutliersCommand command) {
+        if (subSystem==null || command==null) {
+            return;
+        }
+        CommandScheduler s = CommandScheduler.getInstance();
+        s.setDefaultCommand(subSystem, command);
+
+    }
+
     public void zeroSensors() {
-        _turret.zeroSensors();
+        // _turret.zeroSensors();
     }
 
 
