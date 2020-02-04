@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import org.frc5687.infiniterecharge.robot.commands.LowerIntake;
+import org.frc5687.infiniterecharge.robot.commands.RaiseIntake;
 import org.frc5687.infiniterecharge.robot.util.*;
 import org.frc5687.infiniterecharge.robot.commands.ShootSpeedSetpoint;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
@@ -63,6 +65,10 @@ public class OI extends OutliersProxy {
             _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
             _operatorXButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .7));
             _operatorYButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .8));
+        }
+        if (getSubSystem()==SubSystem.Intake) {
+            _driverLeftBumper.whenPressed(new RaiseIntake(intake));
+            _driverRightBumper.whenPressed(new LowerIntake(intake));
         }
     }
 
