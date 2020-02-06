@@ -54,7 +54,7 @@ public class OI extends OutliersProxy {
         _driverRightStickButton = new JoystickButton(_driverGamepad, Gamepad.Buttons.RIGHT_STICK.getNumber());
 
         _operatorLeftTrigger = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_TRIGGER.getNumber(), Constants.OI.AXIS_BUTTON_THRESHHOLD);
-        _operatorRightBumper = new JoystickButton(_operatorGamepad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
+        _operatorRightBumper = new JoystickButton(_operatorGamepad, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
 
         _driverRightBumper = new JoystickButton(_driverGamepad, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _driverLeftBumper = new JoystickButton(_driverGamepad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
@@ -85,7 +85,7 @@ public class OI extends OutliersProxy {
             _driverLeftBumper.whenPressed(new RaiseIntake(intake));
             _driverRightBumper.whenPressed(new LowerIntake(intake));
         }
-        _operatorRightBumper.whenHeld(new ShootSpeedSetpoint(shooter, this, 1.0));
+        _operatorRightBumper.toggleWhenPressed(new ShootSpeedSetpoint(shooter, this, .5));
 
     }
 
