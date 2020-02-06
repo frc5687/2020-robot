@@ -62,8 +62,8 @@ public class DriveTrain extends OutliersSubsystem {
             debug("Allocating motor controllers");
             _leftMaster = new CANSparkMax(RobotMap.CAN.SPARKMAX.LEFT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
             _rightMaster = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
-            _rightSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
             _leftSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.LEFT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
+            _rightSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
 
 
             _leftEncoder = _leftMaster.getEncoder();
@@ -227,7 +227,6 @@ public class DriveTrain extends OutliersSubsystem {
     @Override
     public void periodic() {
         _pose = _odometry.update(getHeading(), Units.inchesToMeters(_leftMagEncoder.getDistance()), Units.inchesToMeters(_rightMagEncoder.getDistance()));
-        setDefaultCommand(new Drive(this, _oi));
     }
 
     @Override

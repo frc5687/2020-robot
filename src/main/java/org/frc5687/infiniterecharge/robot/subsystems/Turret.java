@@ -127,10 +127,8 @@ public class Turret extends OutliersSubsystem {
         if (_limelight.isTargetSighted()) {
             _driveTrain.resetOdometry(updatePose());
         }
-        setDefaultCommand(new DriveTurret(this,_driveTrain, _limelight, _oi));
     }
 
-    @Override
     public void updateDashboard() {
         metric("Position Ticks", getPositionTicks());
         metric("Position Degrees", getPositionDegrees());

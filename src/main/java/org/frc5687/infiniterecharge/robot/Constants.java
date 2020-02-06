@@ -13,6 +13,10 @@ public class Constants {
         public static final boolean INTAKE_MOTOR_INVERTED = true;
     }
 
+    public static class Climber {
+        public static final boolean CLIMBER_MOTOR_INVERTED = true;
+    }
+
     public static class DriveTrain {
         public static final double DEADBAND = 0.25;
         public static final double SPEED_SENSITIVITY = 0.9;
@@ -50,7 +54,6 @@ public class Constants {
 
     public static class Turret {
         public static final double DEADBAND = 0.1;
-
         public static final double TOLERANCE = 2;
         public static final boolean SENSOR_PHASE_INVERTED = false;
         public static final double TICKS_TO_DEGREES = 0.08695652173913;
@@ -82,6 +85,10 @@ public class Constants {
             public static double kD = 150;
             public static double kF = 4;
         }
+    }
+
+    public static class Hood {
+        public static final double DEADBAND = 0.1;
     }
 
     public static class OI {
@@ -120,4 +127,23 @@ public class Constants {
 
     }
 
+    public class Spinner {
+        public static final double MOTOR_PERCENT_SPEED = 0.5; // TODO: Need a real value here!
+        public static final double COLOR_TOLERANCE = 0.06;
+    }
+
+    public class RotarySwitch {
+        public static final double TOLERANCE = 0.02;
+    }
+
+    public class Shooter {
+        public static final boolean LEFT_INVERTED = false;
+        public static final boolean RIGHT_INVERTED = true;
+        public static final double DEADBAND = 0.1;
+    }
+
+    public class Indexer {
+        public static final boolean INVERTED = false;
+        public static final double ADVANCE_SPEED = 0.75; // TODO: Need a real value here!
+    }
 }
