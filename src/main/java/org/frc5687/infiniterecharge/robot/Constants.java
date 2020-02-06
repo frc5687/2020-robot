@@ -1,5 +1,7 @@
 package org.frc5687.infiniterecharge.robot;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.util.Units;
 
 public class Constants {
@@ -9,6 +11,7 @@ public class Constants {
 
     public static class Intake {
         public static final boolean INTAKE_MOTOR_INVERTED = true;
+        public static final double INTAKE_SPEED = 0.75;
     }
 
     public static class Climber {
@@ -53,6 +56,34 @@ public class Constants {
         public static final double TOLERANCE = 2;
         public static final boolean SENSOR_PHASE_INVERTED = false;
         public static final double TICKS_TO_DEGREES = 0.08695652173913;
+        public static final double MIN_DEGREES = -180;
+        public static final double MAX_DEGREES = 90;
+        public static final double MAX_VOLTAGE = 12.0;
+        public static final int CRUISE_VELOCITY = 5000; // in ticks
+        public static final int ACCELERATION = 16000; // in ticks
+        public static final double ABS_OFFSET = 273;// if the turret coasts this value changes, need to find a way to set this position.
+
+
+        public static class Position {
+            public static double kP = 0.11;
+            public static double kI = 0;
+            public static double kD = 0.0016;
+            public static double kF = 0;
+        }
+
+        public static class Velocity {
+            public static double kP = 0.11;
+            public static double kI = 0;
+            public static double kD = 0.0016;
+            public static double kF = 0;
+        }
+
+        public static class MotionMagic {
+            public static double kP = 15;
+            public static double kI = 0;
+            public static double kD = 150;
+            public static double kF = 4;
+        }
     }
 
     public static class Hood {
@@ -79,10 +110,20 @@ public class Constants {
         public static final long MANUAL_WAIT_PERIOD = 3000;
     }
     public class Limelight {
-        public static final double TARGET_HEIGHT = 29;
-        public static final double LIMELIGHT_HEIGHT = 41.5;
-        public static final double LIMELIGHT_ANGLE = 20;
+        public static final double TARGET_HEIGHT = 94;
+        public static final double LIMELIGHT_HEIGHT = 34;
+        public static final double LIMELIGHT_ANGLE = -1.57;
         public static final double OVERALL_LATENCY_MILLIS = 11;
+    }
+
+    public static class AutoPositions {
+        public static double WIDTH_FIELD = Units.inchesToMeters(323.25);
+        public static double MID_WIDTH_FIELD = WIDTH_FIELD / 2;
+        public static double LENGTH_FIELD = Units.inchesToMeters(629.25);
+        public static double MID_LENGTH_FIELD = LENGTH_FIELD / 2;
+        public static Pose2d TARGET_POSE = new Pose2d(MID_LENGTH_FIELD,MID_LENGTH_FIELD - Units.inchesToMeters(94.66), new Rotation2d(0));
+        public static Pose2d LOADING_STATION_POSE = new Pose2d(-MID_LENGTH_FIELD, 1.700911, new Rotation2d(0));
+
     }
 
     public class Spinner {

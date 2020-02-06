@@ -19,6 +19,7 @@ import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.commands.Drive;
+import org.frc5687.infiniterecharge.robot.util.BasicPose;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 import static org.frc5687.infiniterecharge.robot.Constants.DriveTrain.*;
@@ -44,6 +45,9 @@ public class DriveTrain extends OutliersSubsystem {
 
     private Pose2d _pose;
     private Shifter _shifter;
+
+    private double _xLength;
+    private double _yLength;
 
     private double _oldLeftSpeedFront;
     private double _oldLeftSpeedBack;
@@ -113,7 +117,6 @@ public class DriveTrain extends OutliersSubsystem {
         _driveFeedForward = new SimpleMotorFeedforward(KS_VOLTS, KV_VOLTSPR, KA_VOLTSQPR);
         _driveConfig = new TrajectoryConfig(MAX_ACCEL_MPS, MAX_ACCEL_MPS).setKinematics(_driveKinematics);
 
-//        logMetrics("X", "Y", "Heading");
     }
 
     public void enableBrakeMode() {
@@ -220,7 +223,6 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
 
-
     public void pauseMotors() {
         _oldLeftSpeedFront = _leftMaster.get();
         _oldLeftSpeedBack = _leftSlave.get();
@@ -248,6 +250,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
+
 //        SmartDashboard.putBoolean("MetricTracker/Drive", true);
 //        metric("X", getPose().getTranslation().getX());
 //        metric("Y", getPose().getTranslation().getY());
@@ -297,9 +300,32 @@ public class DriveTrain extends OutliersSubsystem {
         _rightEncoder.setPosition(0);
     }
 
+    public double distanceToTarget() {
+        double x = _pose.getTranslation().getX();
+        double y = _pose.getTranslation().getY();
+        double targetX = Constants.AutoPositions.TARGET_POSE.getTranslation().getX();
+        double targetY = Constants.AutoPositions.TARGET_POSE.getTranslation().getY();
+        metric("yTar", _yLength);
+        metric("xTar", _xLength);
+        metric("x",x);
+        metric("y", y);
+        _xLength = targetX - x;
+        _yLength = targetY - y;
+        return Math.sqrt((_xLength * _xLength) + (_yLength * _yLength));
+    }
+
+    public double getAngleToTarget() {
+        double angle = 0;
+        if (_yLength > 0) {
+            angle = (90 - Math.toDegrees(Math.asin(_xLength / distanceToTarget())) - getHeading().getDegrees());
+        } else if (_yLength < 0){
+            angle =  (Math.toDegrees(Math.asin(_xLength / distanceToTarget())) - 90) - getHeading().getDegrees();
+        }
+        return angle;
+    }
 
 
-
-
-
+    public BasicPose getDrivePose() {
+        return new BasicPose(_imu.getAngle(), _leftEncoder.getPosition(), _rightEncoder.getPosition(), 0);
+    }
 }
