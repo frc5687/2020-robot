@@ -26,6 +26,8 @@ public class OI extends OutliersProxy {
     private Button _driverRightBumper;
     private Button _driverLeftBumper;
 
+    private Button _operatorRightBumper;
+
     private Button _driverAButton;
     private Button _driverBButton;
     private Button _driverXButton;
@@ -52,6 +54,7 @@ public class OI extends OutliersProxy {
         _driverLeftTrigger = new AxisButton(_driverGamepad, Gamepad.Axes.LEFT_TRIGGER.getNumber(), Constants.OI.AXIS_BUTTON_THRESHHOLD);
 
         _operatorLeftTrigger = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_TRIGGER.getNumber(), Constants.OI.AXIS_BUTTON_THRESHHOLD);
+        _operatorRightBumper = new JoystickButton(_operatorGamepad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
 
         _driverRightBumper = new JoystickButton(_driverGamepad, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _driverLeftBumper = new JoystickButton(_driverGamepad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
@@ -77,6 +80,7 @@ public class OI extends OutliersProxy {
         _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
         _operatorXButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .7));
         _operatorYButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .8));
+        _operatorRightBumper.toggleWhenPressed(new ShootSpeedSetpoint(shooter, this, 1.0));
 
         _driverLeftBumper.whenPressed(new RaiseIntake(intake));
         _driverRightBumper.whenPressed(new LowerIntake(intake));
@@ -123,8 +127,7 @@ public class OI extends OutliersProxy {
     }
 
     public double getTurretSpeed() {
-        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
-
+//        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.Turret.DEADBAND);
         return speed;
@@ -147,7 +150,7 @@ public class OI extends OutliersProxy {
     }
 
     public double getHoodSpeed() {
-        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
+//        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
 
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_Y.getNumber());
         speed = applyDeadband(speed, Constants.Hood.DEADBAND);
