@@ -4,12 +4,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import org.frc5687.infiniterecharge.robot.commands.AutoTurretSetpoint;
-import org.frc5687.infiniterecharge.robot.commands.AutoTurretTracking;
-import org.frc5687.infiniterecharge.robot.commands.LowerIntake;
-import org.frc5687.infiniterecharge.robot.commands.RaiseIntake;
+import org.frc5687.infiniterecharge.robot.commands.*;
 import org.frc5687.infiniterecharge.robot.util.*;
-import org.frc5687.infiniterecharge.robot.commands.ShootSpeedSetpoint;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.*;
 import org.frc5687.infiniterecharge.robot.util.AxisButton;
@@ -24,6 +20,8 @@ public class OI extends OutliersProxy {
     protected Button _driverRightStickButton;
 
     private Button _operatorLeftTrigger;
+
+    private Button _driverLeftTrigger;
 
     private Button _driverRightBumper;
     private Button _driverLeftBumper;
@@ -53,8 +51,10 @@ public class OI extends OutliersProxy {
         _operatorGamepad = new Gamepad(1);
         _driverRightStickButton = new JoystickButton(_driverGamepad, Gamepad.Buttons.RIGHT_STICK.getNumber());
 
+        _driverLeftTrigger = new AxisButton(_driverGamepad, Gamepad.Axes.LEFT_TRIGGER.getNumber(), Constants.OI.AXIS_BUTTON_THRESHHOLD);
+
         _operatorLeftTrigger = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_TRIGGER.getNumber(), Constants.OI.AXIS_BUTTON_THRESHHOLD);
-        _operatorRightBumper = new JoystickButton(_operatorGamepad, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
+        _operatorRightBumper = new JoystickButton(_operatorGamepad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
 
         _driverRightBumper = new JoystickButton(_driverGamepad, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _driverLeftBumper = new JoystickButton(_driverGamepad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
@@ -74,18 +74,23 @@ public class OI extends OutliersProxy {
         _operatorXButton = new JoystickButton(_operatorGamepad,Gamepad.Buttons.X.getNumber());
         _operatorYButton = new JoystickButton(_operatorGamepad,Gamepad.Buttons.Y.getNumber());
     }
-    public void initializeButtons(DriveTrain driveTrain, Shifter shifter,  Intake intake, Shooter shooter, Climber climber){
-        if (getSubSystem()==SubSystem.Shooter) {
-            _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 1));
-            _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
-            _operatorXButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .7));
-            _operatorYButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .8));
-        }
-        if (getSubSystem()==SubSystem.Intake) {
-            _driverLeftBumper.whenPressed(new RaiseIntake(intake));
-            _driverRightBumper.whenPressed(new LowerIntake(intake));
-        }
-        _operatorRightBumper.toggleWhenPressed(new ShootSpeedSetpoint(shooter, this, .5));
+
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter){
+        _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 1));
+        _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
+        _operatorXButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .7));
+        _operatorYButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .8));
+        _operatorRightBumper.toggleWhenPressed(new ShootSpeedSetpoint(shooter, this, 1.0));
+
+        _driverLeftBumper.whenPressed(new RaiseIntake(intake));
+        _driverRightBumper.whenPressed(new LowerIntake(intake));
+
+        _driverAButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 90));
+        _driverBButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 0));
+        _driverYButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -90));
+        _driverXButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -180));
+        _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this, poseTracker));
+        _driverLeftTrigger.whileHeld(new AutoIntake(intake));
 
     }
 
