@@ -82,8 +82,8 @@ public class OI extends OutliersProxy {
         _operatorYButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .8));
         _operatorRightBumper.toggleWhenPressed(new ShootSpeedSetpoint(shooter, this, 1.0));
 
-        _driverLeftBumper.whenPressed(new RaiseIntake(intake));
-        _driverRightBumper.whenPressed(new LowerIntake(intake));
+        _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
+        _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
 
         _driverAButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 90));
         _driverBButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 0));
