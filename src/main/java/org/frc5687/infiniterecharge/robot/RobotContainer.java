@@ -17,13 +17,10 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import org.frc5687.infiniterecharge.robot.commands.*;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
-import org.frc5687.infiniterecharge.robot.util.Limelight;
+import org.frc5687.infiniterecharge.robot.util.*;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
 import org.frc5687.infiniterecharge.robot.subsystems.Shifter;
 import org.frc5687.infiniterecharge.robot.subsystems.Shooter;
-import org.frc5687.infiniterecharge.robot.util.MetricTracker;
-import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
-import org.frc5687.infiniterecharge.robot.util.PDP;
 
 import java.util.ArrayList;
 
@@ -110,6 +107,9 @@ public class RobotContainer extends OutliersContainer {
         // _turret.zeroSensors();
     }
 
+    public Pose getPose() {
+        return null;
+    }
 
     public void periodic() {
         _oi.poll();
