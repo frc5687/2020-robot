@@ -1,6 +1,5 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
 
@@ -13,12 +12,10 @@ public class Drive extends OutliersCommand {
         _driveTrain = driveTrain;
         _oi = oi;
         addRequirements(_driveTrain);
-//        logMetrics("X", "Y");
     }
 
     @Override
     public void initialize() {
-//        SmartDashboard.putBoolean("MetricTracker/Drive", true);
         super.initialize();
     }
 
@@ -31,10 +28,7 @@ public class Drive extends OutliersCommand {
         // Get the rotation from the tiller
         double wheelRotation = _oi.getDriveRotation();
         _driveTrain.cheesyDrive(stickSpeed, wheelRotation, false, true);
-        metric("Pose", _driveTrain.getPose().toString());
-        metric("X", _driveTrain.getPose().getTranslation().getX());
-        metric("Y", _driveTrain.getPose().getTranslation().getY());
-        metric("Heading", _driveTrain.getPose().getRotation().getDegrees());
+
     }
     @Override
     public boolean isFinished() {

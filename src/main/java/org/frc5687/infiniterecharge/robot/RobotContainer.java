@@ -24,7 +24,7 @@ import org.frc5687.infiniterecharge.robot.subsystems.Shooter;
 
 import java.util.ArrayList;
 
-public class RobotContainer extends OutliersContainer {
+public class RobotContainer extends OutliersContainer implements IPoseTrackable {
 
     private OI _oi;
 
@@ -41,11 +41,14 @@ public class RobotContainer extends OutliersContainer {
 
     private Limelight _limelight;
     private Intake _intake;
+    private PoseTracker _poseTracker;
+
     public RobotContainer(Robot robot) {
 
     }
 
     public void init() {
+
         // OI must be first...
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 100);
@@ -62,7 +65,7 @@ public class RobotContainer extends OutliersContainer {
             _shifter = new Shifter(this);
             _intake = new Intake(this, _oi);
             _driveTrain = new DriveTrain(this, _oi, _imu, _shifter);
-            _turret = new Turret(this, _limelight, _oi);
+            _turret = new Turret(this, _driveTrain, _limelight, _oi);
 //            _spinner = new Spinner(this);
             _climber = new Climber(this, _oi);
             _shooter = new Shooter(this, _oi);
@@ -84,7 +87,7 @@ public class RobotContainer extends OutliersContainer {
             setDefaultCommand(_indexer, new IdleIndexer(_indexer, _intake));
             setDefaultCommand(_shooter, new Shoot(_shooter, _oi));
 //            setDefaultCommand(_spinner, new DriveSpinner(_spinner));
-            setDefaultCommand(_turret, new DriveTurret(_turret, _limelight, _oi));
+            setDefaultCommand(_turret, new DriveTurret(_turret, _driveTrain, _limelight, _oi));
         }
     }
 
@@ -100,15 +103,10 @@ public class RobotContainer extends OutliersContainer {
         }
         CommandScheduler s = CommandScheduler.getInstance();
         s.setDefaultCommand(subSystem, command);
-
     }
 
     public void zeroSensors() {
         // _turret.zeroSensors();
-    }
-
-    public Pose getPose() {
-        return null;
     }
 
     public void periodic() {
@@ -116,6 +114,11 @@ public class RobotContainer extends OutliersContainer {
         if (_oi.isKillAllPressed()) {
             new KillAll(_driveTrain, _shooter, _indexer, _intake).schedule();
         }
+    }
+
+    @Override
+    public Pose getPose() {
+        return new RobotPose(_driveTrain.getDrivePose(), _turret.getPose());
     }
 
     public Command getAutonomousCommand() {
