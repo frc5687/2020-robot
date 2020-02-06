@@ -28,10 +28,10 @@ public class RobotMap {
         }
         public static class TALONSRX {
             public static final int SPINNER = 5;
-            public static final int TURRET = 6;
+            public static final int TURRET = 8;
         }
         public static class VICTORSPX {
-            public static final int HOOD = 10;
+            public static final int HOOD = 7;
         }
 
     }
