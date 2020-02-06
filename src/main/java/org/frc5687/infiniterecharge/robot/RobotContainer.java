@@ -73,7 +73,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             _hood = new Hood(this, _oi);
 
             // Must initialize buttons AFTER subsystems are allocated...
-            _oi.initializeButtons( _driveTrain, _shifter, _intake, _shooter, _climber);
+            _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker, _intake, _shooter);
 
             // Initialize the other stuff
             _driveTrain.enableBrakeMode();

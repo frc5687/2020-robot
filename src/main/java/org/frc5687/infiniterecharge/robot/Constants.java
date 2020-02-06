@@ -11,6 +11,7 @@ public class Constants {
 
     public static class Intake {
         public static final boolean INTAKE_MOTOR_INVERTED = true;
+        public static final double INTAKE_SPEED = 0.75;
     }
 
     public static class Climber {
