@@ -109,7 +109,6 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
         // _turret.zeroSensors();
     }
 
-
     public void periodic() {
         _oi.poll();
         if (_oi.isKillAllPressed()) {
@@ -119,7 +118,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
     @Override
     public Pose getPose() {
-        return new TurretPose(_turret.getPositionDegrees());
+        return new RobotPose(_driveTrain.getDrivePose(), _turret.getPose());
     }
 
     public Command getAutonomousCommand() {

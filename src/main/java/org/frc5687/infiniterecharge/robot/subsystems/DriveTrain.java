@@ -15,6 +15,7 @@ import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.commands.Drive;
+import org.frc5687.infiniterecharge.robot.util.BasicPose;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 import static org.frc5687.infiniterecharge.robot.Constants.DriveTrain.CREEP_FACTOR;
@@ -297,7 +298,7 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
 
-
-
-
+    public BasicPose getDrivePose() {
+        return new BasicPose(_imu.getAngle(), _leftEncoder.getPosition(), _rightEncoder.getPosition(), 0);
+    }
 }

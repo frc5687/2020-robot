@@ -15,6 +15,7 @@ import org.frc5687.infiniterecharge.robot.util.Limelight;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 import org.frc5687.infiniterecharge.robot.Constants.AutoPositions.*;
+import org.frc5687.infiniterecharge.robot.util.TurretPose;
 
 import java.lang.annotation.Target;
 
@@ -168,6 +169,10 @@ public class Turret extends OutliersSubsystem {
     public double getAbsoluteEncoderPosition() {
         _positionABS = (getAbsoluteEncoderRawPosition() * Constants.Turret.TICKS_TO_DEGREES) - Constants.Turret.ABS_OFFSET;
         return _positionABS;
+    }
+
+    public TurretPose getPose() {
+        return new TurretPose(getPositionDegrees());
     }
 
     public enum Control {
