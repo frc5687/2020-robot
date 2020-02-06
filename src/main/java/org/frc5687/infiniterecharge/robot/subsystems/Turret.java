@@ -46,6 +46,10 @@ public class Turret extends OutliersSubsystem {
             _turretController = new TalonSRX(RobotMap.CAN.TALONSRX.TURRET);
             _turretController.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,100);
             _turretController.setSensorPhase(Constants.Turret.SENSOR_PHASE_INVERTED);
+            _turretController.configForwardSoftLimitThreshold((int)(Constants.Turret.MAX_DEGREES/Constants.Turret.TICKS_TO_DEGREES), 30);
+            _turretController.configForwardSoftLimitEnable(true, 30);
+            _turretController.configReverseSoftLimitThreshold((int) (Constants.Turret.MIN_DEGREES/Constants.Turret.TICKS_TO_DEGREES), 30);
+            _turretController.configReverseSoftLimitEnable(true, 30);
             _turretController.configMotionCruiseVelocity(Constants.Turret.CRUISE_VELOCITY);
             _turretController.configMotionAcceleration(Constants.Turret.ACCELERATION);
             _turretController.configVoltageMeasurementFilter(8);
