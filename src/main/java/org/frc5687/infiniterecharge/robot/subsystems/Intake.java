@@ -66,6 +66,12 @@ public class Intake extends OutliersSubsystem {
         metric("INTAKE POSITION", getPosition()== Intake.Position.HIGH ? "Intake from Human Player" : (getPosition() == Intake.Position.LOW ? "Intake from Ground" : "Unknown"));
     }
 
+    public boolean isLowered() {
+        return _intakeSolenoid.get() == DoubleSolenoid.Value.kReverse;
+    }
+    public boolean isRaised() {
+        return _intakeSolenoid.get() == DoubleSolenoid.Value.kForward;
+    }
 
     public void raiseIntake() { _intakeSolenoid.set(DoubleSolenoid.Value.kReverse); }
 
@@ -76,11 +82,14 @@ public class Intake extends OutliersSubsystem {
     }*/
 
 
-
     public void setSpeed(double speed) {
         _intakeSpark.set(speed);
     }
 
     public double getIntakePower() {return _intakeSpark.get(); }
+
+    public boolean isIntaking() {
+        return getIntakePower() > 0;
+    }
 
 }

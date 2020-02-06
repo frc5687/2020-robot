@@ -17,17 +17,14 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import org.frc5687.infiniterecharge.robot.commands.*;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
-import org.frc5687.infiniterecharge.robot.util.Limelight;
+import org.frc5687.infiniterecharge.robot.util.*;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
 import org.frc5687.infiniterecharge.robot.subsystems.Shifter;
 import org.frc5687.infiniterecharge.robot.subsystems.Shooter;
-import org.frc5687.infiniterecharge.robot.util.MetricTracker;
-import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
-import org.frc5687.infiniterecharge.robot.util.PDP;
 
 import java.util.ArrayList;
 
-public class RobotContainer extends OutliersContainer {
+public class RobotContainer extends OutliersContainer implements IPoseTrackable {
 
     private OI _oi;
 
@@ -43,7 +40,9 @@ public class RobotContainer extends OutliersContainer {
     private Hood _hood;
 
     private Limelight _limelight;
+    private Limelight _driveLimelight;
     private Intake _intake;
+    private PoseTracker _poseTracker;
     public RobotContainer(Robot robot) {
 
     }
@@ -57,6 +56,8 @@ public class RobotContainer extends OutliersContainer {
 
         // then proxies...
         _limelight = new Limelight("limelight");
+        _driveLimelight = new Limelight("drive-limelight");
+
 
 
         // Then subsystems....
@@ -81,7 +82,7 @@ public class RobotContainer extends OutliersContainer {
 
             // Now setup the default commands:
             setDefaultCommand(_hood, new DriveHood(_hood, _oi));
-            setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
+            setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi, _intake, _driveLimelight, _poseTracker));
             setDefaultCommand(_climber, new Climb(_climber, _oi));
             setDefaultCommand(_intake, new IntakeSpin(_intake, _oi));
             setDefaultCommand(_indexer, new IdleIndexer(_indexer, _intake));
@@ -169,4 +170,11 @@ public class RobotContainer extends OutliersContainer {
         super.updateDashboard();
         _oi.updateDashboard();
     }
+
+    @Override
+    public Pose getPose() {
+        return new DrivePose(_driveTrain.getHeading().getDegrees(), _driveTrain.getLeftDistance(), _driveTrain.getRightDistance(), _driveTrain.getDistance());
+    }
+
+
 }
