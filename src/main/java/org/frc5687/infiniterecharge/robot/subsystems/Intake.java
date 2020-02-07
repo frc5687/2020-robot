@@ -64,13 +64,14 @@ public class Intake extends OutliersSubsystem {
     {
         metric("INTAKE POWER", getIntakePower());
         metric("INTAKE POSITION", getPosition()== Intake.Position.HIGH ? "Intake from Human Player" : (getPosition() == Intake.Position.LOW ? "Intake from Ground" : "Unknown"));
+        metric("intakeing", isIntaking());
     }
 
     public boolean isLowered() {
-        return _intakeSolenoid.get() == DoubleSolenoid.Value.kReverse;
+        return _intakeSolenoid.get() == DoubleSolenoid.Value.kForward;
     }
     public boolean isRaised() {
-        return _intakeSolenoid.get() == DoubleSolenoid.Value.kForward;
+        return _intakeSolenoid.get() == DoubleSolenoid.Value.kReverse;
     }
 
     public void raiseIntake() { _intakeSolenoid.set(DoubleSolenoid.Value.kReverse); }

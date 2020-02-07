@@ -1,8 +1,11 @@
 package org.frc5687.infiniterecharge.robot.util;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class PoseTracker extends OutliersProxy{
+public class PoseTracker extends OutliersProxy {
 
     private static final double DEFAULT_PERIOD = 0.05; // Seconds
     private static final int DEFAULT_HISTORY = 1; // Seconds

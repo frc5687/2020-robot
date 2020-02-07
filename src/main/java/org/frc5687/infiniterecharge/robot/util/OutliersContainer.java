@@ -6,7 +6,7 @@ import org.frc5687.infiniterecharge.robot.subsystems.OutliersSubsystem;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class OutliersContainer implements ILoggingSource {
+public abstract class OutliersContainer implements ILoggingSource, IPoseTrackable {
     private List<OutliersSubsystem> _subsystems = new LinkedList<OutliersSubsystem>();
 
     public void metric(String name, boolean value) {

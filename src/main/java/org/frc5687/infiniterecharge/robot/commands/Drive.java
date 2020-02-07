@@ -1,11 +1,11 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
+import org.frc5687.infiniterecharge.robot.RobotPose;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
 import org.frc5687.infiniterecharge.robot.subsystems.Intake;
-import org.frc5687.infiniterecharge.robot.util.DrivePose;
+import org.frc5687.infiniterecharge.robot.util.BasicPose;
 import org.frc5687.infiniterecharge.robot.util.Helpers;
 import org.frc5687.infiniterecharge.robot.util.Limelight;
 import org.frc5687.infiniterecharge.robot.util.PoseTracker;
@@ -40,12 +40,10 @@ public class Drive extends OutliersCommand {
         _driveLimelight = driveLimelight;
         _poseTracker = poseTracker;
         addRequirements(_driveTrain);
-//        logMetrics("X", "Y");
     }
 
     @Override
     public void initialize() {
-//        SmartDashboard.putBoolean("MetricTracker/Drive", true);
         super.initialize();
         _mediumZone = Constants.DriveTrain.MEDIUM_ZONE_COMP;
         _slowZone = Constants.DriveTrain.SLOW_ZONE_COMP;
@@ -62,7 +60,7 @@ public class Drive extends OutliersCommand {
         // Get the rotation from the tiller
         double wheelRotation = _oi.getDriveRotation();
         _targetSighted = _driveLimelight.isTargetSighted();
-        if (!_oi.isAutoTargetPressed()) {
+        if (!_oi.isAutoTargetDrivePressed()) {
             _stickyLimit = 1.0;
             _lockout = false;
             if (_driveState!=DriveState.normal) {
@@ -76,14 +74,15 @@ public class Drive extends OutliersCommand {
                     if (_intake.isLowered()) {
                         if (_intake.isIntaking()) {
                             error("Cargo intaking");
-                            _driveLimelight.setPipeline(Limelight.Pipeline.CargoTrackingLargest);
-                            metric("Pipeline", Limelight.Pipeline.CargoTrackingLargest.name());
-                            _driveLimelight.enableLEDs();
+                            _driveLimelight.setPipeline(Limelight.Pipeline.PowerCell);
+                            metric("Pipeline", Limelight.Pipeline.PowerCell.name());
+                            _driveLimelight.disableLEDs();
                             _driveState = DriveState.seekingcells;
                         }
                     } else {
-                        _driveLimelight.setPipeline(Limelight.Pipeline.TapeTrackingLargest);
-                        metric("Pipeline", Limelight.Pipeline.TapeTrackingLargest.name());
+                        error("Using Limelight");
+                        _driveLimelight.setPipeline(Limelight.Pipeline.Wide);
+                        metric("Pipeline", Limelight.Pipeline.Wide.name());
                         _driveLimelight.enableLEDs();
                         _driveState = DriveState.seeking;
                         _seekMax = System.currentTimeMillis() + Constants.DriveTrain.SEEK_TIME;
@@ -100,8 +99,8 @@ public class Drive extends OutliersCommand {
                     if (_driveLimelight.isTargetSighted()) {
                         _turnSpeed = getTurnSpeed();
                         if (_driveLimelight.isTargetCentered()) {
-                            _driveLimelight.setPipeline(Limelight.Pipeline.CargoTrackingClosest);
-                            metric("Pipeline", Limelight.Pipeline.CargoTrackingClosest.name());
+                            _driveLimelight.setPipeline(Limelight.Pipeline.PowerCell);
+                            metric("Pipeline", Limelight.Pipeline.PowerCell.name());
                             _driveState = DriveState.trackingcells;
                         }
                     }
@@ -110,8 +109,8 @@ public class Drive extends OutliersCommand {
                     if (System.currentTimeMillis() > _lockEnd || _driveLimelight.isTargetSighted()) {
                         // Note that we could also wait until the target is centered to lock...which might make more sense.
                         // Just add  && _limelight.isTargetCentered() to the condition above
-                        _driveLimelight.setPipeline(Limelight.Pipeline.TapeTrackingClosest);
-                        metric("Pipeline", Limelight.Pipeline.TapeTrackingClosest.name());
+                        _driveLimelight.setPipeline(Limelight.Pipeline.Wide);
+                        metric("Pipeline", Limelight.Pipeline.Wide.name());
                         _driveState = DriveState.tracking;
                     }
                     _turnSpeed = getTurnSpeed();
@@ -124,11 +123,13 @@ public class Drive extends OutliersCommand {
                     break;
             }
         }
-        _driveTrain.cheesyDrive(stickSpeed, wheelRotation, false, true);
-        metric("Pose", _driveTrain.getPose().toString());
-        metric("X", _driveTrain.getPose().getTranslation().getX());
-        metric("Y", _driveTrain.getPose().getTranslation().getY());
-        metric("Heading", _driveTrain.getPose().getRotation().getDegrees());
+        if (_driveState == DriveState.normal) {
+            _driveTrain.cheesyDrive(stickSpeed, wheelRotation, _oi.isCreepPressed(), false);
+        } else {
+            _driveTrain.cheesyDrive(stickSpeed, _turnSpeed, false, true);
+        }
+//        _driveTrain.cheesyDrive(stickSpeed, wheelRotation, false, true);
+
     }
     @Override
     public boolean isFinished() {
@@ -158,13 +159,13 @@ public class Drive extends OutliersCommand {
 
         // Find the pose of the robot _when the picture was taken_
         long timeKey = System.currentTimeMillis() - (long)_driveLimelight.getLatency();
-        DrivePose pose = (DrivePose)_poseTracker.get(timeKey);
+        RobotPose pose = (RobotPose)_poseTracker.get(timeKey);
 
         // Get the angle from the pose if one was found--otherwise use yaw
-        double poseAngle = pose == null ? yaw : pose.getAngle();
+        double poseAngle = pose == null ? -yaw : -pose.getDrivePose().getAngle();
 
         // Now adjust the limelight angle based on the change in yaw from when the picture was taken to now
-        double offsetCompensation = yaw - poseAngle;
+        double offsetCompensation = -yaw - poseAngle;
         double targetAngle = limelightAngle - offsetCompensation;
 
         metric("Pose", pose==null?0:pose.getMillis());

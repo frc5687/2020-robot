@@ -43,11 +43,13 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
     private Limelight _driveLimelight;
     private Intake _intake;
     private PoseTracker _poseTracker;
+
     public RobotContainer(Robot robot) {
 
     }
 
     public void init() {
+
         // OI must be first...
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 100);
@@ -55,8 +57,8 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
         _imu.zeroYaw();
 
         // then proxies...
-        _limelight = new Limelight("limelight");
-        _driveLimelight = new Limelight("drive-limelight");
+        _limelight = new Limelight("limelight-drive");
+        _driveLimelight = new Limelight("limelight");
 
 
 
@@ -66,15 +68,17 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             _shifter = new Shifter(this);
             _intake = new Intake(this, _oi);
             _driveTrain = new DriveTrain(this, _oi, _imu, _shifter);
-            _turret = new Turret(this, _limelight, _oi);
-//            _spinner = new Spinner(this);
+            _turret = new Turret(this, _driveTrain, _limelight, _oi);
+            _spinner = new Spinner(this);
             _climber = new Climber(this, _oi);
-            _shooter = new Shooter(this, _oi);
+            _shooter = new Shooter(this, _oi, _driveTrain);
             _indexer = new Indexer(this);
             _hood = new Hood(this, _oi);
 
+
+            _poseTracker = new PoseTracker(this);
             // Must initialize buttons AFTER subsystems are allocated...
-            _oi.initializeButtons( _driveTrain, _shifter, _intake, _shooter, _climber);
+            _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker, _intake, _shooter, _indexer, _spinner);
 
             // Initialize the other stuff
             _driveTrain.enableBrakeMode();
@@ -86,9 +90,9 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             setDefaultCommand(_climber, new Climb(_climber, _oi));
             setDefaultCommand(_intake, new IntakeSpin(_intake, _oi));
             setDefaultCommand(_indexer, new IdleIndexer(_indexer, _intake));
-            setDefaultCommand(_shooter, new Shoot(_shooter, _oi));
-//            setDefaultCommand(_spinner, new DriveSpinner(_spinner));
-            setDefaultCommand(_turret, new DriveTurret(_turret, _limelight, _oi));
+            setDefaultCommand(_shooter, new DriveShooter(_shooter, _oi));
+            setDefaultCommand(_spinner, new DriveSpinner(_spinner, _oi));
+            setDefaultCommand(_turret, new DriveTurret(_turret, _driveTrain, _limelight, _oi));
         }
     }
 
@@ -104,19 +108,22 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
         }
         CommandScheduler s = CommandScheduler.getInstance();
         s.setDefaultCommand(subSystem, command);
-
     }
 
     public void zeroSensors() {
         // _turret.zeroSensors();
     }
 
-
     public void periodic() {
         _oi.poll();
         if (_oi.isKillAllPressed()) {
             new KillAll(_driveTrain, _shooter, _indexer, _intake).schedule();
         }
+    }
+
+    @Override
+    public Pose getPose() {
+        return new RobotPose(_driveTrain.getDrivePose(), _turret.getPose());
     }
 
     public Command getAutonomousCommand() {
@@ -169,11 +176,6 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
     public void updateDashboard() {
         super.updateDashboard();
         _oi.updateDashboard();
-    }
-
-    @Override
-    public Pose getPose() {
-        return new DrivePose(_driveTrain.getHeading().getDegrees(), _driveTrain.getLeftDistance(), _driveTrain.getRightDistance(), _driveTrain.getDistance());
     }
 
 

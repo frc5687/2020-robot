@@ -5,14 +5,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * Created by Ben Bernard on 6/20/2016.
  */
-public class DrivePose extends Pose {
+public class BasicPose extends Pose {
 
     private double _angle;
     private double _rightEncoder;
     private double _leftEncoder;
     private double _distance;
 
-    public DrivePose(double angle, double leftEncoder, double rightEncoder, double distance) {
+    public BasicPose(double angle, double leftEncoder, double rightEncoder, double distance) {
         super();
         _angle = angle;
         _leftEncoder = leftEncoder;
