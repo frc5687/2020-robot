@@ -27,12 +27,11 @@ public class RobotMap {
             public static final int LEFT_SHOOTER = 1;
         }
         public static class TALONSRX {
-            public static final int SPINNER = 5;
             public static final int TURRET = 8;
         }
         public static class VICTORSPX {
             public static final int HOOD = 0;
-            public static final int JOHNSON = 1;
+            public static final int SPINNER = 1;
         }
 
     }
@@ -56,18 +55,20 @@ public class RobotMap {
          * Note that for PCM only one device can connect to each port, so the numbers should be unique.
          */
         public static class PCM {
-            public static final int SHIFTER_HIGH = 4;
-            public static final int SHIFTER_LOW = 5;
-            public static final int INTAKE_HIGH = 0;
-            public static final int INTAKE_LOW = 1;
-
-
         /* Example:
         public static final int LEFT_PINCER_OPEN = 5;
         */
 
             //PCM ports are not in the robot yet, using 0 and 1.
+            public static final int SHIFTER_HIGH = 4;
+            public static final int SHIFTER_LOW = 5;
+            public static final int INTAKE_HIGH = 0;
+            public static final int INTAKE_LOW = 1;
+            public static final int SPINNER_DEPLOY = 6;
+            public static final int SPINNER_STOW = 7;
         }
+
+
 
         /**
          * There should be an entry here for each PDP breaker, preferrably in numerical order.
