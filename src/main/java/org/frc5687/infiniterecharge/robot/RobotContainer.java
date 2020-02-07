@@ -66,7 +66,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             _intake = new Intake(this, _oi);
             _driveTrain = new DriveTrain(this, _oi, _imu, _shifter);
             _turret = new Turret(this, _driveTrain, _limelight, _oi);
-//            _spinner = new Spinner(this);
+            _spinner = new Spinner(this);
             _climber = new Climber(this, _oi);
             _shooter = new Shooter(this, _oi);
             _indexer = new Indexer(this);

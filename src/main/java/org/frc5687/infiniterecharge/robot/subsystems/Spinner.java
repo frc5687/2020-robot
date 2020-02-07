@@ -85,6 +85,7 @@ public class Spinner extends OutliersSubsystem {
             debug("allocating spinner motor controller");
             _motorController = new VictorSPX(RobotMap.CAN.VICTORSPX.SPINNER);
             _motorController.setNeutralMode(NeutralMode.Brake);
+            _solenoid = new DoubleSolenoid(RobotMap.PCM.SPINNER_DEPLOY, RobotMap.PCM.SPINNER_STOW);
             // TODO: Not sure if this is really what we want, just stole from turret...
             // _motorController.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,100);
         } catch (Exception e) {
