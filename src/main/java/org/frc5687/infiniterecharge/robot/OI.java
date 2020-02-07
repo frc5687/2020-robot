@@ -91,8 +91,8 @@ public class OI extends OutliersProxy {
         _operatorRightBumper.toggleWhenPressed(new ShootSpeedSetpoint(shooter, this, 1.0));
         _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this));
 
-        _driverLeftBumper.whenPressed(new RaiseIntake(intake));
-        _driverRightBumper.whenPressed(new LowerIntake(intake));
+//        _driverLeftBumper.whenPressed(new RaiseIntake(intake));
+//        _driverRightBumper.whenPressed(new LowerIntake(intake));
 
         _driverAButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 90));
         _driverBButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 0));
@@ -106,8 +106,9 @@ public class OI extends OutliersProxy {
     }
 
     public boolean isAutoTargetPressed() {
-        return _driverLeftBumper.get();
+        return false;
     }
+    public boolean isAutoTargetDrivePressed() {return _driverRightYAxisUpButton.get();}
 
     public double getDriveSpeed() {
         double speed = -getSpeedFromAxis(_driverGamepad, Gamepad.Axes.LEFT_Y.getNumber());

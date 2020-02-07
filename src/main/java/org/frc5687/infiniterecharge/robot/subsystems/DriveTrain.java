@@ -1,6 +1,7 @@
 package org.frc5687.infiniterecharge.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.AlternateEncoderType;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
@@ -31,12 +32,9 @@ public class DriveTrain extends OutliersSubsystem {
     private CANEncoder _leftEncoder;
     private CANEncoder _rightEncoder;
 
-
     private DifferentialDriveOdometry _odometry;
     private DifferentialDriveKinematics _driveKinematics;
 
-    private Encoder _leftMagEncoder;
-    private Encoder _rightMagEncoder;
 
     private OI _oi;
     private AHRS _imu;
@@ -67,8 +65,9 @@ public class DriveTrain extends OutliersSubsystem {
             _rightSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
 
 
-            _leftEncoder = _leftMaster.getEncoder();
-            _rightEncoder = _rightMaster.getEncoder();
+            _leftEncoder = _leftMaster.getAlternateEncoder(AlternateEncoderType.kQuadrature, Constants.DriveTrain.CPR);
+            _rightEncoder = _rightMaster.getAlternateEncoder(AlternateEncoderType.kQuadrature, Constants.DriveTrain.CPR);
+
             _leftMaster.restoreFactoryDefaults();
             _leftSlave.restoreFactoryDefaults();
             _rightMaster.restoreFactoryDefaults();
@@ -105,11 +104,11 @@ public class DriveTrain extends OutliersSubsystem {
             error("Exception allocating drive motor controllers: " + e.getMessage());
         }
 
-        debug("Configuring mag encoders");
-        _leftMagEncoder = new Encoder(RobotMap.DIO.DRIVE_LEFT_A, RobotMap.DIO.DRIVE_LEFT_B, false);
-        _rightMagEncoder = new Encoder(RobotMap.DIO.DRIVE_RIGHT_A, RobotMap.DIO.DRIVE_RIGHT_B, false);
-        _leftMagEncoder.setDistancePerPulse(Constants.DriveTrain.LEFT_DISTANCE_PER_PULSE);
-        _rightMagEncoder.setDistancePerPulse(Constants.DriveTrain.RIGHT_DISTANCE_PER_PULSE);
+
+        _rightEncoder.setInverted(false);
+        _leftEncoder.setInverted(true);
+        _leftSlave.follow(_leftMaster);
+        _rightSlave.follow(_rightMaster);
         resetDriveEncoders();
 
         _driveKinematics = new DifferentialDriveKinematics(Constants.DriveTrain.WIDTH);
@@ -198,11 +197,26 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Power/Right", rightSpeed);
         metric("Power/Left", leftSpeed);
     }
-    public double getNeoLeftEncoder() {
+    public double getRawLeftEncoder() {
         return _leftEncoder.getPosition();
     }
-    public double getNeoRightEncoder() {
+    public double getRawRightEncoder() {
         return _rightEncoder.getPosition();
+    }
+    public double getLeftDistance() {
+        return getRawLeftEncoder() * Constants.DriveTrain.ENCODER_CONVERSION;
+    }
+    public double getRightDistance() {
+        return getRawRightEncoder() * Constants.DriveTrain.ENCODER_CONVERSION;
+    }
+    public double getDistance() {
+        return (getLeftDistance() + getRightDistance()) / 2;
+    }
+    public double getLeftVelocity() {
+        return _leftEncoder.getVelocity() * 2 * Math.PI * Units.inchesToMeters(2) / 60; //Meters Per Sec
+    }
+    public double getRightVelocity() {
+        return _rightEncoder.getVelocity() * 2 * Math.PI * Units.inchesToMeters(2.0) / 60 ; //Meters Per Sec
     }
 
     public void pauseMotors() {
@@ -227,15 +241,15 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void periodic() {
-        _pose = _odometry.update(getHeading(), Units.inchesToMeters(_leftMagEncoder.getDistance()), Units.inchesToMeters(_rightMagEncoder.getDistance()));
+        _pose = _odometry.update(getHeading(), Units.inchesToMeters(getLeftDistance()), Units.inchesToMeters(getRightDistance()));
     }
 
     @Override
     public void updateDashboard() {
 
         metric("Heading", getPose().getRotation().getDegrees());
-        metric("Right", getNeoRightEncoder());
-        metric("Left", getNeoLeftEncoder());
+        metric("Right", getRightDistance());
+        metric("Left", getLeftDistance());
         metric("DistanceTarget", distanceToTarget());
         metric("AngleTarget", getAngleToTarget());
     }
@@ -253,7 +267,7 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(_leftMagEncoder.getRate(), _rightMagEncoder.getRate());
+        return new DifferentialDriveWheelSpeeds(_leftEncoder.getVelocity(),_rightEncoder.getVelocity());
     }
     public void resetOdometry(Pose2d pose) {
         resetDriveEncoders();
@@ -269,8 +283,8 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public void resetDriveEncoders() {
-        _leftMagEncoder.reset();
-        _rightMagEncoder.reset();
+        _leftEncoder.setPosition(0);
+        _rightEncoder.setPosition(0);
     }
 
     public double distanceToTarget() {
