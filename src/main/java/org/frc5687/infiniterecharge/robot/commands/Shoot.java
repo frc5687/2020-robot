@@ -32,18 +32,19 @@ public class Shoot extends OutliersCommand {
         super.execute();
         _setpoint = _shooter.getDistanceSetpoint();
         _shooter.setShooterSpeed(_setpoint);
-        if (_turret.isTargetInTolerance() || _oi.isOverridePressed()) {
-            if (_shooter.isAtVelocity(_setpoint) || _oi.isOverridePressed()) {
-                _indexer.setIndexerSpeed(Constants.Indexer.ADVANCE_SPEED);
-                _endTime = System.currentTimeMillis() + Constants.Shooter.TIMEOUT;
-            }
+        if ((_turret.isTargetInTolerance() && _shooter.isAtVelocity(_setpoint)) || _oi.isOverridePressed()) {
+            _indexer.setIndexerSpeed(Constants.Indexer.ADVANCE_SPEED);
+            _endTime = System.currentTimeMillis() + Constants.Shooter.TIMEOUT;
         }
     }
 
 
     @Override
     public boolean isFinished() {
-        return (System.currentTimeMillis() >= _endTime);
+        if (_endTime == null) {
+            return false;
+        }
+        return System.currentTimeMillis() >= _endTime;
     }
 
 }
