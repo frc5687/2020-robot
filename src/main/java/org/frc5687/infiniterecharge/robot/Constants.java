@@ -55,6 +55,11 @@ public class Constants {
         public static final int STALL_CURRENT_LIMIT = 50;
         public static final int FREE_CURRENT_LIMIT = 60;
         public static final double SECONDARY_LIMIT = 90;
+
+        public static final double kP = 0.01;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double ANGLE_TOLERANCE = 0.25;
     }
 
     public static class Turret {
@@ -150,5 +155,10 @@ public class Constants {
     public class Indexer {
         public static final boolean INVERTED = false;
         public static final double ADVANCE_SPEED = 0.00; // TODO: Need a real value here!
+    }
+
+    public class Auto {
+        public static final double MAX_IMU_ANGLE = 180.0;
+        public static final double MIN_IMU_ANGLE = -MAX_IMU_ANGLE;
     }
 }

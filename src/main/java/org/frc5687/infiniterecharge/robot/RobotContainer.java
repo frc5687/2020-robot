@@ -81,7 +81,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
             // Now setup the default commands:
             setDefaultCommand(_hood, new DriveHood(_hood, _oi));
-            setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
+            setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi, _imu));
             setDefaultCommand(_climber, new Climb(_climber, _oi));
             setDefaultCommand(_intake, new IntakeSpin(_intake, _oi));
             setDefaultCommand(_indexer, new IdleIndexer(_indexer, _intake));
