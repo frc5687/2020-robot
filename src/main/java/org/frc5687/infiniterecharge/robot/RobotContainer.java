@@ -57,8 +57,8 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
         _imu.zeroYaw();
 
         // then proxies...
-        _limelight = new Limelight("limelight-drive");
-        _driveLimelight = new Limelight("limelight");
+        _limelight = new Limelight("limelight");
+        _driveLimelight = new Limelight("limelight-drive");
 
 
 

@@ -128,8 +128,6 @@ public class Drive extends OutliersCommand {
         } else {
             _driveTrain.cheesyDrive(stickSpeed, _turnSpeed, false, true);
         }
-//        _driveTrain.cheesyDrive(stickSpeed, wheelRotation, false, true);
-
     }
     @Override
     public boolean isFinished() {

@@ -108,7 +108,7 @@ public class OI extends OutliersProxy {
     public boolean isAutoTargetPressed() {
         return false;
     }
-    public boolean isAutoTargetDrivePressed() {return _driverLeftBumper.get();}
+    public boolean isAutoTargetDrivePressed() {return _driverRightYAxisUpButton.get();}
 
     public double getDriveSpeed() {
         double speed = -getSpeedFromAxis(_driverGamepad, Gamepad.Axes.LEFT_Y.getNumber());
