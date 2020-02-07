@@ -106,7 +106,8 @@ public class RobotMap {
             public static final int DRIVE_RIGHT_B = 6;
             public static final int DRIVE_RIGHT_A = 7;
 
-            public static final int RANGE_FINDER = 8;
+            public static final int FRONT_SHARK = 8;
+            public static final int REAR_SHARK = 9;
         /* Example:
         public static final int ARM_FRONT_LIMIT = 0;
         */

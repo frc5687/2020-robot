@@ -29,7 +29,6 @@ public class Drive extends OutliersCommand {
         double wheelRotation = _oi.getDriveRotation();
         _driveTrain.cheesyDrive(stickSpeed, wheelRotation, false, true);
 
-        metric("LaserDistance", _driveTrain.getLaserDistance());
     }
     @Override
     public boolean isFinished() {
