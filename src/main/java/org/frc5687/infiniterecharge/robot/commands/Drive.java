@@ -54,7 +54,7 @@ public class Drive extends OutliersCommand {
 //            metric("PID/Yaw", _imu.getYaw());
 //            _driveTrain.cheesyDrive(stickSpeed, stickSpeed==0 ?  0 :_anglePIDOut, false, true);
 //        } else {
-            _driveTrain.cheesyDrive(stickSpeed, wheelRotation, false, false);
+            _driveTrain.cheesyDrive(stickSpeed, -wheelRotation, false, false);
 //        }
 
     }

@@ -1,6 +1,7 @@
 package org.frc5687.infiniterecharge.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.AlternateEncoderType;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
@@ -67,8 +68,8 @@ public class DriveTrain extends OutliersSubsystem {
             _rightSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
 
 
-            _leftEncoder = _leftMaster.getEncoder();
-            _rightEncoder = _rightMaster.getEncoder();
+            _leftEncoder = _leftMaster.getAlternateEncoder(AlternateEncoderType.kQuadrature, 8092);
+            _rightEncoder = _rightMaster.getAlternateEncoder(AlternateEncoderType.kQuadrature,8092);
             _leftMaster.restoreFactoryDefaults();
             _leftSlave.restoreFactoryDefaults();
             _rightMaster.restoreFactoryDefaults();
