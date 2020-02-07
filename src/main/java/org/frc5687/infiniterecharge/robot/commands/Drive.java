@@ -28,7 +28,6 @@ public class Drive extends OutliersCommand {
         // Get the rotation from the tiller
         double wheelRotation = _oi.getDriveRotation();
         _driveTrain.cheesyDrive(stickSpeed, wheelRotation, false, true);
-
     }
     @Override
     public boolean isFinished() {
