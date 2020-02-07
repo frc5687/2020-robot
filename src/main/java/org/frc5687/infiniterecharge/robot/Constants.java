@@ -11,7 +11,7 @@ public class Constants {
 
     public static class Intake {
         public static final boolean INTAKE_MOTOR_INVERTED = true;
-        public static final double INTAKE_SPEED = 0.9;
+        public static final double INTAKE_SPEED = 0.75;
     }
 
     public static class Climber {
@@ -22,10 +22,6 @@ public class Constants {
         public static final double DEADBAND = 0.25;
         public static final double SPEED_SENSITIVITY = 0.9;
         public static final double ROTATION_SENSITIVITY = 0.75;
-        public static final double ROTATION_SENSITIVITY_HIGH_GEAR = 1.0;
-        public static final double ROTATION_SENSITIVITY_LOW_GEAR = 1.0;
-        public static final double TURNING_SENSITIVITY_HIGH_GEAR = 1.0 ;
-        public static final double TURNING_SENSITIVITY_LOW_GEAR = 1.0;
 
         public static final double CREEP_FACTOR = 0.25;
         public static final double LEFT_DISTANCE_PER_PULSE = 0.0286206896551724;
@@ -42,8 +38,8 @@ public class Constants {
 
         public static final double KP_DRIVE_VELOCITY = 13.2;
 
-        public static final boolean LEFT_MOTORS_INVERTED = false;
-        public static final boolean RIGHT_MOTORS_INVERTED = true;
+        public static final boolean LEFT_MOTORS_INVERTED = true;
+        public static final boolean RIGHT_MOTORS_INVERTED = false;
 
         public static final double MAX_SPEED_IPS = 156.0;
         public static final double MAX_SPEED_MPS = Units.inchesToMeters(MAX_SPEED_IPS);
@@ -55,11 +51,6 @@ public class Constants {
         public static final int STALL_CURRENT_LIMIT = 50;
         public static final int FREE_CURRENT_LIMIT = 60;
         public static final double SECONDARY_LIMIT = 90;
-
-        public static final double kP = 0.01;
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
-        public static final double ANGLE_TOLERANCE = 0.25;
     }
 
     public static class Turret {
@@ -154,11 +145,7 @@ public class Constants {
 
     public class Indexer {
         public static final boolean INVERTED = false;
-        public static final double ADVANCE_SPEED = 0.00; // TODO: Need a real value here!
-    }
-
-    public class Auto {
-        public static final double MAX_IMU_ANGLE = 180.0;
-        public static final double MIN_IMU_ANGLE = -MAX_IMU_ANGLE;
+        public static final double ADVANCE_SPEED = 0.75; // TODO: Need a real value here!
+        public static final double JOHNSON_SPEED = 1.0;
     }
 }
