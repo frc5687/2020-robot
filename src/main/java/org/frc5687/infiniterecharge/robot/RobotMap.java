@@ -32,6 +32,7 @@ public class RobotMap {
         }
         public static class VICTORSPX {
             public static final int HOOD = 0;
+            public static final int JOHNSON = 1;
         }
 
     }

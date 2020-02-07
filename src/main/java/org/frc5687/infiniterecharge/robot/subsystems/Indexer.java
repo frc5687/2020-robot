@@ -1,5 +1,7 @@
 package org.frc5687.infiniterecharge.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import org.frc5687.infiniterecharge.robot.Constants;
@@ -11,6 +13,7 @@ import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 public class Indexer extends OutliersSubsystem {
 
     private CANSparkMax _indexerNeo;
+    private VictorSPX _indexerJohnson;
     private OI _oi;
 
     private DigitalIR _bottomIR;
@@ -24,6 +27,8 @@ public class Indexer extends OutliersSubsystem {
         _indexerNeo = new CANSparkMax(RobotMap.CAN.SPARKMAX.INDEXER, CANSparkMaxLowLevel.MotorType.kBrushless);
         _indexerNeo.setInverted(Constants.Indexer.INVERTED);
         _indexerNeo.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
+        _indexerJohnson = new VictorSPX(RobotMap.CAN.VICTORSPX.JOHNSON);
 
         _bottomIR = new DigitalIR(RobotMap.DIO.BOTTOM_IR);
         _midIR = new DigitalIR(RobotMap.DIO.MID_IR);
@@ -43,7 +48,10 @@ public class Indexer extends OutliersSubsystem {
         return _bottomIR.get();
     }
 
-    public void setIndexerSpeed(double speed) { _indexerNeo.set(speed);}
+    public void setIndexerSpeed(double speed) {
+        _indexerNeo.set(speed);
+        _indexerJohnson.set(ControlMode.PercentOutput, Constants.Indexer.JOHNSON_SPEED);
+    }
 
 
     @Override
