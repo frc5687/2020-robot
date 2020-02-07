@@ -11,12 +11,12 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.commands.Drive;
+import org.frc5687.infiniterecharge.robot.util.BasicPose;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 import static org.frc5687.infiniterecharge.robot.Constants.DriveTrain.CREEP_FACTOR;
@@ -46,6 +46,9 @@ public class DriveTrain extends OutliersSubsystem {
     private Pose2d _pose;
     private Shifter _shifter;
 
+    private double _xLength;
+    private double _yLength;
+
     private double _oldLeftSpeedFront;
     private double _oldLeftSpeedBack;
     private double _oldRightSpeedFront;
@@ -62,11 +65,8 @@ public class DriveTrain extends OutliersSubsystem {
             debug("Allocating motor controllers");
             _leftMaster = new CANSparkMax(RobotMap.CAN.SPARKMAX.LEFT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
             _rightMaster = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
-            _rightSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
             _leftSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.LEFT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
-
-//            _leftSlave.follow(_leftMaster);
-//            _rightSlave.follow(_rightMaster);
+            _rightSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
 
 
             _leftEncoder = _leftMaster.getEncoder();
@@ -117,7 +117,6 @@ public class DriveTrain extends OutliersSubsystem {
         _odometry = new DifferentialDriveOdometry(getHeading());
         _laserShark = new Lasershark(RobotMap.DIO.RANGE_FINDER);
 
-        logMetrics("X", "Y", "Heading");
     }
 
     public void enableBrakeMode() {
@@ -235,17 +234,16 @@ public class DriveTrain extends OutliersSubsystem {
     @Override
     public void periodic() {
         _pose = _odometry.update(getHeading(), Units.inchesToMeters(_leftMagEncoder.getDistance()), Units.inchesToMeters(_rightMagEncoder.getDistance()));
-        setDefaultCommand(new Drive(this, _oi));
     }
 
     @Override
     public void updateDashboard() {
-//        SmartDashboard.putBoolean("MetricTracker/Drive", true);
-        metric("X", getPose().getTranslation().getX());
-        metric("Y", getPose().getTranslation().getY());
+
         metric("Heading", getPose().getRotation().getDegrees());
         metric("Right", getNeoRightEncoder());
         metric("Left", getNeoLeftEncoder());
+        metric("DistanceTarget", distanceToTarget());
+        metric("AngleTarget", getAngleToTarget());
         metric("LaserDistance", getLaserDistance());
     }
 
@@ -282,9 +280,32 @@ public class DriveTrain extends OutliersSubsystem {
         _rightMagEncoder.reset();
     }
 
+    public double distanceToTarget() {
+        double x = _pose.getTranslation().getX();
+        double y = _pose.getTranslation().getY();
+        double targetX = Constants.AutoPositions.TARGET_POSE.getTranslation().getX();
+        double targetY = Constants.AutoPositions.TARGET_POSE.getTranslation().getY();
+        metric("yTar", _yLength);
+        metric("xTar", _xLength);
+        metric("x",x);
+        metric("y", y);
+        _xLength = targetX - x;
+        _yLength = targetY - y;
+        return Math.sqrt((_xLength * _xLength) + (_yLength * _yLength));
+    }
+
+    public double getAngleToTarget() {
+        double angle = 0;
+        if (_yLength > 0) {
+            angle = (90 - Math.toDegrees(Math.asin(_xLength / distanceToTarget())) - getHeading().getDegrees());
+        } else if (_yLength < 0){
+            angle =  (Math.toDegrees(Math.asin(_xLength / distanceToTarget())) - 90) - getHeading().getDegrees();
+        }
+        return angle;
+    }
 
 
-
-
-
+    public BasicPose getDrivePose() {
+        return new BasicPose(_imu.getAngle(), _leftEncoder.getPosition(), _rightEncoder.getPosition(), 0);
+    }
 }
