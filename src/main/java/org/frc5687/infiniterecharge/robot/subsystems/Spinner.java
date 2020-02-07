@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.I2C;
@@ -19,9 +20,13 @@ import java.util.Map;
 
 public class Spinner extends OutliersSubsystem {
     private ColorSensorV3 _colorSensor;
-    private TalonSRX _motorController;
+    private VictorSPX _motorController;
     private DoubleSolenoid _solenoid;
     private Map<Color, Rgb> _swatches = new HashMap<>();
+
+    public void setSpeed(double speed) {
+        _motorController.set(ControlMode.PercentOutput, speed);
+    }
 
     public static class Rgb {
         private double red;
@@ -78,10 +83,10 @@ public class Spinner extends OutliersSubsystem {
 
         try {
             debug("allocating spinner motor controller");
-            _motorController = new TalonSRX(RobotMap.CAN.TALONSRX.SPINNER);
+            _motorController = new VictorSPX(RobotMap.CAN.VICTORSPX.SPINNER);
             _motorController.setNeutralMode(NeutralMode.Brake);
             // TODO: Not sure if this is really what we want, just stole from turret...
-            _motorController.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,100);
+            // _motorController.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,100);
         } catch (Exception e) {
             error("error allocating spinner motor controller: " + e.getMessage());
             e.printStackTrace();
@@ -107,11 +112,11 @@ public class Spinner extends OutliersSubsystem {
         return Color.unknown;
     }
 
-    public void raiseArm() {
+    public void deploy() {
         _solenoid.set(DoubleSolenoid.Value.kForward);
     }
 
-    public void lowerArm(){
+    public void stow(){
         _solenoid.set(DoubleSolenoid.Value.kReverse);
     }
 
