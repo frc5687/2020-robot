@@ -175,6 +175,10 @@ public class Turret extends OutliersSubsystem {
         return _positionABS;
     }
 
+    public boolean isTargetInTolerance() {
+        return _limelight.isTargetCentered();
+    }
+
     public TurretPose getPose() {
         return new TurretPose(getPositionDegrees());
     }
