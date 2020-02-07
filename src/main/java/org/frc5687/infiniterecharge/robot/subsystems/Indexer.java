@@ -1,5 +1,7 @@
 package org.frc5687.infiniterecharge.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import org.frc5687.infiniterecharge.robot.Constants;
@@ -43,7 +45,9 @@ public class Indexer extends OutliersSubsystem {
         return _bottomIR.get();
     }
 
-    public void setIndexerSpeed(double speed) { _indexerNeo.set(speed);}
+    public void setIndexerSpeed(double speed) {
+        _indexerNeo.set(speed);
+    }
 
 
     @Override

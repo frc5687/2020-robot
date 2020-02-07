@@ -20,8 +20,9 @@ public class OI extends OutliersProxy {
     protected Button _driverRightStickButton;
 
     private Button _operatorLeftTrigger;
-
+    private Button _operatorRightTrigger;
     private Button _driverLeftTrigger;
+
 
     private Button _driverRightBumper;
     private Button _driverLeftBumper;
@@ -43,6 +44,9 @@ public class OI extends OutliersProxy {
     private AxisButton _operatorRightXAxisUpButton;
     private AxisButton _operatorRightXAxisDownButton;
 
+    private AxisButton _operatorLeftYAxisUpButton;
+    private AxisButton _operatorLeftYAxisDownButton;
+
     private RotarySwitch _subsystemSelector;
 
     public OI(){
@@ -52,7 +56,7 @@ public class OI extends OutliersProxy {
         _driverRightStickButton = new JoystickButton(_driverGamepad, Gamepad.Buttons.RIGHT_STICK.getNumber());
 
         _driverLeftTrigger = new AxisButton(_driverGamepad, Gamepad.Axes.LEFT_TRIGGER.getNumber(), Constants.OI.AXIS_BUTTON_THRESHHOLD);
-
+        _operatorRightTrigger = new AxisButton(_operatorGamepad, Gamepad.Axes.RIGHT_TRIGGER.getNumber(), Constants.OI.AXIS_BUTTON_THRESHHOLD);
         _operatorLeftTrigger = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_TRIGGER.getNumber(), Constants.OI.AXIS_BUTTON_THRESHHOLD);
         _operatorRightBumper = new JoystickButton(_operatorGamepad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
 
@@ -73,14 +77,19 @@ public class OI extends OutliersProxy {
         _operatorBButton = new JoystickButton(_operatorGamepad,Gamepad.Buttons.B.getNumber());
         _operatorXButton = new JoystickButton(_operatorGamepad,Gamepad.Buttons.X.getNumber());
         _operatorYButton = new JoystickButton(_operatorGamepad,Gamepad.Buttons.Y.getNumber());
+
+        _operatorLeftYAxisDownButton = new AxisButton(_operatorGamepad,Gamepad.Axes.LEFT_Y.getNumber(), -.5);
+        _operatorLeftYAxisUpButton = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_Y.getNumber(), .5);
+
     }
 
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter){
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner){
         _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 1));
         _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
         _operatorXButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .7));
         _operatorYButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .8));
         _operatorRightBumper.toggleWhenPressed(new ShootSpeedSetpoint(shooter, this, 1.0));
+        _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this));
 
         _driverLeftBumper.whenPressed(new RaiseIntake(intake));
         _driverRightBumper.whenPressed(new LowerIntake(intake));
@@ -92,6 +101,8 @@ public class OI extends OutliersProxy {
         _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this, poseTracker));
         _driverLeftTrigger.whileHeld(new AutoIntake(intake));
 
+        _operatorLeftYAxisUpButton.whenPressed(new DeploySpinner(spinner));
+        _operatorLeftYAxisDownButton.whenPressed(new StowSpinner(spinner));
     }
 
     public boolean isAutoTargetPressed() {
@@ -152,7 +163,7 @@ public class OI extends OutliersProxy {
     public double getHoodSpeed() {
 //        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
 
-        double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_Y.getNumber());
+        double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber());
         speed = applyDeadband(speed, Constants.Hood.DEADBAND);
         return speed;
     }
@@ -245,6 +256,10 @@ public class OI extends OutliersProxy {
             default: return SubSystem.None;
         }
 
+    }
+
+    public double getSpinnerSpeed() {
+        return getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
     }
 
     private enum SubSystem {
