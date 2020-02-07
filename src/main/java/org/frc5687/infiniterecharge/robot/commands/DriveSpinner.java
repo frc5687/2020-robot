@@ -1,5 +1,6 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
+import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 
 public class DriveSpinner extends OutliersCommand {
@@ -9,13 +10,15 @@ public class DriveSpinner extends OutliersCommand {
      */
 
     private Spinner _spinner;
+    private OI _oi;
 
     /**
      * The constructors parameters will always have the Subsystem is is trying to run
      * as Commands need to require the subsystem they are trying to use.
      */
-    public DriveSpinner(Spinner spinner) {
+    public DriveSpinner(Spinner spinner, OI oi) {
         _spinner = spinner;
+        _oi = oi;
         addRequirements(_spinner);
     }
 
@@ -38,6 +41,8 @@ public class DriveSpinner extends OutliersCommand {
          * this is where closed loop and open loop control is taken place.
          */
         super.execute();
+        double speed = _oi.getSpinnerSpeed();
+        _spinner.setSpeed(speed);
     }
 
     @Override
