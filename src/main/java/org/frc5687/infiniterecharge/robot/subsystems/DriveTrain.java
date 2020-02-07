@@ -119,9 +119,9 @@ public class DriveTrain extends OutliersSubsystem {
 
     public void enableBrakeMode() {
         _leftMaster.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        _leftSlave.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        _leftSlave.setIdleMode(CANSparkMax.IdleMode.kCoast);
         _rightMaster.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        _rightSlave.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        _rightSlave.setIdleMode(CANSparkMax.IdleMode.kCoast);
     }
 
     public void disableBrakeMode() {
