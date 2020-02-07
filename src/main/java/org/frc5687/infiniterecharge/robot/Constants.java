@@ -90,6 +90,13 @@ public class Constants {
 
     public static class Hood {
         public static final double DEADBAND = 0.1;
+        public static final double kP = 0.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double TOLERANCE = 0.5;
+        public static final double MIN_ANGLE = 55.0;
+        public static final double MAX_ANGLE = 80.0;
+        public static final double ROTATIONS_TO_DEGREES = 1;
     }
 
     public static class OI {
