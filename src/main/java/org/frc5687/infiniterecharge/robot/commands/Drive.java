@@ -27,10 +27,10 @@ public class Drive extends OutliersCommand {
     @Override
     public void initialize() {
         super.initialize();
-        _angleController = new PIDController(Constants.DriveTrain.kP, Constants.DriveTrain.kI, Constants.DriveTrain.kD);
-        _angleController.enableContinuousInput(Constants.Auto.MIN_IMU_ANGLE, Constants.Auto.MAX_IMU_ANGLE);
-        _angleController.setTolerance(Constants.DriveTrain.ANGLE_TOLERANCE);
-        _useAnglePID = false;
+//        _angleController = new PIDController(Constants.DriveTrain.kP, Constants.DriveTrain.kI, Constants.DriveTrain.kD);
+//        _angleController.enableContinuousInput(Constants.Auto.MIN_IMU_ANGLE, Constants.Auto.MAX_IMU_ANGLE);
+//        _angleController.setTolerance(Constants.DriveTrain.ANGLE_TOLERANCE);
+//        _useAnglePID = false;
     }
 
     @Override
@@ -41,21 +41,21 @@ public class Drive extends OutliersCommand {
 
         // Get the rotation from the tiller
         double wheelRotation = _oi.getDriveRotation();
-        if (wheelRotation==0 && stickSpeed != 0) {
-            _useAnglePID = true;
-            double yaw = _imu.getYaw();
-            _anglePIDOut = _angleController.calculate(yaw);
-        } else {
-            _useAnglePID = false;
-        }
-
-        if (wheelRotation==0 && _useAnglePID) {
-            metric("PID/AngleOut", _anglePIDOut);
-            metric("PID/Yaw", _imu.getYaw());
-            _driveTrain.cheesyDrive(stickSpeed, stickSpeed==0 ?  0 :_anglePIDOut, false, true);
-        } else {
+//        if (wheelRotation==0 && stickSpeed != 0) {
+//            _useAnglePID = true;
+//            double yaw = _imu.getYaw();
+//            _anglePIDOut = _angleController.calculate(yaw);
+//        } else {
+//            _useAnglePID = false;
+//        }
+//
+//        if (wheelRotation==0 && _useAnglePID) {
+//            metric("PID/AngleOut", _anglePIDOut);
+//            metric("PID/Yaw", _imu.getYaw());
+//            _driveTrain.cheesyDrive(stickSpeed, stickSpeed==0 ?  0 :_anglePIDOut, false, true);
+//        } else {
             _driveTrain.cheesyDrive(stickSpeed, wheelRotation, false, false);
-        }
+//        }
 
     }
     @Override

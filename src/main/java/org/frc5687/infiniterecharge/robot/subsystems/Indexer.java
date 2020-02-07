@@ -29,6 +29,7 @@ public class Indexer extends OutliersSubsystem {
         _indexerNeo.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
         _indexerJohnson = new VictorSPX(RobotMap.CAN.VICTORSPX.JOHNSON);
+        _indexerJohnson.setInverted(Constants.Indexer.JOHNSON_INVERTED);
 
         _bottomIR = new DigitalIR(RobotMap.DIO.BOTTOM_IR);
         _midIR = new DigitalIR(RobotMap.DIO.MID_IR);
