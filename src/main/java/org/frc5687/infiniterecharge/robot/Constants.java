@@ -38,8 +38,8 @@ public class Constants {
 
         public static final double KP_DRIVE_VELOCITY = 13.2;
 
-        public static final boolean LEFT_MOTORS_INVERTED = true;
-        public static final boolean RIGHT_MOTORS_INVERTED = false;
+        public static final boolean LEFT_MOTORS_INVERTED = false;
+        public static final boolean RIGHT_MOTORS_INVERTED = true;
 
         public static final double MAX_SPEED_IPS = 156.0;
         public static final double MAX_SPEED_MPS = Units.inchesToMeters(MAX_SPEED_IPS);
@@ -141,6 +141,12 @@ public class Constants {
         public static final boolean LEFT_INVERTED = false;
         public static final boolean RIGHT_INVERTED = true;
         public static final double DEADBAND = 0.1;
+        public static final double RPM_TOLERANCE = 300; //RPM
+        public static final double kP = 0.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kF = 0.0;
+        public static final long TIMEOUT = 100;
     }
 
     public class Indexer {
