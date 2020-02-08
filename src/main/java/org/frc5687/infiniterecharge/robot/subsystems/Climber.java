@@ -1,5 +1,6 @@
 package org.frc5687.infiniterecharge.robot.subsystems;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -12,6 +13,7 @@ import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 public class Climber extends OutliersSubsystem {
     private CANSparkMax _climberSpark;
+    private CANEncoder _climberEncoder;
     private OI _oi;
 
     public Climber(OutliersContainer container, OI oi) {
@@ -20,6 +22,7 @@ public class Climber extends OutliersSubsystem {
 
         _climberSpark = new CANSparkMax(RobotMap.CAN.SPARKMAX.CLIMBER_NEO, CANSparkMaxLowLevel.MotorType.kBrushless);
         _climberSpark.setInverted(Constants.Climber.CLIMBER_MOTOR_INVERTED);
+       _climberEncoder= _climberSpark.getEncoder();
     }
 
 
@@ -28,6 +31,7 @@ public class Climber extends OutliersSubsystem {
     public void updateDashboard()
     {
         metric("CLIMBER POWER", getClimberPower());
+        metric("CLIMBER POSITION", getPosition());
     }
 
     @Override
@@ -42,4 +46,5 @@ public class Climber extends OutliersSubsystem {
     }
 
     public double getClimberPower() {return _climberSpark.get(); }
+    public double getPosition() {return _climberEncoder.getPosition();}
 }
