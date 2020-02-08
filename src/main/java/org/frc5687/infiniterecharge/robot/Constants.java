@@ -149,6 +149,7 @@ public class Constants {
     public class Spinner {
         public static final double MOTOR_PERCENT_SPEED = 0.5; // TODO: Need a real value here!
         public static final double COLOR_TOLERANCE = 0.06;
+        public static final double PRE_INDEXER_SPEED = 1.0;
     }
 
     public class RotarySwitch {
