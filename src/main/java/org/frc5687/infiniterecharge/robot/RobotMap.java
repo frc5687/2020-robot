@@ -60,8 +60,8 @@ public class RobotMap {
         */
 
             //PCM ports are not in the robot yet, using 0 and 1.
-            public static final int SHIFTER_HIGH = 4;
-            public static final int SHIFTER_LOW = 5;
+            public static final int SHIFTER_HIGH = 2;
+            public static final int SHIFTER_LOW = 3;
             public static final int INTAKE_HIGH = 0;
             public static final int INTAKE_LOW = 1;
             public static final int SPINNER_DEPLOY = 6;

@@ -118,9 +118,9 @@ public class DriveTrain extends OutliersSubsystem {
 
     public void enableBrakeMode() {
         _leftMaster.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        _leftSlave.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        _leftSlave.setIdleMode(CANSparkMax.IdleMode.kCoast);
         _rightMaster.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        _rightSlave.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        _rightSlave.setIdleMode(CANSparkMax.IdleMode.kCoast);
     }
 
     public void disableBrakeMode() {
@@ -134,7 +134,7 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Rotation", rotation);
 
         speed = limit(speed, 1);
-        //Shifter.Gear gear = _robot.getShifter().getGear();
+        Shifter.Gear gear = _shifter.getGear();
 
         rotation = limit(rotation, 1);
 
@@ -145,29 +145,22 @@ public class DriveTrain extends OutliersSubsystem {
 
         if (speed < Constants.DriveTrain.DEADBAND && speed > -Constants.DriveTrain.DEADBAND) {
             if (!override) {
-//                rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.ROTATION_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.ROTATION_SENSITIVITY_LOW_GEAR);
+                rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.ROTATION_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.ROTATION_SENSITIVITY_LOW_GEAR);
             }
             if (creep) {
-                //metric("Rot/Creep", creep);
                 rotation = rotation * CREEP_FACTOR;
             } else {
                 rotation = rotation * 0.8;
             }
-
-//            metric("Rot/Transformed", rotation);
             leftMotorOutput = rotation;
             rightMotorOutput = -rotation;
-//            metric("Rot/LeftMotor", leftMotorOutput);
-//            metric("Rot/RightMotor", rightMotorOutput);
         } else {
             // Square the inputs (while preserving the sign) to increase fine control
             // while permitting full power.
-            metric("Str/Raw", speed);
             speed = Math.copySign(applySensitivityFactor(speed, Constants.DriveTrain.SPEED_SENSITIVITY), speed);
             if (!override) {
-//                rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.TURNING_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.TURNING_SENSITIVITY_LOW_GEAR);
+                rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.TURNING_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.TURNING_SENSITIVITY_LOW_GEAR);
             }
-            metric("Str/Trans", speed);
             rotation = applySensitivityFactor(rotation, Constants.DriveTrain.ROTATION_SENSITIVITY);
             double delta = override ? rotation : rotation * Math.abs(speed);
             if (override) {
@@ -310,7 +303,6 @@ public class DriveTrain extends OutliersSubsystem {
         }
         return angle;
     }
-
 
     public BasicPose getDrivePose() {
         return new BasicPose(_imu.getAngle(), _leftEncoder.getPosition(), _rightEncoder.getPosition(), 0);
