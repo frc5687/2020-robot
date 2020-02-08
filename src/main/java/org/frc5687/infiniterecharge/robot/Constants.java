@@ -69,6 +69,7 @@ public class Constants {
         public static final double ROTATION_SENSITIVITY_LOW_GEAR = .8;
         public static final double TURNING_SENSITIVITY_HIGH_GEAR = .8;
         public static final double TURNING_SENSITIVITY_LOW_GEAR = .8;
+        public static final double SPEED_LIMIT = 0.75;
     }
 
     public static class Turret {
