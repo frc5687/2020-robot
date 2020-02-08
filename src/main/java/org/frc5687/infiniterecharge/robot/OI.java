@@ -91,23 +91,24 @@ public class OI extends OutliersProxy {
         _operatorRightBumper.toggleWhenPressed(new ShootSpeedSetpoint(shooter, this, 1.0));
         _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this));
 
-        _driverLeftBumper.whenPressed(new RaiseIntake(intake));
-        _driverRightBumper.whenPressed(new LowerIntake(intake));
+        _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
+        _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
 
         _driverAButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 90));
         _driverBButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 0));
         _driverYButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -90));
         _driverXButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -180));
-        _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this, poseTracker));
-        _driverLeftTrigger.whileHeld(new AutoIntake(intake));
+//        _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this, poseTracker));
+        _operatorLeftTrigger.whileHeld(new AutoIntake(intake, spinner));
 
         _operatorLeftYAxisUpButton.whenPressed(new DeploySpinner(spinner));
         _operatorLeftYAxisDownButton.whenPressed(new StowSpinner(spinner));
     }
 
     public boolean isAutoTargetPressed() {
-        return _driverLeftBumper.get();
+        return false;
     }
+    public boolean isAutoTargetDrivePressed() {return _driverRightYAxisUpButton.get();}
 
     public double getDriveSpeed() {
         double speed = -getSpeedFromAxis(_driverGamepad, Gamepad.Axes.LEFT_Y.getNumber());
@@ -116,7 +117,7 @@ public class OI extends OutliersProxy {
     }
 
     public double getDriveRotation() {
-        double speed = getSpeedFromAxis(_driverGamepad, Gamepad.Axes.RIGHT_X.getNumber());
+        double speed = -getSpeedFromAxis(_driverGamepad, Gamepad.Axes.RIGHT_X.getNumber());
         speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
         return speed;
     }

@@ -40,6 +40,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
     private Hood _hood;
 
     private Limelight _limelight;
+    private Limelight _driveLimelight;
     private Intake _intake;
     private PoseTracker _poseTracker;
 
@@ -57,6 +58,8 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
         // then proxies...
         _limelight = new Limelight("limelight");
+        _driveLimelight = new Limelight("limelight-drive");
+
 
 
         // Then subsystems....
@@ -72,6 +75,8 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             _indexer = new Indexer(this);
             _hood = new Hood(this, _oi);
 
+
+            _poseTracker = new PoseTracker(this);
             // Must initialize buttons AFTER subsystems are allocated...
             _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker, _intake, _shooter, _indexer, _spinner);
 
@@ -81,7 +86,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
             // Now setup the default commands:
             setDefaultCommand(_hood, new DriveHood(_hood, _oi));
-            setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
+            setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi, _intake, _driveLimelight, _poseTracker, _imu));
             setDefaultCommand(_climber, new Climb(_climber, _oi));
             setDefaultCommand(_intake, new IntakeSpin(_intake, _oi));
             setDefaultCommand(_indexer, new IdleIndexer(_indexer, _intake));
@@ -172,4 +177,6 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
         super.updateDashboard();
         _oi.updateDashboard();
     }
+
+
 }

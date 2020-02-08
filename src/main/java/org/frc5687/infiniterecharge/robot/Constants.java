@@ -24,8 +24,8 @@ public class Constants {
         public static final double ROTATION_SENSITIVITY = 0.75;
 
         public static final double CREEP_FACTOR = 0.25;
-        public static final double LEFT_DISTANCE_PER_PULSE = 0.0286206896551724;
-        public static final double RIGHT_DISTANCE_PER_PULSE = 0.0286206896551724;
+        public static final int CPR = 8192;
+        public static final double ENCODER_CONVERSION = 6.85714286;
 
         public static final double WIDTH = Units.inchesToMeters(27.0);
 
@@ -38,8 +38,12 @@ public class Constants {
 
         public static final double KP_DRIVE_VELOCITY = 13.2;
 
-        public static final boolean LEFT_MOTORS_INVERTED = false;
-        public static final boolean RIGHT_MOTORS_INVERTED = true;
+        public static final boolean LEFT_MOTORS_INVERTED = true;
+        public static final boolean RIGHT_MOTORS_INVERTED = false;
+
+        public static final long LOCK_TIME = 80;
+        public static final long DROPOUT_TIME = 100;
+        public static final long SEEK_TIME = 500;
 
         public static final double MAX_SPEED_IPS = 156.0;
         public static final double MAX_SPEED_MPS = Units.inchesToMeters(MAX_SPEED_IPS);
@@ -51,6 +55,21 @@ public class Constants {
         public static final int STALL_CURRENT_LIMIT = 50;
         public static final int FREE_CURRENT_LIMIT = 60;
         public static final double SECONDARY_LIMIT = 90;
+
+        public static final double SLOW_ZONE_COMP = 30;
+        public static final double MEDIUM_ZONE_COMP = 70;
+
+        public static final double SLOW_SPEED_COMP = 0.4;
+        public static final double MEDIUM_SPEED_COMP = 0.6;
+        public static final double kP = 0.01;
+        public static final double kI = 0.00;
+        public static final double kD = 0.00;
+        public static final double ANGLE_TOLERANCE = 0.25;
+        public static final double ROTATION_SENSITIVITY_HIGH_GEAR = .8;
+        public static final double ROTATION_SENSITIVITY_LOW_GEAR = .8;
+        public static final double TURNING_SENSITIVITY_HIGH_GEAR = .8;
+        public static final double TURNING_SENSITIVITY_LOW_GEAR = .8;
+        public static final double SPEED_LIMIT = 0.75;
     }
 
     public static class Turret {
@@ -138,6 +157,7 @@ public class Constants {
     public class Spinner {
         public static final double MOTOR_PERCENT_SPEED = 0.5; // TODO: Need a real value here!
         public static final double COLOR_TOLERANCE = 0.06;
+        public static final double PRE_INDEXER_SPEED = 1.0;
     }
 
     public class RotarySwitch {
@@ -160,5 +180,18 @@ public class Constants {
         public static final boolean INVERTED = false;
         public static final double ADVANCE_SPEED = 0.75; // TODO: Need a real value here!
         public static final double JOHNSON_SPEED = 1.0;
+        public static final boolean JOHNSON_INVERTED = true;
+    }
+
+    public class Auto {
+        public class Drive {
+            public static final double SPEED = 1.0;
+            public static final double MIN_SPEED = 0.25;
+            public static final double MIN_TRACK_DISTANCE = 18;
+            public static final int MAX_GARBAGE = 5;
+            public static final double STEER_K = 0.02;
+            public static final double MAX_IMU_ANGLE = 180.0;
+            public static final double MIN_IMU_ANGLE = -MAX_IMU_ANGLE;
+        }
     }
 }
