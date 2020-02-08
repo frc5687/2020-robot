@@ -13,34 +13,43 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import org.frc5687.infiniterecharge.robot.commands.KillAll;
+import org.frc5687.infiniterecharge.robot.commands.*;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
-import org.frc5687.infiniterecharge.robot.util.Limelight;
-import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
-import org.frc5687.infiniterecharge.robot.util.PDP;
+import org.frc5687.infiniterecharge.robot.util.*;
+import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
+import org.frc5687.infiniterecharge.robot.subsystems.Shifter;
+import org.frc5687.infiniterecharge.robot.subsystems.Shooter;
 
 import java.util.ArrayList;
 
-public class RobotContainer extends OutliersContainer {
+public class RobotContainer extends OutliersContainer implements IPoseTrackable {
 
     private OI _oi;
 
     private AHRS _imu;
     private DriveTrain _driveTrain;
     private Turret _turret;
+    private Indexer _indexer;
+    private Shooter _shooter;
     private Shifter _shifter;
     private PDP _pdp;
     private Spinner _spinner;
     private Climber _climber;
+    private Hood _hood;
 
     private Limelight _limelight;
+    private Limelight _driveLimelight;
     private Intake _intake;
+    private PoseTracker _poseTracker;
+
     public RobotContainer(Robot robot) {
 
     }
 
     public void init() {
+
         // OI must be first...
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 100);
@@ -49,6 +58,8 @@ public class RobotContainer extends OutliersContainer {
 
         // then proxies...
         _limelight = new Limelight("limelight");
+        _driveLimelight = new Limelight("limelight-drive");
+
 
 
         // Then subsystems....
@@ -57,29 +68,62 @@ public class RobotContainer extends OutliersContainer {
             _shifter = new Shifter(this);
             _intake = new Intake(this, _oi);
             _driveTrain = new DriveTrain(this, _oi, _imu, _shifter);
-            _turret = new Turret(this, _limelight, _oi);
+            _turret = new Turret(this, _driveTrain, _limelight, _oi);
             _spinner = new Spinner(this);
             _climber = new Climber(this, _oi);
+            _shooter = new Shooter(this, _oi, _driveTrain);
+            _indexer = new Indexer(this);
+            _hood = new Hood(this, _oi);
 
-        // Must initialize buttons AFTER subsystems are allocated...
-        _oi.initializeButtons(_shifter, _driveTrain, _intake, _climber);
+
+            _poseTracker = new PoseTracker(this);
+            // Must initialize buttons AFTER subsystems are allocated...
+            _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker, _intake, _shooter, _indexer, _spinner, _climber);
 
             // Initialize the other stuff
             _driveTrain.enableBrakeMode();
             _driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
+
+            // Now setup the default commands:
+            setDefaultCommand(_hood, new DriveHood(_hood, _oi));
+            setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi, _intake, _driveLimelight, _poseTracker, _imu));
+            setDefaultCommand(_climber, new Climb(_climber, _oi));
+            setDefaultCommand(_intake, new IntakeSpin(_intake, _oi));
+            setDefaultCommand(_indexer, new IdleIndexer(_indexer, _intake));
+            setDefaultCommand(_shooter, new DriveShooter(_shooter, _oi));
+            setDefaultCommand(_spinner, new DriveSpinner(_spinner, _oi));
+            setDefaultCommand(_turret, new DriveTurret(_turret, _driveTrain, _limelight, _oi));
         }
     }
 
-    public void zeroSensors() {
-        _turret.zeroSensors();
+    /**
+     * Helper function to wrap CommandScheduler.setDefaultCommand.  This allows us to pass nulls during initial development
+     * without breaking.
+     * @param subSystem
+     * @param command
+     */
+    private void setDefaultCommand(OutliersSubsystem subSystem, OutliersCommand command) {
+        if (subSystem==null || command==null) {
+            return;
+        }
+        CommandScheduler s = CommandScheduler.getInstance();
+        s.setDefaultCommand(subSystem, command);
     }
 
+    public void zeroSensors() {
+        // _turret.zeroSensors();
+    }
 
     public void periodic() {
         _oi.poll();
         if (_oi.isKillAllPressed()) {
-            new KillAll(_driveTrain).schedule();
+            new KillAll(_driveTrain, _shooter, _indexer, _intake).schedule();
         }
+    }
+
+    @Override
+    public Pose getPose() {
+        return new RobotPose(_driveTrain.getDrivePose(), _turret.getPose());
     }
 
     public Command getAutonomousCommand() {
@@ -133,4 +177,6 @@ public class RobotContainer extends OutliersContainer {
         super.updateDashboard();
         _oi.updateDashboard();
     }
+
+
 }

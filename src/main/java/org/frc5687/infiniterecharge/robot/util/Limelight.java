@@ -75,6 +75,9 @@ public class Limelight extends OutliersProxy {
     public void disableLEDs() {
         _ledmode.setNumber(1);
     }
+
+
+
     public void blinkLEDs() {
         _ledmode.setNumber(2);
     }
@@ -107,6 +110,10 @@ public class Limelight extends OutliersProxy {
         return _tl.getDouble(0) + Constants.Limelight.OVERALL_LATENCY_MILLIS;
     }
 
+    public double getSkew() {
+        return _ts.getDouble(0.0);
+    }
+
     public double getCamTran(int variable) {
         double[] camtranData = _camtran.getDoubleArray(new double[]{});
         /**
@@ -131,12 +138,21 @@ public class Limelight extends OutliersProxy {
 
     }
     public double getTargetDistance() {
-
         double heightOffset = (LIMELIGHT_HEIGHT - TARGET_HEIGHT);
         double limeLightYAngle = getVerticalAngle();
         double angleY = (LIMELIGHT_ANGLE - limeLightYAngle);
         double tanY = Math.tan(angleY * (Math.PI / 180));
         double distance = (heightOffset)/tanY;
+        return distance;
+    }
+
+    //created new method as limelight angle and height will change when hood moves.
+    public double getTargetDistance(double angle, double height) {
+        double heightOffset = height - TARGET_HEIGHT;
+        double limeLightYAngle = getVerticalAngle();
+        double angleY = angle - limeLightYAngle;
+        double tany = Math.tan(angleY * (Math.PI/180));
+        double distance = heightOffset/tany;
         return distance;
     }
 
@@ -181,11 +197,11 @@ public class Limelight extends OutliersProxy {
     }
 
     public enum Pipeline {
-        TapeTrackingLargest(0),
-        TapeTrackingClosest(1),
-        TapeTrackingHighest(2),
-        CargoTrackingLargest(8),
-        CargoTrackingClosest(9);
+        Wide(0),
+        TwoTimes(1),
+        nulls(2),
+        PowerCell(3),
+        PowerCells(4);
 
         private int _value;
 

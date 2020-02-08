@@ -27,6 +27,10 @@ public class Intake extends OutliersSubsystem {
         _intakeSpark.setInverted(Constants.Intake.INTAKE_MOTOR_INVERTED);
     }
 
+    public boolean isRunning() {
+        return getIntakePower()!=0;
+    }
+
     public enum Position {
         UNKNOWN(DoubleSolenoid.Value.kOff),
         HIGH(DoubleSolenoid.Value.kReverse),
@@ -60,11 +64,14 @@ public class Intake extends OutliersSubsystem {
     {
         metric("INTAKE POWER", getIntakePower());
         metric("INTAKE POSITION", getPosition()== Intake.Position.HIGH ? "Intake from Human Player" : (getPosition() == Intake.Position.LOW ? "Intake from Ground" : "Unknown"));
+        metric("intakeing", isIntaking());
     }
 
-    @Override
-    public void periodic() {
-        setDefaultCommand(new IntakeSpin(this, _oi));
+    public boolean isLowered() {
+        return _intakeSolenoid.get() == DoubleSolenoid.Value.kForward;
+    }
+    public boolean isRaised() {
+        return _intakeSolenoid.get() == DoubleSolenoid.Value.kReverse;
     }
 
     public void raiseIntake() { _intakeSolenoid.set(DoubleSolenoid.Value.kReverse); }
@@ -76,11 +83,14 @@ public class Intake extends OutliersSubsystem {
     }*/
 
 
-
     public void setSpeed(double speed) {
         _intakeSpark.set(speed);
     }
 
     public double getIntakePower() {return _intakeSpark.get(); }
+
+    public boolean isIntaking() {
+        return getIntakePower() > 0;
+    }
 
 }
