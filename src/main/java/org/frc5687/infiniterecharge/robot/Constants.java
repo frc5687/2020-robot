@@ -77,12 +77,12 @@ public class Constants {
         public static final double TOLERANCE = 2;
         public static final boolean SENSOR_PHASE_INVERTED = false;
         public static final double TICKS_TO_DEGREES = 0.08695652173913;
-        public static final double MIN_DEGREES = -180;
-        public static final double MAX_DEGREES = 90;
+        public static final double MIN_DEGREES = -193;
+        public static final double MAX_DEGREES = 128;
         public static final double MAX_VOLTAGE = 12.0;
         public static final int CRUISE_VELOCITY = 5000; // in ticks
         public static final int ACCELERATION = 16000; // in ticks
-        public static final double ABS_OFFSET = 273;// if the turret coasts this value changes, need to find a way to set this position.
+        public static final double ABS_OFFSET = 196;// if the turret coasts this value changes, need to find a way to set this position.
 
 
         public static class Position {

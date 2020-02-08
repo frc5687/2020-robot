@@ -30,7 +30,6 @@ public class AutoTarget extends OutliersCommand {
 
     @Override
     public void execute() {
-        _limel
         _turret.setMotionMagicSpeed(getTargetAngle()/Constants.Turret.TICKS_TO_DEGREES);
     }
 
@@ -52,8 +51,4 @@ public class AutoTarget extends OutliersCommand {
         return targetAngle;
     }
 
-    protected double calculateHoodAngle() {
-
-        
-    }
 }
