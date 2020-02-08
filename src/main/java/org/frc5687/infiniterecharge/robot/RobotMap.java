@@ -31,7 +31,6 @@ public class RobotMap {
             public static final int HOOD = 7;
         }
         public static class VICTORSPX {
-            public static final int HOOD = 0;
             public static final int SPINNER = 1;
         }
 
