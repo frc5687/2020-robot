@@ -1,28 +1,30 @@
 package org.frc5687.infiniterecharge.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.Notifier;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.RobotMap;
-import org.frc5687.infiniterecharge.robot.commands.DriveSpinner;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 import java.util.HashMap;
 import java.util.Map;
+//
+//import static com.revrobotics.ColorSensorV3.ColorSensorMeasurementRate.*;
+//import static com.revrobotics.ColorSensorV3.ColorSensorResolution.*;
+//import static com.revrobotics.ColorSensorV3.GainFactor.*;
 
 public class Spinner extends OutliersSubsystem {
     private ColorSensorV3 _colorSensor;
     private VictorSPX _motorController;
     private DoubleSolenoid _solenoid;
     private Map<Color, Rgb> _swatches = new HashMap<>();
+    private  Color _sensedColor = Color.unknown;
+    private int _wedgeCount = 0;
 
     public void setSpeed(double speed) {
         _motorController.set(ControlMode.PercentOutput, speed);
@@ -76,6 +78,7 @@ public class Spinner extends OutliersSubsystem {
             debug("allocating spinner color sensor");
             I2C.Port port = I2C.Port.kOnboard;
             _colorSensor = new ColorSensorV3(port);
+            //_colorSensor.configureColorSensor(kColorSensorRes20bit, kColorRate25ms, kGain3x);
         } catch (Exception e) {
             error("error allocating color sensor: " + e.getMessage());
             e.printStackTrace();
@@ -93,6 +96,19 @@ public class Spinner extends OutliersSubsystem {
             e.printStackTrace();
         }
 
+        // We sample the color sensor at a higher sample rate than the normal "robot frequency" of 20ms. This
+        // might be overkill right now because our color sensor isn't terribly speedy. We could be even more clever
+        // and calculate how many wedges went by based on the color we're reading now vs the color we read previously,
+        // but I'm already worried that this won't be performant enough as things are.
+        new Notifier(() -> {
+            edu.wpi.first.wpilibj.util.Color sensorReading = _colorSensor.getColor();
+            Color newColor = matchColor(sensorReading);
+            if (!newColor.equals(_sensedColor)) {
+                _wedgeCount++;
+            }
+            _sensedColor = newColor;
+        }).startPeriodic(Constants.Spinner.SENSOR_SAMPLE_PERIOD_SECONDS);
+
         // TODO(mike) might want to move to Constants.java ?
         _swatches.put(Color.red, new Rgb(0.60, 0.31, 0.08));
         _swatches.put(Color.yellow, new Rgb(0.40, 0.49, 0.10));
@@ -101,13 +117,17 @@ public class Spinner extends OutliersSubsystem {
     }
 
     public Color getColor() {
-        if (closeEnoughTo(_swatches.get(Color.red))) {
+        return _sensedColor;
+    }
+
+    private Color matchColor(edu.wpi.first.wpilibj.util.Color sensorReading) {
+        if (closeEnoughTo(sensorReading, _swatches.get(Color.red))) {
             return Color.red;
-        } else if (closeEnoughTo(_swatches.get(Color.green))) {
+        } else if (closeEnoughTo(sensorReading, _swatches.get(Color.green))) {
             return Color.green;
-        } else if (closeEnoughTo(_swatches.get(Color.blue))) {
+        } else if (closeEnoughTo(sensorReading, _swatches.get(Color.blue))) {
             return Color.blue;
-        } else if (closeEnoughTo(_swatches.get(Color.yellow))) {
+        } else if (closeEnoughTo(sensorReading, _swatches.get(Color.yellow))) {
             return Color.yellow;
         }
         return Color.unknown;
@@ -141,15 +161,26 @@ public class Spinner extends OutliersSubsystem {
         _motorController.set(ControlMode.PercentOutput, Constants.Spinner.MOTOR_PERCENT_SPEED);
     }
 
+    public void slow() {
+        _motorController.set(ControlMode.PercentOutput, Constants.Spinner.MOTOR_SLOW_PERCENT_SPEED);
+    }
+
     public void stop() {
         _motorController.set(ControlMode.PercentOutput, 0);
     }
 
-    private boolean closeEnoughTo(Rgb swatch) {
-        edu.wpi.first.wpilibj.util.Color readColor = _colorSensor.getColor();
-        return Math.abs(readColor.red - swatch.red) <= Constants.Spinner.COLOR_TOLERANCE &&
-                Math.abs(readColor.green - swatch.green) <= Constants.Spinner.COLOR_TOLERANCE &&
-                Math.abs(readColor.blue - swatch.blue) <= Constants.Spinner.COLOR_TOLERANCE;
+    public void resetWedgeCount() {
+        _wedgeCount = 0;
+    }
+
+    public int getWedgeCount() {
+        return _wedgeCount;
+    }
+
+    private boolean closeEnoughTo(edu.wpi.first.wpilibj.util.Color sensorReading, Rgb swatch) {
+        return Math.abs(sensorReading.red - swatch.red) <= Constants.Spinner.COLOR_TOLERANCE &&
+                Math.abs(sensorReading.green - swatch.green) <= Constants.Spinner.COLOR_TOLERANCE &&
+                Math.abs(sensorReading.blue - swatch.blue) <= Constants.Spinner.COLOR_TOLERANCE;
     }
 
     @Override
@@ -163,9 +194,10 @@ public class Spinner extends OutliersSubsystem {
         metric("Spinner/Color", getColor().toString());
         metric("Spinner/IR", _colorSensor.getIR());
         metric("Spinner/Proximity", _colorSensor.getProximity());
-        metric("Spinner/ArmIsRaised", isRaised());
-        metric("Spinner/ArmIsLowered", isLowered());
-        metric("Spinner/ArmIsOff", isArmOff());
-        metric("Spinner/SpinnerSpeed", _motorController.getSelectedSensorVelocity()); // units per 100ms
+        metric("Spinner/WedgeCount", _wedgeCount);
+//        metric("Spinner/ArmIsRaised", isRaised());
+//        metric("Spinner/ArmIsLowered", isLowered());
+//        metric("Spinner/ArmIsOff", isArmOff());
+//        metric("Spinner/SpinnerSpeed", _motorController.getSelectedSensorVelocity()); // units per 100ms
     }
 }
