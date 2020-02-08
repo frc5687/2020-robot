@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.commands.DriveSpinner;
+import org.frc5687.infiniterecharge.robot.util.AdafruitColorSensor;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 import java.util.HashMap;
@@ -23,6 +24,8 @@ public class Spinner extends OutliersSubsystem {
     private VictorSPX _motorController;
     private DoubleSolenoid _solenoid;
     private Map<Color, Rgb> _swatches = new HashMap<>();
+
+    private AdafruitColorSensor _ada;
 
     public void setSpeed(double speed) {
         _motorController.set(ControlMode.PercentOutput, speed);
@@ -72,26 +75,29 @@ public class Spinner extends OutliersSubsystem {
     public Spinner(OutliersContainer container) {
         super(container);
 
-        try {
-            debug("allocating spinner color sensor");
-            I2C.Port port = I2C.Port.kOnboard;
-            _colorSensor = new ColorSensorV3(port);
-        } catch (Exception e) {
-            error("error allocating color sensor: " + e.getMessage());
-            e.printStackTrace();
-        }
+//        try {
+//            debug("allocating spinner color sensor");
+//            I2C.Port port = I2C.Port.kOnboard;
+//            _colorSensor = new ColorSensorV3(port);
+//        } catch (Exception e) {
+//            error("error allocating color sensor: " + e.getMessage());
+//            e.printStackTrace();
+//        }
 
         try {
             debug("allocating spinner motor controller");
             _motorController = new VictorSPX(RobotMap.CAN.VICTORSPX.SPINNER);
             _motorController.setNeutralMode(NeutralMode.Brake);
-            _solenoid = new DoubleSolenoid(RobotMap.PCM.SPINNER_DEPLOY, RobotMap.PCM.SPINNER_STOW);
+            //_solenoid = new DoubleSolenoid(RobotMap.PCM.SPINNER_DEPLOY, RobotMap.PCM.SPINNER_STOW);
             // TODO: Not sure if this is really what we want, just stole from turret...
             // _motorController.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,100);
         } catch (Exception e) {
             error("error allocating spinner motor controller: " + e.getMessage());
             e.printStackTrace();
         }
+
+        _ada = new AdafruitColorSensor();
+        info(">>>>>>>>>>>>>> ID VALUE IS " + _ada.getId());
 
         // TODO(mike) might want to move to Constants.java ?
         _swatches.put(Color.red, new Rgb(0.60, 0.31, 0.08));
@@ -154,18 +160,23 @@ public class Spinner extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        metric("Spinner/RawRed", _colorSensor.getRed());
-        metric("Spinner/RawGreen", _colorSensor.getGreen());
-        metric("Spinner/RawBlue", _colorSensor.getBlue());
-        metric("Spinner/NormRed", _colorSensor.getColor().red);
-        metric("Spinner/NormGreen", _colorSensor.getColor().green);
-        metric("Spinner/NormBlue", _colorSensor.getColor().blue);
-        metric("Spinner/Color", getColor().toString());
-        metric("Spinner/IR", _colorSensor.getIR());
-        metric("Spinner/Proximity", _colorSensor.getProximity());
-        metric("Spinner/ArmIsRaised", isRaised());
-        metric("Spinner/ArmIsLowered", isLowered());
-        metric("Spinner/ArmIsOff", isArmOff());
-        metric("Spinner/SpinnerSpeed", _motorController.getSelectedSensorVelocity()); // units per 100ms
+//        metric("Spinner/RawRed", _colorSensor.getRed());
+//        metric("Spinner/RawGreen", _colorSensor.getGreen());
+//        metric("Spinner/RawBlue", _colorSensor.getBlue());
+//        metric("Spinner/NormRed", _colorSensor.getColor().red);
+//        metric("Spinner/NormGreen", _colorSensor.getColor().green);
+//        metric("Spinner/NormBlue", _colorSensor.getColor().blue);
+//        metric("Spinner/Color", getColor().toString());
+//        metric("Spinner/IR", _colorSensor.getIR());
+//        metric("Spinner/Proximity", _colorSensor.getProximity());
+        metric("Spinner/Ada ID", _ada.getId());
+        metric("Spinner/Ada0", _ada.getColor()[0]);
+        metric("Spinner/Ada1", _ada.getColor()[1]);
+        metric("Spinner/Ada2", _ada.getColor()[2]);
+        metric("Spinner/Ada Raw", _ada.getColorRaw());
+//        metric("Spinner/ArmIsRaised", isRaised());
+//        metric("Spinner/ArmIsLowered", isLowered());
+//        metric("Spinner/ArmIsOff", isArmOff());
+//        metric("Spinner/SpinnerSpeed", _motorController.getSelectedSensorVelocity()); // units per 100ms
     }
 }

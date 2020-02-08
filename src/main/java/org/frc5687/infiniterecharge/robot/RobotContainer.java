@@ -60,6 +60,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
         _limelight = new Limelight("limelight");
         _driveLimelight = new Limelight("limelight-drive");
 
+        _spinner = new Spinner(this);
 
 
         // Then subsystems....
