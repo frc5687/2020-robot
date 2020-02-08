@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -17,12 +18,14 @@ import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.lang.String;
 
 public class Spinner extends OutliersSubsystem {
     private ColorSensorV3 _colorSensor;
     private VictorSPX _motorController;
     private DoubleSolenoid _solenoid;
     private Map<Color, Rgb> _swatches = new HashMap<>();
+    private boolean FMSDataCorrupt = false;
 
     public void setSpeed(double speed) {
         _motorController.set(ControlMode.PercentOutput, speed);
@@ -44,7 +47,8 @@ public class Spinner extends OutliersSubsystem {
         green(1),
         blue(2),
         yellow(3),
-        unknown(4);
+        unknown(4),
+        badData(5);
 
         private int _value;
         Color(int value) {
@@ -67,6 +71,31 @@ public class Spinner extends OutliersSubsystem {
                     return "unknown";
             }
         }
+    }
+
+    public Color getSoughtColor(){
+        String gameData;
+        gameData = DriverStation.getInstance().getGameSpecificMessage();
+        if(gameData.length() > 0){
+            switch (gameData.charAt(0)){
+                case 'B':
+                    return Color.blue;
+
+                case 'G':
+                    return  Color.green;
+
+                case 'R':
+                    return Color.red;
+
+                case 'Y':
+                    return Color.yellow;
+
+                default:
+                    FMSDataCorrupt = true;
+                    return Color.badData;
+            }
+        }
+        return Color.unknown;
     }
 
     public Spinner(OutliersContainer container) {
@@ -154,6 +183,7 @@ public class Spinner extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
+        metric("Spinner/FMSDataCorrupt", FMSDataCorrupt);
         metric("Spinner/RawRed", _colorSensor.getRed());
         metric("Spinner/RawGreen", _colorSensor.getGreen());
         metric("Spinner/RawBlue", _colorSensor.getBlue());
