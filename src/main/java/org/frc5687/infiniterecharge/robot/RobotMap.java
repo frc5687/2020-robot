@@ -18,7 +18,8 @@ public class RobotMap {
             public static final int LEFT_SLAVE = 3;
             public static final int RIGHT_SLAVE = 2;
             public static final int INTAKE_NEO = 6;
-            public static final int CLIMBER_NEO = 7;
+            public static final int ELEVATOR_NEO = 8;
+            public static final int WINCH_NEO = 6;
             public static final int INDEXER = 5;
         }
 

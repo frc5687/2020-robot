@@ -3,26 +3,33 @@ package org.frc5687.infiniterecharge.robot.subsystems;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
-import org.frc5687.infiniterecharge.robot.commands.Climb;
-import org.frc5687.infiniterecharge.robot.commands.IntakeSpin;
+import org.frc5687.infiniterecharge.robot.commands.ExtendElevator;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 public class Climber extends OutliersSubsystem {
-    private CANSparkMax _climberSpark;
-    private CANEncoder _climberEncoder;
+    private CANSparkMax _elevatorSpark;
+    private CANEncoder _elevatorEncoder;
+
+    private CANSparkMax _winchSpark;
+    private CANEncoder _winchEncoder;
+
     private OI _oi;
 
     public Climber(OutliersContainer container, OI oi) {
         super(container);
         _oi = oi;
 
-        _climberSpark = new CANSparkMax(RobotMap.CAN.SPARKMAX.CLIMBER_NEO, CANSparkMaxLowLevel.MotorType.kBrushless);
-        _climberSpark.setInverted(Constants.Climber.CLIMBER_MOTOR_INVERTED);
-       _climberEncoder= _climberSpark.getEncoder();
+        _elevatorSpark = new CANSparkMax(RobotMap.CAN.SPARKMAX.ELEVATOR_NEO, CANSparkMaxLowLevel.MotorType.kBrushless);
+        _elevatorSpark.setInverted(Constants.Climber.ELEVATOR_MOTOR_INVERTED);
+        _elevatorEncoder = _elevatorSpark.getEncoder();
+
+        _winchSpark = new CANSparkMax(RobotMap.CAN.SPARKMAX.WINCH_NEO, CANSparkMaxLowLevel.MotorType.kBrushless);
+        _winchSpark.setInverted(Constants.Climber.WINCH_MOTOR_INVERTED);
+        _winchEncoder = _winchSpark.getEncoder();
+
     }
 
 
@@ -34,17 +41,16 @@ public class Climber extends OutliersSubsystem {
         metric("CLIMBER POSITION", getPosition());
     }
 
-    @Override
-    public void periodic() {
-        setDefaultCommand(new Climb(this, _oi));
+
+
+    public void setElevatorSpeed(double speed) {
+        _elevatorSpark.set(speed);
     }
 
-
-
-    public void setSpeed(double speed) {
-        _climberSpark.set(speed);
+    public void setWinchSpeed(double speed) {
+        _winchSpark.set(speed);
     }
 
-    public double getClimberPower() {return _climberSpark.get(); }
-    public double getPosition() {return _climberEncoder.getPosition();}
+    public double getClimberPower() {return _elevatorSpark.get(); }
+    public double getPosition() {return _elevatorEncoder.getPosition();}
 }

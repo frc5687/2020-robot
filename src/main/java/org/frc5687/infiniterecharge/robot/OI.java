@@ -98,7 +98,9 @@ public class OI extends OutliersProxy {
         _operatorRightBumper.toggleWhenPressed(new ShootSpeedSetpoint(shooter, this, 1.0));
         _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this));
 
-        // _operatorStartButton.whileHeld(new )
+        _operatorStartButton.whileHeld(new ExtendElevator(climber));
+        _operatorEndButton.whileHeld(new RetractWinch(climber));
+
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
 
@@ -161,13 +163,6 @@ public class OI extends OutliersProxy {
         return speed;
     }
 
-    public double getClimberSpeed() {
-        if (getSubSystem()!=SubSystem.Climber) { return 0; }
-
-        double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_X.getNumber());
-        speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
-        return speed;
-    }
 
     public double getHoodSpeed() {
 //        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
