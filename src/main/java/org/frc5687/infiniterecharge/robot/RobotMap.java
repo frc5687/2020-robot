@@ -28,6 +28,7 @@ public class RobotMap {
         }
         public static class TALONSRX {
             public static final int TURRET = 8;
+            public static final int HOOD = 7;
         }
         public static class VICTORSPX {
             public static final int HOOD = 0;

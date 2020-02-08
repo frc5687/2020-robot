@@ -83,7 +83,7 @@ public class OI extends OutliersProxy {
 
     }
 
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner){
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Hood hood){
         _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 1));
         _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
         _operatorXButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .7));
@@ -236,11 +236,19 @@ public class OI extends OutliersProxy {
 
         return driverPOV == Constants.OI.KILL_ALL || operatorPOV == Constants.OI.KILL_ALL;
     }
+
     public boolean isOverridePressed() {
         int operatorPOV = getOperatorPOV();
         int driverPOV = getDriverPOV();
 
         return driverPOV == Constants.OI.OVERRIDE || operatorPOV == Constants.OI.OVERRIDE;
+    }
+
+    public boolean isPanicPressed() {
+        int operatorPOV = getOperatorPOV();
+        int driverPOV = getDriverPOV();
+
+        return driverPOV == Constants.OI.PANIC || operatorPOV == Constants.OI.PANIC;
     }
 
 
