@@ -29,6 +29,10 @@ public class OI extends OutliersProxy {
 
     private Button _operatorRightBumper;
 
+    private Button _operatorStartButton;
+    private Button _operatorEndButton;
+
+
     private Button _driverAButton;
     private Button _driverBButton;
     private Button _driverXButton;
@@ -78,18 +82,24 @@ public class OI extends OutliersProxy {
         _operatorXButton = new JoystickButton(_operatorGamepad,Gamepad.Buttons.X.getNumber());
         _operatorYButton = new JoystickButton(_operatorGamepad,Gamepad.Buttons.Y.getNumber());
 
+        _operatorStartButton = new JoystickButton(_operatorGamepad, Gamepad.Buttons.START.getNumber());
+        _operatorEndButton = new JoystickButton(_operatorGamepad, Gamepad.Buttons.BACK.getNumber());
+
         _operatorLeftYAxisDownButton = new AxisButton(_operatorGamepad,Gamepad.Axes.LEFT_Y.getNumber(), -.5);
         _operatorLeftYAxisUpButton = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_Y.getNumber(), .5);
 
     }
 
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner){
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber){
         _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 1));
         _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
         _operatorXButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .7));
         _operatorYButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .8));
         _operatorRightBumper.toggleWhenPressed(new ShootSpeedSetpoint(shooter, this, 1.0));
         _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this));
+
+        _operatorStartButton.whileHeld(new ExtendElevator(climber));
+        _operatorEndButton.whileHeld(new RetractWinch(climber));
 
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
@@ -153,13 +163,6 @@ public class OI extends OutliersProxy {
         return speed;
     }
 
-    public double getClimberSpeed() {
-        if (getSubSystem()!=SubSystem.Climber) { return 0; }
-
-        double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_X.getNumber());
-        speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
-        return speed;
-    }
 
     public double getHoodSpeed() {
 //        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
