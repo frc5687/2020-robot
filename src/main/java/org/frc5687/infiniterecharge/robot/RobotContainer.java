@@ -60,6 +60,8 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
         _limelight = new Limelight("limelight");
         _driveLimelight = new Limelight("limelight-drive");
 
+        _spinner = new Spinner(this);
+        setDefaultCommand(_spinner, new DriveSpinner(_spinner, _oi));
 
 
         // Then subsystems....
@@ -168,7 +170,9 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
                 _driveTrain
         );
 
-        return ramseteCommand.andThen(() -> _driveTrain.tankDriveVolts(0, 0));
+        return new AutoSpinToColor(_spinner, _oi, );
+
+        //return ramseteCommand.andThen(() -> _driveTrain.tankDriveVolts(0, 0));
 
     }
 
