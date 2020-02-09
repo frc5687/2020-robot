@@ -111,8 +111,9 @@ public class OI extends OutliersProxy {
 //        _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this, poseTracker));
         _operatorLeftTrigger.whileHeld(new AutoIntake(intake, spinner));
 
-        _operatorLeftYAxisUpButton.whenPressed(new DeploySpinner(spinner));
-        _operatorLeftYAxisDownButton.whenPressed(new StowSpinner(spinner));
+        _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
+        // _operatorLeftYAxisUpButton.whenPressed(new DeploySpinner(spinner));
+        // _operatorLeftYAxisDownButton.whenPressed(new StowSpinner(spinner));
     }
 
     public boolean isAutoTargetPressed() {
