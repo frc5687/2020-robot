@@ -53,4 +53,5 @@ public class Climber extends OutliersSubsystem {
 
     public double getClimberPower() {return _elevatorSpark.get(); }
     public double getPosition() {return _elevatorEncoder.getPosition();}
+
 }

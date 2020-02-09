@@ -19,7 +19,7 @@ public class Constants {
         public static final boolean WINCH_MOTOR_INVERTED = true;
         public static final double ELEVATOR_EXTEND_SPEED = 0.5;
         public static final double ELEVATOR_TENSION_SPEED = 0.0;
-        public static final double WINCH_RETRACT_SPEED = 0.5;
+        public static final double WINCH_RETRACT_SPEED = 1;
         public static final double WINCH_TENSION_SPEED = 0.0;
         public static final double ELEVATOR_RETRACT_SPEED = -0.25;
     }

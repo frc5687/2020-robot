@@ -149,7 +149,7 @@ public class OI extends OutliersProxy {
     }
 
     public double getTurretSpeed() {
-//        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
+        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.Turret.DEADBAND);
         return speed;
