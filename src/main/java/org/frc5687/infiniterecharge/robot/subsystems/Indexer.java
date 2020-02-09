@@ -19,6 +19,7 @@ public class Indexer extends OutliersSubsystem {
     private DigitalIR _midIR;
     private DigitalIR _topIR;
 
+    private Spinner _spinner;
 
     public Indexer(OutliersContainer container) {
         super(container);

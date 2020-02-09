@@ -24,6 +24,7 @@ public class AutoTarget extends OutliersCommand {
         _hood = hood;
         _driveTrain = driveTrain;
         _limelight = limelight;
+        _poseTracker = poseTracker;
     }
 
     @Override
@@ -35,7 +36,7 @@ public class AutoTarget extends OutliersCommand {
     @Override
     public void execute() {
         _hood.setPosition(_hood.getHoodDesiredAngle(_driveTrain.distanceToTarget()));
-        _turret.setMotionMagicSetpoint(getTargetAngle());
+        _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees());
     }
 
     @Override

@@ -6,12 +6,10 @@ import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 
 public class AutoIntake extends OutliersCommand {
     private Intake _intake;
-    private Spinner _spinner;
 
-    public AutoIntake(Intake intake, Spinner spinner) {
+    public AutoIntake(Intake intake) {
         _intake = intake;
-        _spinner = spinner;
-        addRequirements(_intake, _spinner);
+        addRequirements(_intake);
     }
 
     @Override
@@ -23,7 +21,6 @@ public class AutoIntake extends OutliersCommand {
     @Override
     public void execute() {
         _intake.setSpeed(Constants.Intake.INTAKE_SPEED);
-        _spinner.setSpeed(Constants.Spinner.PRE_INDEXER_SPEED);
     }
 
     @Override

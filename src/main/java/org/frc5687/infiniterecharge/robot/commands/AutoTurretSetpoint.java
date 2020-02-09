@@ -30,7 +30,7 @@ public class AutoTurretSetpoint extends OutliersCommand {
 
     @Override
     public void execute() {
-        double position = _angle / Constants.Turret.TICKS_TO_DEGREES;
+        double position = _angle;
         _turret.setMotionMagicSetpoint(position);
     }
 

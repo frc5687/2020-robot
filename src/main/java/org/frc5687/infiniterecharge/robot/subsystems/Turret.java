@@ -140,6 +140,7 @@ public class Turret extends OutliersSubsystem {
         metric("Position Degrees", getPositionDegrees());
         metric("Absolute Position raw" , getAbsoluteEncoderRawPosition());
         metric("Absolute Pos", getAbsoluteEncoderPosition());
+        metric("LL distance inches", _limelight.getTargetDistance());
         metric("LLDistance", Units.inchesToMeters(_limelight.getTargetDistance()));
 //        metric("Velocity", getVelocityTicksPer100ms());
 //        metric("Speed", _turretController.getMotorOutputVoltage());
