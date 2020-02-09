@@ -93,12 +93,12 @@ public class OI extends OutliersProxy {
     public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber){
         _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 1));
         _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
-        _operatorXButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .7));
         _operatorYButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .8));
         _operatorRightBumper.toggleWhenPressed(new ShootSpeedSetpoint(shooter, this, 1.0));
         _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this));
 
         _operatorStartButton.whileHeld(new ExtendElevator(climber));
+        _operatorXButton.whileHeld(new RetractElevator(climber));
         _operatorEndButton.whileHeld(new RetractWinch(climber));
 
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
@@ -149,7 +149,7 @@ public class OI extends OutliersProxy {
     }
 
     public double getTurretSpeed() {
-//        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
+        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.Turret.DEADBAND);
         return speed;

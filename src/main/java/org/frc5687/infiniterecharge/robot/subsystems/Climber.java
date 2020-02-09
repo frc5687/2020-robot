@@ -21,8 +21,8 @@ public class Climber extends OutliersSubsystem {
     public Climber(OutliersContainer container, OI oi) {
         super(container);
         _oi = oi;
-
         _elevatorSpark = new CANSparkMax(RobotMap.CAN.SPARKMAX.ELEVATOR_NEO, CANSparkMaxLowLevel.MotorType.kBrushless);
+        _elevatorSpark .setIdleMode(CANSparkMax.IdleMode.kBrake);
         _elevatorSpark.setInverted(Constants.Climber.ELEVATOR_MOTOR_INVERTED);
         _elevatorEncoder = _elevatorSpark.getEncoder();
 
@@ -53,4 +53,5 @@ public class Climber extends OutliersSubsystem {
 
     public double getClimberPower() {return _elevatorSpark.get(); }
     public double getPosition() {return _elevatorEncoder.getPosition();}
+
 }
