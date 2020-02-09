@@ -21,6 +21,7 @@ public class Constants {
         public static final double ELEVATOR_TENSION_SPEED = 0.0;
         public static final double WINCH_RETRACT_SPEED = 0.5;
         public static final double WINCH_TENSION_SPEED = 0.0;
+        public static final double ELEVATOR_RETRACT_SPEED = -0.25;
     }
 
     public static class DriveTrain {
