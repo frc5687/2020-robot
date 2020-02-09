@@ -154,7 +154,7 @@ public class Constants {
         public static final double MOTOR_SLOW_PERCENT_SPEED = 0.2; // TODO: Need a real value here!
         public static final int AUTOSPIN_SLOW_AT_WEDGES = 20;
         public static final int AUTOSPIN_STOP_AT_WEDGES = 25;
-        public static final double SENSOR_SAMPLE_PERIOD_SECONDS = 0.005;
+        public static final double SENSOR_SAMPLE_PERIOD_SECONDS = 0.01;
     }
 
     public class RotarySwitch {
