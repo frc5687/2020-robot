@@ -20,7 +20,7 @@ public class Hood extends OutliersSubsystem {
         _oi = oi;
         try {
             debug("Allocating hood motor");
-            _hood = new VictorSPX(RobotMap.CAN.VICTORSPX.HOOD);
+            _hood = new VictorSPX(RobotMap.CAN.TALONSRX.HOOD);
             _encoder = new DutyCycleEncoder(RobotMap.DIO.HOOD_ENCODER);
         } catch (Exception e) {
             error("Exception allocating hood motor" + e.getMessage());
