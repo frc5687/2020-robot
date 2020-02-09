@@ -24,6 +24,11 @@ public class Constants {
         public static final double ELEVATOR_RETRACT_SPEED = -0.50;
     }
 
+    public static class Skywalker {
+        public static final boolean SKYWALKER_MOTOR_INVERTED = true;
+        public static final double DEADBAND = 0.25;
+    }
+
     public static class DriveTrain {
         public static final double DEADBAND = 0.25;
         public static final double SPEED_SENSITIVITY = 0.9;

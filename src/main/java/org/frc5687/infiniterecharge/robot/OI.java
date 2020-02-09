@@ -148,6 +148,13 @@ public class OI extends OutliersProxy {
         return speed;
     }
 
+    public double getSkywalkerSpeed() {
+        //if (getSubSystem()!=SubSystem.Skywalker) { return 0; }
+        double speed = getSpeedFromAxis(_driverGamepad, Gamepad.Axes.LEFT_X.getNumber());
+        speed = applyDeadband(speed, Constants.Skywalker.DEADBAND);
+        return speed;
+    }
+
     public double getTurretSpeed() {
         if (getSubSystem()!=SubSystem.Shooter) { return 0; }
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
