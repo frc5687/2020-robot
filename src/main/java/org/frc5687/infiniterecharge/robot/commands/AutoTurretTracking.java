@@ -1,7 +1,5 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
@@ -38,7 +36,7 @@ public class AutoTurretTracking extends OutliersCommand {
 //        double position = (_limelight.getHorizontalAngle() + _turret.getPositionDegrees()) /Constants.Turret.TICKS_TO_DEGREES;
         double position = _driveTrain.getAngleToTarget() / Constants.Turret.TICKS_TO_DEGREES;
 
-       _turret.setMotionMagicSpeed(position);
+       _turret.setMotionMagicSetpoint(position);
     }
 
     public double getVisionSetpoint() {

@@ -91,8 +91,8 @@ public class Turret extends OutliersSubsystem {
         }
     }
 
-    public void setMotionMagicSpeed(double output) {
-        _turretController.set(ControlMode.MotionMagic, output);
+    public void setMotionMagicSetpoint(double angle) {
+        _turretController.set(ControlMode.MotionMagic, angle/Constants.Turret.TICKS_TO_DEGREES);
     }
 
     public boolean isAtSetpoint() {

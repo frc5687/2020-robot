@@ -22,6 +22,7 @@ public class OI extends OutliersProxy {
     private Button _operatorLeftTrigger;
     private Button _operatorRightTrigger;
     private Button _driverLeftTrigger;
+    private Button _driverRightTrigger;
 
 
     private Button _driverRightBumper;
@@ -56,6 +57,7 @@ public class OI extends OutliersProxy {
         _driverRightStickButton = new JoystickButton(_driverGamepad, Gamepad.Buttons.RIGHT_STICK.getNumber());
 
         _driverLeftTrigger = new AxisButton(_driverGamepad, Gamepad.Axes.LEFT_TRIGGER.getNumber(), Constants.OI.AXIS_BUTTON_THRESHHOLD);
+        _driverRightTrigger = new AxisButton(_driverGamepad, Gamepad.Axes.RIGHT_TRIGGER.getNumber(), Constants.OI.AXIS_BUTTON_THRESHHOLD);
         _operatorRightTrigger = new AxisButton(_operatorGamepad, Gamepad.Axes.RIGHT_TRIGGER.getNumber(), Constants.OI.AXIS_BUTTON_THRESHHOLD);
         _operatorLeftTrigger = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_TRIGGER.getNumber(), Constants.OI.AXIS_BUTTON_THRESHHOLD);
         _operatorRightBumper = new JoystickButton(_operatorGamepad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
@@ -83,13 +85,14 @@ public class OI extends OutliersProxy {
 
     }
 
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner){
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Hood hood){
         _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 1));
         _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
         _operatorXButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .7));
         _operatorYButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .8));
         _operatorRightBumper.toggleWhenPressed(new ShootSpeedSetpoint(shooter, this, 1.0));
-        _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this));
+        _operatorRightTrigger.whenHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker));
+        _driverRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this));
 
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
@@ -236,11 +239,19 @@ public class OI extends OutliersProxy {
 
         return driverPOV == Constants.OI.KILL_ALL || operatorPOV == Constants.OI.KILL_ALL;
     }
+
     public boolean isOverridePressed() {
         int operatorPOV = getOperatorPOV();
         int driverPOV = getDriverPOV();
 
         return driverPOV == Constants.OI.OVERRIDE || operatorPOV == Constants.OI.OVERRIDE;
+    }
+
+    public boolean isPanicPressed() {
+        int operatorPOV = getOperatorPOV();
+        int driverPOV = getDriverPOV();
+
+        return driverPOV == Constants.OI.PANIC || operatorPOV == Constants.OI.PANIC;
     }
 
 
