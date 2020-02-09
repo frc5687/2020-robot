@@ -98,7 +98,7 @@ public class OI extends OutliersProxy {
         _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this));
 
         _operatorStartButton.whileHeld(new ExtendElevator(climber));
-        _operatorXButton.whenPressed(new RetractElevator(climber));
+        _operatorXButton.whileHeld(new RetractElevator(climber));
         _operatorEndButton.whileHeld(new RetractWinch(climber));
 
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
