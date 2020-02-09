@@ -15,7 +15,13 @@ public class Constants {
     }
 
     public static class Climber {
-        public static final boolean CLIMBER_MOTOR_INVERTED = true;
+        public static final boolean ELEVATOR_MOTOR_INVERTED = true;
+        public static final boolean WINCH_MOTOR_INVERTED = true;
+        public static final double ELEVATOR_EXTEND_SPEED = 0.5;
+        public static final double ELEVATOR_TENSION_SPEED = 0.0;
+        public static final double WINCH_RETRACT_SPEED = 1;
+        public static final double WINCH_TENSION_SPEED = 0.0;
+        public static final double ELEVATOR_RETRACT_SPEED = -0.50;
     }
 
     public static class DriveTrain {
@@ -69,6 +75,7 @@ public class Constants {
         public static final double ROTATION_SENSITIVITY_LOW_GEAR = .8;
         public static final double TURNING_SENSITIVITY_HIGH_GEAR = .8;
         public static final double TURNING_SENSITIVITY_LOW_GEAR = .8;
+        public static final double SPEED_LIMIT = 0.75;
     }
 
     public static class Turret {
@@ -155,6 +162,7 @@ public class Constants {
     public class Spinner {
         public static final double MOTOR_PERCENT_SPEED = 0.5; // TODO: Need a real value here!
         public static final double COLOR_TOLERANCE = 0.06;
+        public static final double PRE_INDEXER_SPEED = 1.0;
     }
 
     public class RotarySwitch {
