@@ -71,4 +71,5 @@ public abstract class OutliersSubsystem extends SubsystemBase implements ILoggin
     }
 
     public abstract void updateDashboard();
+
 }

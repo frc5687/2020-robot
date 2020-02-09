@@ -78,7 +78,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
             _poseTracker = new PoseTracker(this);
             // Must initialize buttons AFTER subsystems are allocated...
-            _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker, _intake, _shooter, _indexer, _spinner, _climber);
+            _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker, _intake, _shooter, _indexer, _spinner, _climber, _hood);
 
             // Initialize the other stuff
             _driveTrain.enableBrakeMode();
@@ -117,6 +117,10 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
         _oi.poll();
         if (_oi.isKillAllPressed()) {
             new KillAll(_driveTrain, _shooter, _indexer, _intake).schedule();
+        }
+
+        if (_oi.isPanicPressed()) {
+            new MoveHoodToAngle(_hood, Constants.Hood.STOWED).schedule();
         }
     }
 
