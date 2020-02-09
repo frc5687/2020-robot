@@ -115,6 +115,11 @@ public class Constants {
 
     public static class Hood {
         public static final double DEADBAND = 0.1;
+        public static final double MIN_DEGREES = 0.0;
+        public static final boolean SENSOR_PHASE_INVERTED = false;
+        public static final double MAX_DEGREES = 360.00;
+        public static final double TICKS_TO_DEGREES = 12;
+        public static final double STOWED = 0;
     }
 
     public static class OI {
@@ -124,6 +129,7 @@ public class Constants {
         public static final long RUMBLE_PULSE_TIME = 100;
         public static final int KILL_ALL = 4;
         public static final int OVERRIDE = 8;
+        public static final int PANIC = 6;
     }
 
     public static class Shifter {
