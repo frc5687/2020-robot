@@ -1,5 +1,6 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
+import edu.wpi.first.wpilibj.MedianFilter;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.RobotPose;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
@@ -17,6 +18,7 @@ public class AutoTarget extends OutliersCommand {
     private DriveTrain _driveTrain;
     private Limelight _limelight;
     private PoseTracker _poseTracker;
+    private MedianFilter _filter;
 
     public AutoTarget(Turret turret, Shooter shooter, Hood hood, Limelight limelight, DriveTrain driveTrain, PoseTracker poseTracker) {
         _turret = turret;
@@ -25,12 +27,14 @@ public class AutoTarget extends OutliersCommand {
         _driveTrain = driveTrain;
         _limelight = limelight;
         _poseTracker = poseTracker;
+        _filter = new MedianFilter(10);
     }
 
     @Override
     public void initialize() {
         super.initialize();
         _limelight.enableLEDs();
+        _filter.reset();
     }
 
     @Override
@@ -53,8 +57,8 @@ public class AutoTarget extends OutliersCommand {
 
         double poseAngle = pose == null ? turretAngle : pose.getTurretPose().getAngle();
         double angleCompensation = turretAngle - poseAngle;
-        double targetAngle = angleCompensation + limelightAngle;
-        return targetAngle;
+        double targetAngle = limelightAngle + angleCompensation;
+        return _filter.calculate(targetAngle);
     }
 
     @Override

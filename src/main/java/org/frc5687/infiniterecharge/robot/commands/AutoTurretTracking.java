@@ -34,7 +34,6 @@ public class AutoTurretTracking extends OutliersCommand {
 
     @Override
     public void execute() {
-//        double position = (_limelight.getHorizontalAngle() + _turret.getPositionDegrees()) /Constants.Turret.TICKS_TO_DEGREES;
         double position = _driveTrain.getAngleToTarget();
         metric("angle target", position);
        _turret.setMotionMagicSetpoint(position);
