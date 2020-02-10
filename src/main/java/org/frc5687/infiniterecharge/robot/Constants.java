@@ -24,6 +24,11 @@ public class Constants {
         public static final double ELEVATOR_RETRACT_SPEED = -0.50;
     }
 
+    public static class Skywalker {
+        public static final boolean SKYWALKER_MOTOR_INVERTED = true;
+        public static final double DEADBAND = 0.25;
+    }
+
     public static class DriveTrain {
         public static final double DEADBAND = 0.25;
         public static final double SPEED_SENSITIVITY = 0.9;
@@ -162,7 +167,7 @@ public class Constants {
     public class Spinner {
         public static final double MOTOR_PERCENT_SPEED = 0.5; // TODO: Need a real value here!
         public static final double COLOR_TOLERANCE = 0.06;
-        public static final double PRE_INDEXER_SPEED = 1.0;
+        public static final double PRE_INDEXER_SPEED = -1.0;
     }
 
     public class RotarySwitch {
@@ -184,8 +189,6 @@ public class Constants {
     public class Indexer {
         public static final boolean INVERTED = false;
         public static final double ADVANCE_SPEED = 0.75; // TODO: Need a real value here!
-        public static final double JOHNSON_SPEED = 1.0;
-        public static final boolean JOHNSON_INVERTED = true;
     }
 
     public class Auto {

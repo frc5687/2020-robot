@@ -109,10 +109,11 @@ public class OI extends OutliersProxy {
         _driverYButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -90));
         _driverXButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -180));
 //        _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this, poseTracker));
-        _operatorLeftTrigger.whileHeld(new AutoIntake(intake, spinner));
+        _operatorLeftTrigger.whileHeld(new AutoIntake(intake));
 
-        _operatorLeftYAxisUpButton.whenPressed(new DeploySpinner(spinner));
-        _operatorLeftYAxisDownButton.whenPressed(new StowSpinner(spinner));
+        _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
+        // _operatorLeftYAxisUpButton.whenPressed(new DeploySpinner(spinner));
+        // _operatorLeftYAxisDownButton.whenPressed(new StowSpinner(spinner));
     }
 
     public boolean isAutoTargetPressed() {
@@ -145,6 +146,13 @@ public class OI extends OutliersProxy {
 
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.Shooter.DEADBAND);
+        return speed;
+    }
+
+    public double getSkywalkerSpeed() {
+        //if (getSubSystem()!=SubSystem.Skywalker) { return 0; }
+        double speed = getSpeedFromAxis(_driverGamepad, Gamepad.Axes.LEFT_X.getNumber());
+        speed = applyDeadband(speed, Constants.Skywalker.DEADBAND);
         return speed;
     }
 

@@ -5,7 +5,6 @@ import com.revrobotics.AlternateEncoderType;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
@@ -15,7 +14,6 @@ import edu.wpi.first.wpilibj.util.Units;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
-import org.frc5687.infiniterecharge.robot.commands.Drive;
 import org.frc5687.infiniterecharge.robot.util.BasicPose;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
@@ -61,8 +59,8 @@ public class DriveTrain extends OutliersSubsystem {
             debug("Allocating motor controllers");
             _leftMaster = new CANSparkMax(RobotMap.CAN.SPARKMAX.LEFT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
             _rightMaster = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
-            _leftSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.LEFT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
-            _rightSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
+            _leftSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.LEFT_FOLLOWER, CANSparkMaxLowLevel.MotorType.kBrushless);
+            _rightSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_FOLLOWER, CANSparkMaxLowLevel.MotorType.kBrushless);
 
 
             _leftEncoder = _leftMaster.getAlternateEncoder(AlternateEncoderType.kQuadrature, Constants.DriveTrain.CPR);
