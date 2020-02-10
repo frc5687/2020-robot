@@ -167,15 +167,11 @@ public class Constants {
     public class Spinner {
         public static final double MOTOR_PERCENT_SPEED = 0.5; // TODO: Need a real value here!
         public static final double COLOR_TOLERANCE = 0.06;
-<<<<<<< HEAD
-        public static final double PRE_INDEXER_SPEED = 1.0;
+        public static final double PRE_INDEXER_SPEED = -1.0;
         public static final double MOTOR_SLOW_PERCENT_SPEED = 0.2; // TODO: Need a real value here!
         public static final int AUTOSPIN_SLOW_AT_WEDGES = 20;
         public static final int AUTOSPIN_STOP_AT_WEDGES = 25;
         public static final double SENSOR_SAMPLE_PERIOD_SECONDS = 0.01;
-=======
-        public static final double PRE_INDEXER_SPEED = -1.0;
->>>>>>> master
     }
 
     public class RotarySwitch {
