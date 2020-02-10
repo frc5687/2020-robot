@@ -1,17 +1,13 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
-import org.frc5687.infiniterecharge.robot.OI;
-import org.frc5687.infiniterecharge.robot.commands.OutliersCommand;
+import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.subsystems.Climber;
 
-public class Climb extends OutliersCommand {
-    private OI _oi;
+public class IdleClimber extends OutliersCommand {
     private Climber _climber;
-    private double _rotationSpeed;
 
-    public Climb(Climber climber, OI oi) {
+    public IdleClimber(Climber climber) {
         _climber = climber;
-        _oi = oi;
         addRequirements(_climber);
     }
 
@@ -22,13 +18,14 @@ public class Climb extends OutliersCommand {
 
     @Override
     public void execute() {
-        double climberSpeed = _oi.getClimberSpeed();
-        _climber.setSpeed(climberSpeed);
+        _climber.setWinchSpeed(0);
+        _climber.setElevatorSpeed(0);
     }
 
     @Override
     public boolean isFinished() {
         return false;
     }
-}
 
+
+}
