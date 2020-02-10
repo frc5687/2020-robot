@@ -31,6 +31,7 @@ public class DriveSpinner extends OutliersCommand {
          * _spinner.enableBreakMode(); <---- this method need to be create in the Subsystem class.
          */
         super.initialize();
+        _spinner.deploy();
     }
 
     @Override
@@ -43,6 +44,12 @@ public class DriveSpinner extends OutliersCommand {
         super.execute();
         double speed = _oi.getSpinnerSpeed();
         _spinner.setSpeed(speed);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        super.end(interrupted);
+        _spinner.stow();
     }
 
     @Override
