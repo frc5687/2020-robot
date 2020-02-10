@@ -130,7 +130,7 @@ public class OI extends OutliersProxy {
     }
 
     public double getDriveRotation() {
-        double speed = -getSpeedFromAxis(_driverGamepad, Gamepad.Axes.RIGHT_X.getNumber());
+        double speed = getSpeedFromAxis(_driverGamepad, Gamepad.Axes.RIGHT_X.getNumber());
         speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
         return speed;
     }
@@ -148,6 +148,13 @@ public class OI extends OutliersProxy {
 
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.Shooter.DEADBAND);
+        return speed;
+    }
+
+    public double getSkywalkerSpeed() {
+        //if (getSubSystem()!=SubSystem.Skywalker) { return 0; }
+        double speed = getSpeedFromAxis(_driverGamepad, Gamepad.Axes.LEFT_X.getNumber());
+        speed = applyDeadband(speed, Constants.Skywalker.DEADBAND);
         return speed;
     }
 
