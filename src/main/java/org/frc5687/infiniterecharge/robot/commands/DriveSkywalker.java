@@ -14,6 +14,7 @@ public class DriveSkywalker extends OutliersCommand{
 
     public DriveSkywalker(Skywalker skywalker, OI oi) {
         _skywalker = skywalker;
+        _oi = oi;
         addRequirements(_skywalker);
     }
 

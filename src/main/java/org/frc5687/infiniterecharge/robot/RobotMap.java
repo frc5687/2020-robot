@@ -13,26 +13,26 @@ public class RobotMap {
             /*  Example:
                 public static final int LEFT_MASTER_SPARK= 1;
                 */
-            public static final int LEFT_MASTER = 4;
-            public static final int RIGHT_MASTER = 1;
-            public static final int LEFT_SLAVE = 3;
-            public static final int RIGHT_SLAVE = 2;
-            public static final int INTAKE_NEO = 5;
+            public static final int LEFT_MASTER = 3;
+            public static final int RIGHT_MASTER = 20;
+            public static final int LEFT_FOLLOWER = 2;
+            public static final int RIGHT_FOLLOWER = 1;
+            public static final int INTAKE_NEO = 9;
             public static final int ELEVATOR_NEO = 8;
-            public static final int WINCH_NEO = 7;
-            public static final int INDEXER = 5;
+            public static final int WINCH_NEO = 12;
+            public static final int INDEXER = 11;
         }
 
         public static class TALONFX {
-            public static final int RIGHT_SHOOTER = 0;
-            public static final int LEFT_SHOOTER = 1;
+            public static final int RIGHT_SHOOTER = 14;
+            public static final int LEFT_SHOOTER = 15;
         }
         public static class TALONSRX {
-            public static final int TURRET = 8;
+            public static final int TURRET = 13;
+            public static final int HOOD = 6;
         }
         public static class VICTORSPX {
-            public static final int HOOD = 0;
-            public static final int SPINNER = 1;
+            public static final int SPINNER = 10;
             public static final int SKYWALKER = 7;
         }
 
