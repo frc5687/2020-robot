@@ -15,7 +15,18 @@ public class Constants {
     }
 
     public static class Climber {
-        public static final boolean CLIMBER_MOTOR_INVERTED = true;
+        public static final boolean ELEVATOR_MOTOR_INVERTED = true;
+        public static final boolean WINCH_MOTOR_INVERTED = true;
+        public static final double ELEVATOR_EXTEND_SPEED = 0.5;
+        public static final double ELEVATOR_TENSION_SPEED = 0.0;
+        public static final double WINCH_RETRACT_SPEED = 1;
+        public static final double WINCH_TENSION_SPEED = 0.0;
+        public static final double ELEVATOR_RETRACT_SPEED = -0.50;
+    }
+
+    public static class Skywalker {
+        public static final boolean SKYWALKER_MOTOR_INVERTED = true;
+        public static final double DEADBAND = 0.25;
     }
 
     public static class DriveTrain {
@@ -38,8 +49,8 @@ public class Constants {
 
         public static final double KP_DRIVE_VELOCITY = 13.2;
 
-        public static final boolean LEFT_MOTORS_INVERTED = true;
-        public static final boolean RIGHT_MOTORS_INVERTED = false;
+        public static final boolean LEFT_MOTORS_INVERTED = false;
+        public static final boolean RIGHT_MOTORS_INVERTED = true;
 
         public static final long LOCK_TIME = 80;
         public static final long DROPOUT_TIME = 100;
@@ -109,6 +120,11 @@ public class Constants {
 
     public static class Hood {
         public static final double DEADBAND = 0.1;
+        public static final double MIN_DEGREES = 0.0;
+        public static final boolean SENSOR_PHASE_INVERTED = false;
+        public static final double MAX_DEGREES = 360.00;
+        public static final double TICKS_TO_DEGREES = 12;
+        public static final double STOWED = 0;
     }
 
     public static class OI {
@@ -118,6 +134,7 @@ public class Constants {
         public static final long RUMBLE_PULSE_TIME = 100;
         public static final int KILL_ALL = 4;
         public static final int OVERRIDE = 8;
+        public static final int PANIC = 6;
     }
 
     public static class Shifter {
@@ -150,7 +167,7 @@ public class Constants {
     public class Spinner {
         public static final double MOTOR_PERCENT_SPEED = 0.5; // TODO: Need a real value here!
         public static final double COLOR_TOLERANCE = 0.06;
-        public static final double PRE_INDEXER_SPEED = 1.0;
+        public static final double PRE_INDEXER_SPEED = -1.0;
         public static final double MOTOR_SLOW_PERCENT_SPEED = 0.2; // TODO: Need a real value here!
         public static final int AUTOSPIN_SLOW_AT_WEDGES = 20;
         public static final int AUTOSPIN_STOP_AT_WEDGES = 25;
@@ -176,8 +193,6 @@ public class Constants {
     public class Indexer {
         public static final boolean INVERTED = false;
         public static final double ADVANCE_SPEED = 0.75; // TODO: Need a real value here!
-        public static final double JOHNSON_SPEED = 1.0;
-        public static final boolean JOHNSON_INVERTED = true;
     }
 
     public class Auto {
@@ -186,7 +201,7 @@ public class Constants {
             public static final double MIN_SPEED = 0.25;
             public static final double MIN_TRACK_DISTANCE = 18;
             public static final int MAX_GARBAGE = 5;
-            public static final double STEER_K = 0.02;
+            public static final double STEER_K = 0.019;
             public static final double MAX_IMU_ANGLE = 180.0;
             public static final double MIN_IMU_ANGLE = -MAX_IMU_ANGLE;
         }

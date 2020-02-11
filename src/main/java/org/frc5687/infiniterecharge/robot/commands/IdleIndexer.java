@@ -3,6 +3,7 @@ package org.frc5687.infiniterecharge.robot.commands;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.subsystems.Indexer;
 import org.frc5687.infiniterecharge.robot.subsystems.Intake;
+import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 
 /***
  * This command acts as a giant state machine to load the hopper/indexer with balls.  The basic rules are:
@@ -16,12 +17,14 @@ import org.frc5687.infiniterecharge.robot.subsystems.Intake;
 public class IdleIndexer extends OutliersCommand {
     private Indexer _indexer;
     private Intake _intake;
+    private Spinner _spinner;
 
-    public IdleIndexer(Indexer indexer, Intake intake) {
+    public IdleIndexer(Indexer indexer, Intake intake, Spinner spinner) {
         super();
         _indexer = indexer;
         _intake = intake;
-        addRequirements(indexer);
+        _spinner = spinner;
+        addRequirements(_indexer, _spinner);
     }
 
     @Override
@@ -62,6 +65,8 @@ public class IdleIndexer extends OutliersCommand {
             speed = Constants.Indexer.ADVANCE_SPEED;
         }
         _indexer.setIndexerSpeed(speed);
+
+        _spinner.setSpeed(Constants.Spinner.PRE_INDEXER_SPEED);
     }
 
 
