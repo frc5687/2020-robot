@@ -60,8 +60,7 @@ public class Spinner extends OutliersSubsystem {
         // color that we expected to see next. We start this task when we start spinning, and stop it when we
         // stop spinning, so we don't steal too many CPU cycles when thw robot is busy doing other stuff.
         _sampleTask = new Notifier(() -> {
-            edu.wpi.first.wpilibj.util.Color sensorReading = _colorSensor.getColor();
-            Color newColor = matchColor(sensorReading);
+            Color newColor = senseColor();
             if (!newColor.equals(_previouslySensedColor)) {
                 _wedgeCount++;
             }
@@ -81,36 +80,47 @@ public class Spinner extends OutliersSubsystem {
         _swatches.put(Color.blue, new Rgb(0.21, 0.45, 0.35));
     }
 
+    /**
+     * If a valid color has been cached (e.g., by the periodic notifier task), return that value. Otherwise take a
+     * reading from the sensor and attempt to match it.
+     * @return Color.red, Color.green, Color.blue, Color.yellow, or Color.unknown
+     */
     public Color getColor() {
+        if (_previouslySensedColor == null || _previouslySensedColor.equals(Color.unknown)) {
+            _previouslySensedColor = senseColor();
+        }
         return _previouslySensedColor;
     }
 
-    private Color matchColor(edu.wpi.first.wpilibj.util.Color sensorReading) {
-        if (closeEnoughTo(sensorReading, _swatches.get(Color.red))) {
-            return Color.red;
-        } else if (closeEnoughTo(sensorReading, _swatches.get(Color.green))) {
-            return Color.green;
-        } else if (closeEnoughTo(sensorReading, _swatches.get(Color.blue))) {
-            return Color.blue;
-        } else if (closeEnoughTo(sensorReading, _swatches.get(Color.yellow))) {
-            return Color.yellow;
-        }
-        return Color.unknown;
+    /**
+     * Gets a sensor reading from the color sensor and attempts to match it against the
+     * swatches of red, green, yellow, or blue
+     * @return Color.red, Color.green, Color.blue, Color.yellow, or Color.unknown
+     */
+    public Color senseColor() {
+        edu.wpi.first.wpilibj.util.Color sensorReading = _colorSensor.getColor();
+        return matchColor(sensorReading);
     }
 
+    /**
+     * Deploys the spinner motor.
+     */
     public void deploy() {
         _solenoid.set(DoubleSolenoid.Value.kForward);
     }
 
+    /**
+     * Retracts the spinner motor.
+     */
     public void stow(){
         _solenoid.set(DoubleSolenoid.Value.kReverse);
     }
 
-    public boolean isRaised(){
+    public boolean isDeployed(){
         return _solenoid.get().equals(DoubleSolenoid.Value.kForward);
     }
 
-    public boolean isLowered(){
+    public boolean isStowed(){
         return _solenoid.get().equals(DoubleSolenoid.Value.kReverse);
     }
 
@@ -122,14 +132,23 @@ public class Spinner extends OutliersSubsystem {
         _solenoid.set(DoubleSolenoid.Value.kOff);
     }
 
+    /**
+     * Spins the spinner motor at regular speed.
+     */
     public void spin() {
         setSpeed(Constants.Spinner.MOTOR_PERCENT_SPEED);
     }
 
+    /**
+     * Spins the spinner motor at low speed.
+     */
     public void slow() {
         setSpeed(Constants.Spinner.MOTOR_SLOW_PERCENT_SPEED);
     }
 
+    /**
+     * Stops the spinner motor.
+     */
     public void stop() {
         _motorController.set(ControlMode.PercentOutput, 0);
     }
@@ -149,6 +168,24 @@ public class Spinner extends OutliersSubsystem {
 
     public int getWedgeCount() {
         return _wedgeCount;
+    }
+
+    /**
+     * Checks to see if the sensor read color matches any of our swatches.
+     * @param sensorReading The raw reading from the color sensor
+     * @return Color.red, Color.green, Color.blue, Color.yellow, or Color.unknown
+     */
+    private Color matchColor(edu.wpi.first.wpilibj.util.Color sensorReading) {
+        if (closeEnoughTo(sensorReading, _swatches.get(Color.red))) {
+            return Color.red;
+        } else if (closeEnoughTo(sensorReading, _swatches.get(Color.green))) {
+            return Color.green;
+        } else if (closeEnoughTo(sensorReading, _swatches.get(Color.blue))) {
+            return Color.blue;
+        } else if (closeEnoughTo(sensorReading, _swatches.get(Color.yellow))) {
+            return Color.yellow;
+        }
+        return Color.unknown;
     }
 
     private boolean closeEnoughTo(edu.wpi.first.wpilibj.util.Color sensorReading, Rgb swatch) {
@@ -172,8 +209,8 @@ public class Spinner extends OutliersSubsystem {
             metric("Spinner/WedgeCount", _wedgeCount);
         }
         if (_solenoid != null) {
-            metric("Spinner/ArmIsRaised", isRaised());
-            metric("Spinner/ArmIsLowered", isLowered());
+            metric("Spinner/ArmIsRaised", isDeployed());
+            metric("Spinner/ArmIsLowered", isStowed());
             metric("Spinner/ArmIsOff", isArmOff());
             metric("Spinner/SpinnerSpeed", _motorController.getSelectedSensorVelocity()); // units per 100ms
         }
