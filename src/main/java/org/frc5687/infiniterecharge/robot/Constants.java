@@ -49,6 +49,10 @@ public class Constants {
         public static final int FREE_CURRENT_LIMIT = 60;
         public static final double SECONDARY_LIMIT = 90;
         public static final double WHEEL_DIAMETER = 4; //inches
+        public static final double kP = 0.01;
+        public static final double kI = 0.00;
+        public static final double kD = 0.00;
+        public static final double ANGLE_TOLERANCE = 0.25;
     }
 
     public static class Turret {

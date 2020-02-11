@@ -270,6 +270,8 @@ public class DriveTrain extends OutliersSubsystem {
         return Rotation2d.fromDegrees(-_imu.getYaw());
     }
 
+    public double getYaw() {return _imu.getYaw();}
+
     public Pose2d getPose() {
         return _odometry.getPoseMeters();
     }
