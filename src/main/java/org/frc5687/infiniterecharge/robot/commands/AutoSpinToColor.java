@@ -7,16 +7,15 @@ import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 public class AutoSpinToColor extends OutliersCommand {
     private Spinner _spinner;
     private OI _oi;
-    private Spinner.Color _color;
+    private Spinner.Color _colorWeWantToSee;
 
     /**
      * The constructors parameters will always have the Subsystem is is trying to run
      * as Commands need to require the subsystem they are trying to use.
      */
-    public AutoSpinToColor(Spinner spinner, OI oi, Spinner.Color color) {
+    public AutoSpinToColor(Spinner spinner, OI oi) {
         _spinner = spinner;
         _oi = oi;
-        _color = color;
         addRequirements(_spinner);
     }
 
@@ -29,8 +28,14 @@ public class AutoSpinToColor extends OutliersCommand {
          * _spinner.enableBreakMode(); <---- this method need to be create in the Subsystem class.
          */
         super.initialize();
+        Spinner.Color colorTheFieldWantsToSee = _spinner.getSoughtColor();
+        _colorWeWantToSee = _spinner.getColorTheRobotSeesForColorTheFieldSees(colorTheFieldWantsToSee);
         _spinner.deploy(); // deploys spinner arm
-        _spinner.spin(); // starts spinner
+        if (shouldGoLeft()) {
+            _spinner.spinBackwards();
+        } else {
+            _spinner.spin();
+        }
     }
 
     @Override
@@ -40,11 +45,10 @@ public class AutoSpinToColor extends OutliersCommand {
          * execute() is run every 20ms(unless told otherwise)
          * this is where closed loop and open loop control is taken place.
          */
-          _spinner.setSpeed(Constants.Spinner.PRE_INDEXER_SPEED);
-        if(_spinner.getColor() == _color){
+        _spinner.setSpeed(Constants.Spinner.PRE_INDEXER_SPEED);
+        if (_spinner.getColor() == _colorWeWantToSee) {
             _spinner.stop(); // stops spinner
         }
-
     }
 
     @Override
@@ -60,5 +64,16 @@ public class AutoSpinToColor extends OutliersCommand {
     public void end(boolean interrupted) {
         _spinner.stow(); // stows spinner
         super.end(interrupted);
+    }
+
+    /**
+     * @return Returns true if rotating the disc counterclockwise is the shortest path to the targetColor.
+     */
+    private boolean shouldGoLeft() {
+        Spinner.Color onColor = _spinner.getColor();
+        return onColor.equals(Spinner.Color.red) && _colorWeWantToSee.equals((Spinner.Color.yellow)) ||
+                onColor.equals(Spinner.Color.yellow) && _colorWeWantToSee.equals((Spinner.Color.blue)) ||
+                onColor.equals(Spinner.Color.blue) && _colorWeWantToSee.equals((Spinner.Color.green)) ||
+                onColor.equals(Spinner.Color.green) && _colorWeWantToSee.equals((Spinner.Color.red));
     }
 }

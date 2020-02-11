@@ -170,10 +170,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
                 _driveTrain
         );
 
-        return new AutoSpinToColor(_spinner, _oi, );
-
-        //return ramseteCommand.andThen(() -> _driveTrain.tankDriveVolts(0, 0));
-
+        return ramseteCommand.andThen(() -> _driveTrain.tankDriveVolts(0, 0));
     }
 
     @Override

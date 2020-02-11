@@ -1,19 +1,14 @@
 package org.frc5687.infiniterecharge.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.RobotMap;
-import org.frc5687.infiniterecharge.robot.commands.DriveSpinner;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 import java.util.HashMap;
@@ -25,6 +20,7 @@ public class Spinner extends OutliersSubsystem {
     private VictorSPX _motorController;
     private DoubleSolenoid _solenoid;
     private Map<Color, Rgb> _swatches = new HashMap<>();
+    private Map<Color, Color> _fieldToRobotColorMap = new HashMap<>(); // see getColorRobotSeesForColorFieldSees()
     private boolean FMSDataCorrupt = false;
 
     public void setSpeed(double speed) {
@@ -73,26 +69,23 @@ public class Spinner extends OutliersSubsystem {
         }
     }
 
-    public Color getSoughtColor(){
+    public Color getSoughtColor() {
         String gameData;
         gameData = DriverStation.getInstance().getGameSpecificMessage();
         if(gameData.length() > 0){
             switch (gameData.charAt(0)){
                 case 'B':
                     return Color.blue;
-
                 case 'G':
                     return  Color.green;
-
                 case 'R':
                     return Color.red;
-
                 case 'Y':
                     return Color.yellow;
-
                 default:
+                    error("Corrupt/unknown color returned from field: " + gameData);
                     FMSDataCorrupt = true;
-                    return Color.badData;
+                    return Color.unknown;
             }
         }
         return Color.unknown;
@@ -127,6 +120,11 @@ public class Spinner extends OutliersSubsystem {
         _swatches.put(Color.yellow, new Rgb(0.40, 0.49, 0.10));
         _swatches.put(Color.green, new Rgb(0.21, 0.56, 0.23));
         _swatches.put(Color.blue, new Rgb(0.21, 0.45, 0.35));
+
+        _fieldToRobotColorMap.put(Color.yellow, Color.green);
+        _fieldToRobotColorMap.put(Color.red, Color.blue);
+        _fieldToRobotColorMap.put(Color.green, Color.yellow);
+        _fieldToRobotColorMap.put(Color.blue, Color.red);
     }
 
     public Color getColor() {
@@ -140,6 +138,19 @@ public class Spinner extends OutliersSubsystem {
             return Color.yellow;
         }
         return Color.unknown;
+    }
+
+    /**
+     * The field's sensor is not in the same place as the robot's sensor... it's about 90 degrees away and thus
+     * is looking at a completely different color/wedge. This method determines what color the robot will see
+     * for a given color that the field sees (incidentally, this function also just happens to work for the
+     * inverse case: getting the color the field sees for the provided color the robot sees, because of how
+     * the pattern on the control panel works).
+     * @param seenByField The color seen by the field's sensor.
+     * @return The color the robot should see when the field sees _seenByField_
+     */
+    public Color getColorTheRobotSeesForColorTheFieldSees(Color seenByField) {
+        return _fieldToRobotColorMap.get(seenByField);
     }
 
     public void deploy() {
@@ -170,6 +181,10 @@ public class Spinner extends OutliersSubsystem {
         _motorController.set(ControlMode.PercentOutput, Constants.Spinner.MOTOR_PERCENT_SPEED);
     }
 
+    public void spinBackwards() {
+        _motorController.set(ControlMode.PercentOutput, -1 * Constants.Spinner.MOTOR_PERCENT_SPEED);
+    }
+
     public void stop() {
         _motorController.set(ControlMode.PercentOutput, 0);
     }
@@ -183,7 +198,7 @@ public class Spinner extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        metric("Spinner/FMSDataCorrupt", FMSDataCorrupt);
+        metric("Spinner/ColorTheFieldSees", getColorTheRobotSeesForColorTheFieldSees(getColor()).toString());
         metric("Spinner/RawRed", _colorSensor.getRed());
         metric("Spinner/RawGreen", _colorSensor.getGreen());
         metric("Spinner/RawBlue", _colorSensor.getBlue());
