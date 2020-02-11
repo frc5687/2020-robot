@@ -126,6 +126,8 @@ public class Constants {
         public static final double TICKS_TO_DEGREES = 12;
         public static final double STOWED = 0;
         public static final double DISTANCE_ANGLE_CONVERSION = 0.001;
+        public static final int CRUISE_VELOCITY = 5000;
+        public static final int ACCELERATION = 16000;
     }
 
     public static class OI {

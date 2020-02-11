@@ -35,8 +35,8 @@ public class Hood extends OutliersSubsystem {
             _hoodController.configForwardSoftLimitEnable(true, 30);
             _hoodController.configReverseSoftLimitThreshold((int) (Constants.Hood.MIN_DEGREES/Constants.Hood.TICKS_TO_DEGREES), 30);
             _hoodController.configReverseSoftLimitEnable(true, 30);
-            _hoodController.configMotionCruiseVelocity(Constants.Turret.CRUISE_VELOCITY);
-            _hoodController.configMotionAcceleration(Constants.Turret.ACCELERATION);
+            _hoodController.configMotionCruiseVelocity(Constants.Hood.CRUISE_VELOCITY);
+            _hoodController.configMotionAcceleration(Constants.Hood.ACCELERATION);
             _hoodController.configVoltageMeasurementFilter(8);
             _hoodController.enableVoltageCompensation(true);
             _hoodController.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10,20);
