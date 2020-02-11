@@ -30,6 +30,10 @@ public class OI extends OutliersProxy {
 
     private Button _operatorRightBumper;
 
+    private Button _operatorStartButton;
+    private Button _operatorEndButton;
+
+
     private Button _driverAButton;
     private Button _driverBButton;
     private Button _driverXButton;
@@ -79,36 +83,44 @@ public class OI extends OutliersProxy {
         _operatorXButton = new JoystickButton(_operatorGamepad,Gamepad.Buttons.X.getNumber());
         _operatorYButton = new JoystickButton(_operatorGamepad,Gamepad.Buttons.Y.getNumber());
 
+        _operatorStartButton = new JoystickButton(_operatorGamepad, Gamepad.Buttons.START.getNumber());
+        _operatorEndButton = new JoystickButton(_operatorGamepad, Gamepad.Buttons.BACK.getNumber());
+
         _operatorLeftYAxisDownButton = new AxisButton(_operatorGamepad,Gamepad.Axes.LEFT_Y.getNumber(), -.5);
         _operatorLeftYAxisUpButton = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_Y.getNumber(), .5);
 
     }
 
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, AHRS imu){
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber, Hood hood, AHRS imu){
         _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 1));
         _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
-        _operatorXButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .7));
         _operatorYButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .8));
         _operatorRightBumper.toggleWhenPressed(new ShootSpeedSetpoint(shooter, this, 1.0));
         _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this));
 
-        _driverLeftBumper.whenPressed(new RaiseIntake(intake));
-        _driverRightBumper.whenPressed(new LowerIntake(intake));
+        _operatorStartButton.whileHeld(new ExtendElevator(climber));
+        _operatorXButton.whileHeld(new RetractElevator(climber));
+        _operatorEndButton.whileHeld(new RetractWinch(climber));
+
+        _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
+        _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
 
         _driverAButton.whenPressed(new AutoDrivePath(driveTrain, imu, "Snipe", 0, false));
         _driverBButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 0));
         _driverYButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -90));
         _driverXButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -180));
-        _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this, poseTracker));
-        _driverLeftTrigger.whileHeld(new AutoIntake(intake));
+//        _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this, poseTracker));
+        _operatorLeftTrigger.whileHeld(new AutoIntake(intake));
 
-        _operatorLeftYAxisUpButton.whenPressed(new DeploySpinner(spinner));
-        _operatorLeftYAxisDownButton.whenPressed(new StowSpinner(spinner));
+        _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
+        // _operatorLeftYAxisUpButton.whenPressed(new DeploySpinner(spinner));
+        // _operatorLeftYAxisDownButton.whenPressed(new StowSpinner(spinner));
     }
 
     public boolean isAutoTargetPressed() {
-        return _driverLeftBumper.get();
+        return false;
     }
+    public boolean isAutoTargetDrivePressed() {return _driverRightYAxisUpButton.get();}
 
     public double getDriveSpeed() {
         double speed = -getSpeedFromAxis(_driverGamepad, Gamepad.Axes.LEFT_Y.getNumber());
@@ -138,8 +150,15 @@ public class OI extends OutliersProxy {
         return speed;
     }
 
+    public double getSkywalkerSpeed() {
+        //if (getSubSystem()!=SubSystem.Skywalker) { return 0; }
+        double speed = getSpeedFromAxis(_driverGamepad, Gamepad.Axes.LEFT_X.getNumber());
+        speed = applyDeadband(speed, Constants.Skywalker.DEADBAND);
+        return speed;
+    }
+
     public double getTurretSpeed() {
-//        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
+        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.Turret.DEADBAND);
         return speed;
@@ -153,13 +172,6 @@ public class OI extends OutliersProxy {
         return speed;
     }
 
-    public double getClimberSpeed() {
-        if (getSubSystem()!=SubSystem.Climber) { return 0; }
-
-        double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_X.getNumber());
-        speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
-        return speed;
-    }
 
     public double getHoodSpeed() {
 //        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
@@ -236,11 +248,19 @@ public class OI extends OutliersProxy {
 
         return driverPOV == Constants.OI.KILL_ALL || operatorPOV == Constants.OI.KILL_ALL;
     }
+
     public boolean isOverridePressed() {
         int operatorPOV = getOperatorPOV();
         int driverPOV = getDriverPOV();
 
         return driverPOV == Constants.OI.OVERRIDE || operatorPOV == Constants.OI.OVERRIDE;
+    }
+
+    public boolean isPanicPressed() {
+        int operatorPOV = getOperatorPOV();
+        int driverPOV = getDriverPOV();
+
+        return driverPOV == Constants.OI.PANIC || operatorPOV == Constants.OI.PANIC;
     }
 
 

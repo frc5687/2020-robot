@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.frc5687.infiniterecharge.robot.commands.Drive;
 import org.frc5687.infiniterecharge.robot.util.*;
 
 import java.io.BufferedReader;
@@ -25,7 +26,7 @@ import java.io.FileReader;
  * creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends OutliersRobot implements ILoggingSource {
+public class Robot extends OutliersRobot implements ILoggingSource{
 
     public static IdentityMode identityMode = IdentityMode.competition;
     private RioLogger.LogLevel _dsLogLevel = RioLogger.LogLevel.warn;
@@ -159,7 +160,6 @@ public class Robot extends OutliersRobot implements ILoggingSource {
             _robotContainer.updateDashboard();
         }
     }
-
 
     private void loadConfigFromUSB() {
         String output_dir = "/U/"; // USB drive is mounted to /U on roboRIO

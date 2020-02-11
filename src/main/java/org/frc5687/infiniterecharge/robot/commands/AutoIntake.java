@@ -2,6 +2,7 @@ package org.frc5687.infiniterecharge.robot.commands;
 
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.subsystems.Intake;
+import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 
 public class AutoIntake extends OutliersCommand {
     private Intake _intake;

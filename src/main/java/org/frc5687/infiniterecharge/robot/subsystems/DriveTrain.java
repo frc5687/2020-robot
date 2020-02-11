@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
@@ -18,7 +19,6 @@ import edu.wpi.first.wpilibj.util.Units;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
-import org.frc5687.infiniterecharge.robot.commands.Drive;
 import org.frc5687.infiniterecharge.robot.util.BasicPose;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
@@ -39,6 +39,7 @@ public class DriveTrain extends OutliersSubsystem {
     private DifferentialDriveKinematics _driveKinematics;
     private SimpleMotorFeedforward _driveFeedForward;
     private TrajectoryConfig _driveConfig;
+
 
     private OI _oi;
     private AHRS _imu;
@@ -65,8 +66,9 @@ public class DriveTrain extends OutliersSubsystem {
             debug("Allocating motor controllers");
             _leftMaster = new CANSparkMax(RobotMap.CAN.SPARKMAX.LEFT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
             _rightMaster = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
-            _leftSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.LEFT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
-            _rightSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_SLAVE, CANSparkMaxLowLevel.MotorType.kBrushless);
+            _leftSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.LEFT_FOLLOWER, CANSparkMaxLowLevel.MotorType.kBrushless);
+            _rightSlave = new CANSparkMax(RobotMap.CAN.SPARKMAX.RIGHT_FOLLOWER, CANSparkMaxLowLevel.MotorType.kBrushless);
+
 
             _leftEncoder = _leftMaster.getAlternateEncoder(AlternateEncoderType.kQuadrature, Constants.DriveTrain.CPR);
             _rightEncoder = _rightMaster.getAlternateEncoder(AlternateEncoderType.kQuadrature, Constants.DriveTrain.CPR);
@@ -121,9 +123,9 @@ public class DriveTrain extends OutliersSubsystem {
 
     public void enableBrakeMode() {
         _leftMaster.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        _leftSlave.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        _leftSlave.setIdleMode(CANSparkMax.IdleMode.kCoast);
         _rightMaster.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        _rightSlave.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        _rightSlave.setIdleMode(CANSparkMax.IdleMode.kCoast);
     }
 
     public void disableBrakeMode() {
@@ -136,8 +138,8 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Speed", speed);
         metric("Rotation", rotation);
 
-        speed = limit(speed, 1);
-        //Shifter.Gear gear = _robot.getShifter().getGear();
+        speed = limit(speed, Constants.DriveTrain.SPEED_LIMIT);
+        Shifter.Gear gear = _shifter.getGear();
 
         rotation = limit(rotation, 1);
 
@@ -148,29 +150,22 @@ public class DriveTrain extends OutliersSubsystem {
 
         if (speed < Constants.DriveTrain.DEADBAND && speed > -Constants.DriveTrain.DEADBAND) {
             if (!override) {
-//                rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.ROTATION_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.ROTATION_SENSITIVITY_LOW_GEAR);
+                rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.ROTATION_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.ROTATION_SENSITIVITY_LOW_GEAR);
             }
             if (creep) {
-                //metric("Rot/Creep", creep);
                 rotation = rotation * CREEP_FACTOR;
             } else {
                 rotation = rotation * 0.8;
             }
-
-//            metric("Rot/Transformed", rotation);
             leftMotorOutput = rotation;
             rightMotorOutput = -rotation;
-//            metric("Rot/LeftMotor", leftMotorOutput);
-//            metric("Rot/RightMotor", rightMotorOutput);
         } else {
             // Square the inputs (while preserving the sign) to increase fine control
             // while permitting full power.
-            metric("Str/Raw", speed);
             speed = Math.copySign(applySensitivityFactor(speed, Constants.DriveTrain.SPEED_SENSITIVITY), speed);
             if (!override) {
-//                rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.TURNING_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.TURNING_SENSITIVITY_LOW_GEAR);
+                rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.TURNING_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.TURNING_SENSITIVITY_LOW_GEAR);
             }
-            metric("Str/Trans", speed);
             rotation = applySensitivityFactor(rotation, Constants.DriveTrain.ROTATION_SENSITIVITY);
             double delta = override ? rotation : rotation * Math.abs(speed);
             if (override) {
@@ -221,8 +216,6 @@ public class DriveTrain extends OutliersSubsystem {
     public double getRightVelocity() {
         return _rightEncoder.getVelocity() * 2 * Math.PI * Units.inchesToMeters(2.0) / 60 ; //Meters Per Sec
     }
-
-
     public void pauseMotors() {
         _oldLeftSpeedFront = _leftMaster.get();
         _oldLeftSpeedBack = _leftSlave.get();
@@ -325,7 +318,6 @@ public class DriveTrain extends OutliersSubsystem {
         }
         return angle;
     }
-
 
     public BasicPose getDrivePose() {
         return new BasicPose(_imu.getAngle(), _leftEncoder.getPosition(), _rightEncoder.getPosition(), 0);

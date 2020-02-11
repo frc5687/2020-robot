@@ -15,7 +15,18 @@ public class Constants {
     }
 
     public static class Climber {
-        public static final boolean CLIMBER_MOTOR_INVERTED = true;
+        public static final boolean ELEVATOR_MOTOR_INVERTED = true;
+        public static final boolean WINCH_MOTOR_INVERTED = true;
+        public static final double ELEVATOR_EXTEND_SPEED = 0.5;
+        public static final double ELEVATOR_TENSION_SPEED = 0.0;
+        public static final double WINCH_RETRACT_SPEED = 1;
+        public static final double WINCH_TENSION_SPEED = 0.0;
+        public static final double ELEVATOR_RETRACT_SPEED = -0.50;
+    }
+
+    public static class Skywalker {
+        public static final boolean SKYWALKER_MOTOR_INVERTED = true;
+        public static final double DEADBAND = 0.25;
     }
 
     public static class DriveTrain {
@@ -23,12 +34,15 @@ public class Constants {
         public static final double SPEED_SENSITIVITY = 0.9;
         public static final double ROTATION_SENSITIVITY = 0.75;
         public static final double CREEP_FACTOR = 0.25;
-        public static final double WIDTH = 27.5;
+
         public static final int CPR = 8192;
         public static final double ENCODER_CONVERSION = 6.85714286;
-        public static final double KS_VOLTS = 0.207;
-        public static final double KV_VOLTSPR = 0.11;
-        public static final double KA_VOLTSQPR = 0.0159;
+
+        public static final double WIDTH = Units.inchesToMeters(27.0);
+
+        public static final double KS_VOLTS = 0.172;
+        public static final double KV_VOLTSPR = 2.46;
+        public static final double KA_VOLTSQPR = 0.355;
 
         public static final double RAMSETE_B = 2;
         public static final double RAMSETE_ZETA = 0.7;
@@ -38,7 +52,10 @@ public class Constants {
         public static final boolean LEFT_MOTORS_INVERTED = false;
         public static final boolean RIGHT_MOTORS_INVERTED = true;
 
-        public static final double MAX_SPEED_IPS = 172.0;
+        public static final long LOCK_TIME = 80;
+        public static final long DROPOUT_TIME = 100;
+        public static final long SEEK_TIME = 500;
+        public static final int MAX_SPEED_IPS = 157;
         public static final double MAX_SPEED_MPS = Units.inchesToMeters(MAX_SPEED_IPS);
         public static final double CAP_SPEED_IPS = .8 * MAX_SPEED_IPS;
         public static final double MAX_ACCELERATION_IPSS = CAP_SPEED_IPS / 2;
@@ -48,11 +65,22 @@ public class Constants {
         public static final int STALL_CURRENT_LIMIT = 50;
         public static final int FREE_CURRENT_LIMIT = 60;
         public static final double SECONDARY_LIMIT = 90;
-        public static final double WHEEL_DIAMETER = 4; //inches
+
+        public static final double SLOW_ZONE_COMP = 30;
+        public static final double MEDIUM_ZONE_COMP = 70;
+
+        public static final double SLOW_SPEED_COMP = 0.4;
+        public static final double MEDIUM_SPEED_COMP = 0.6;
+
         public static final double kP = 0.01;
         public static final double kI = 0.00;
         public static final double kD = 0.00;
         public static final double ANGLE_TOLERANCE = 0.25;
+        public static final double ROTATION_SENSITIVITY_HIGH_GEAR = .8;
+        public static final double ROTATION_SENSITIVITY_LOW_GEAR = .8;
+        public static final double TURNING_SENSITIVITY_HIGH_GEAR = .8;
+        public static final double TURNING_SENSITIVITY_LOW_GEAR = .8;
+        public static final double SPEED_LIMIT = 0.75;
     }
 
     public static class Turret {
@@ -92,6 +120,11 @@ public class Constants {
 
     public static class Hood {
         public static final double DEADBAND = 0.1;
+        public static final double MIN_DEGREES = 0.0;
+        public static final boolean SENSOR_PHASE_INVERTED = false;
+        public static final double MAX_DEGREES = 360.00;
+        public static final double TICKS_TO_DEGREES = 12;
+        public static final double STOWED = 0;
     }
 
     public static class OI {
@@ -101,6 +134,7 @@ public class Constants {
         public static final long RUMBLE_PULSE_TIME = 100;
         public static final int KILL_ALL = 4;
         public static final int OVERRIDE = 8;
+        public static final int PANIC = 6;
     }
 
     public static class Shifter {
@@ -133,6 +167,7 @@ public class Constants {
     public class Spinner {
         public static final double MOTOR_PERCENT_SPEED = 0.5; // TODO: Need a real value here!
         public static final double COLOR_TOLERANCE = 0.06;
+        public static final double PRE_INDEXER_SPEED = -1.0;
     }
 
     public class RotarySwitch {
@@ -154,7 +189,18 @@ public class Constants {
     public class Indexer {
         public static final boolean INVERTED = false;
         public static final double ADVANCE_SPEED = 0.75; // TODO: Need a real value here!
-        public static final double JOHNSON_SPEED = 1.0;
+    }
+
+    public class Auto {
+        public class Drive {
+            public static final double SPEED = 1.0;
+            public static final double MIN_SPEED = 0.25;
+            public static final double MIN_TRACK_DISTANCE = 18;
+            public static final int MAX_GARBAGE = 5;
+            public static final double STEER_K = 0.019;
+            public static final double MAX_IMU_ANGLE = 180.0;
+            public static final double MIN_IMU_ANGLE = -MAX_IMU_ANGLE;
+        }
     }
 
     public class AutoDrivePath {
