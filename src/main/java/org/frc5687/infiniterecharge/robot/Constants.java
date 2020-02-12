@@ -88,12 +88,12 @@ public class Constants {
         public static final double TOLERANCE = 2;
         public static final boolean SENSOR_PHASE_INVERTED = false;
         public static final double TICKS_TO_DEGREES = 0.08695652173913;
-        public static final double MIN_DEGREES = -180;
-        public static final double MAX_DEGREES = 90;
+        public static final double MIN_DEGREES = -138;
+        public static final double MAX_DEGREES = 200;
         public static final double MAX_VOLTAGE = 12.0;
         public static final int CRUISE_VELOCITY = 5000; // in ticks
         public static final int ACCELERATION = 16000; // in ticks
-        public static final double ABS_OFFSET = 273;// if the turret coasts this value changes, need to find a way to set this position.
+        public static final double ABS_OFFSET = 140;// if the turret coasts this value changes, need to find a way to set this position.
 
 
         public static class Position {
@@ -125,6 +125,9 @@ public class Constants {
         public static final double MAX_DEGREES = 360.00;
         public static final double TICKS_TO_DEGREES = 12;
         public static final double STOWED = 0;
+        public static final double DISTANCE_ANGLE_CONVERSION = 0.001;
+        public static final int CRUISE_VELOCITY = 5000;
+        public static final int ACCELERATION = 16000;
     }
 
     public static class OI {
@@ -148,9 +151,9 @@ public class Constants {
         public static final long MANUAL_WAIT_PERIOD = 3000;
     }
     public class Limelight {
-        public static final double TARGET_HEIGHT = 94;
+        public static final double TARGET_HEIGHT = 92;
         public static final double LIMELIGHT_HEIGHT = 34;
-        public static final double LIMELIGHT_ANGLE = -1.57;
+        public static final double LIMELIGHT_ANGLE = -1.5;
         public static final double OVERALL_LATENCY_MILLIS = 11;
     }
 

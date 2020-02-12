@@ -15,6 +15,8 @@ import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.commands.DriveHood;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
+import java.util.concurrent.CompletionService;
+
 public class Hood extends OutliersSubsystem {
 
     private OI _oi;
@@ -33,8 +35,8 @@ public class Hood extends OutliersSubsystem {
             _hoodController.configForwardSoftLimitEnable(true, 30);
             _hoodController.configReverseSoftLimitThreshold((int) (Constants.Hood.MIN_DEGREES/Constants.Hood.TICKS_TO_DEGREES), 30);
             _hoodController.configReverseSoftLimitEnable(true, 30);
-            _hoodController.configMotionCruiseVelocity(Constants.Turret.CRUISE_VELOCITY);
-            _hoodController.configMotionAcceleration(Constants.Turret.ACCELERATION);
+            _hoodController.configMotionCruiseVelocity(Constants.Hood.CRUISE_VELOCITY);
+            _hoodController.configMotionAcceleration(Constants.Hood.ACCELERATION);
             _hoodController.configVoltageMeasurementFilter(8);
             _hoodController.enableVoltageCompensation(true);
             _hoodController.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10,20);
@@ -70,8 +72,11 @@ public class Hood extends OutliersSubsystem {
         return getPositionDegrees();
     }
 
-
     public boolean isAtSetpoint() {
         return _hoodController.isMotionProfileFinished();
+    }
+
+    public double getHoodDesiredAngle(double distance) {
+        return distance * Constants.Hood.DISTANCE_ANGLE_CONVERSION;
     }
 }

@@ -56,6 +56,7 @@ public class Turret extends OutliersSubsystem {
             _turretController.enableVoltageCompensation(true);
             _turretController.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10,20);
             _turretController.configClosedloopRamp(0,50);
+            _turretController.setNeutralMode(NeutralMode.Brake);
 
         } catch (Exception e) {
             error("error allocating turret motors " + e.getMessage());
@@ -90,8 +91,8 @@ public class Turret extends OutliersSubsystem {
         }
     }
 
-    public void setMotionMagicSpeed(double output) {
-        _turretController.set(ControlMode.MotionMagic, output);
+    public void setMotionMagicSetpoint(double angle) {
+        _turretController.set(ControlMode.MotionMagic, angle/Constants.Turret.TICKS_TO_DEGREES);
     }
 
     public boolean isAtSetpoint() {
@@ -107,6 +108,7 @@ public class Turret extends OutliersSubsystem {
     }
 
     public Pose2d updatePose() {
+        Pose2d prevPose = _driveTrain.getPose();
         double distance = Units.inchesToMeters(_limelight.getTargetDistance());
         // big dumb turret angle doesn't effect pose.
 //        double alpha = (90 -(getPositionDegrees() + _limelight.getHorizontalAngle())) - _driveTrain.getHeading().getDegrees();
@@ -119,9 +121,9 @@ public class Turret extends OutliersSubsystem {
         metric("Skew", _limelight.getSkew());
         double poseX = Constants.AutoPositions.TARGET_POSE.getTranslation().getX() - x;
         double poseY = 0;
-        if (_limelight.getSkew() <= -45) {
+        if (prevPose.getTranslation().getY() < Constants.AutoPositions.TARGET_POSE.getTranslation().getY()) {
             poseY = Constants.AutoPositions.TARGET_POSE.getTranslation().getY() - y;
-        } else if (_limelight. getSkew() > -45) {
+        } else if (prevPose.getTranslation().getY() > Constants.AutoPositions.TARGET_POSE.getTranslation().getY()) {
             poseY = Constants.AutoPositions.TARGET_POSE.getTranslation().getY() + y;
         }
         return new Pose2d(poseX, poseY, _driveTrain.getHeading());
@@ -129,7 +131,7 @@ public class Turret extends OutliersSubsystem {
 
     @Override
     public void periodic() {
-        if (_limelight.isTargetSighted()) {
+        if (_oi.isAutoTargetPressed()) {
             _driveTrain.resetOdometry(updatePose());
         }
     }
@@ -139,6 +141,7 @@ public class Turret extends OutliersSubsystem {
         metric("Position Degrees", getPositionDegrees());
         metric("Absolute Position raw" , getAbsoluteEncoderRawPosition());
         metric("Absolute Pos", getAbsoluteEncoderPosition());
+        metric("LL distance inches", _limelight.getTargetDistance());
         metric("LLDistance", Units.inchesToMeters(_limelight.getTargetDistance()));
 //        metric("Velocity", getVelocityTicksPer100ms());
 //        metric("Speed", _turretController.getMotorOutputVoltage());
