@@ -88,13 +88,6 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
             // Initialize the other stuff
             // Initialize the other stuff
-            try {
-                String trajectoryJson = "paths/output/MidShieldGeneratorBalls.wpilib.json";
-                Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJson);
-                _trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-            } catch (Exception e) {
-                error("Paths not working" + e.getMessage());
-            }
             _driveTrain.enableBrakeMode();
             _driveTrain.resetOdometry(new Pose2d(0,0,new Rotation2d(0)));
 

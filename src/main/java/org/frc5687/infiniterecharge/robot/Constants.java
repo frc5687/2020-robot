@@ -55,7 +55,7 @@ public class Constants {
         public static final long LOCK_TIME = 80;
         public static final long DROPOUT_TIME = 100;
         public static final long SEEK_TIME = 500;
-        public static final int MAX_SPEED_IPS = 157;
+        public static final int MAX_SPEED_IPS = 156;
         public static final double MAX_SPEED_MPS = Units.inchesToMeters(MAX_SPEED_IPS);
         public static final double CAP_SPEED_IPS = .8 * MAX_SPEED_IPS;
         public static final double MAX_ACCELERATION_IPSS = CAP_SPEED_IPS / 2;
@@ -72,10 +72,10 @@ public class Constants {
         public static final double SLOW_SPEED_COMP = 0.4;
         public static final double MEDIUM_SPEED_COMP = 0.6;
 
-        public static final double kP = 0.01;
+        public static final double kP = 0.015;
         public static final double kI = 0.00;
-        public static final double kD = 0.00;
-        public static final double ANGLE_TOLERANCE = 0.25;
+        public static final double kD = 0.001;
+        public static final double ANGLE_TOLERANCE = 1;
         public static final double ROTATION_SENSITIVITY_HIGH_GEAR = .8;
         public static final double ROTATION_SENSITIVITY_LOW_GEAR = .8;
         public static final double TURNING_SENSITIVITY_HIGH_GEAR = .8;

@@ -32,5 +32,6 @@ public class AutoIntake extends OutliersCommand {
     public void end(boolean interrupted) {
         super.end(interrupted);
         _intake.raiseIntake();
+        error("Ending Intake");
     }
 }
