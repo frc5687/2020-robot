@@ -27,6 +27,9 @@ public class Constants {
     public static class Skywalker {
         public static final boolean SKYWALKER_MOTOR_INVERTED = true;
         public static final double DEADBAND = 0.25;
+        public static final double UPSPEED = .50;
+        public static final double DOWNSPEED = -.50;
+        public static final double SKYWALKER_TENSION_SPEED = 0;
     }
 
     public static class DriveTrain {
