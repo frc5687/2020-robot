@@ -1,9 +1,15 @@
 package org.frc5687.infiniterecharge.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.commands.DriveHood;
@@ -12,23 +18,46 @@ import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 public class Hood extends OutliersSubsystem {
 
     private OI _oi;
-    private VictorSPX _hood;
-    private DutyCycleEncoder _encoder;
+    private TalonSRX _hoodController;
 
     public Hood(OutliersContainer container, OI oi) {
         super(container);
         _oi = oi;
         try {
             debug("Allocating hood motor");
-            _hood = new VictorSPX(RobotMap.CAN.VICTORSPX.HOOD);
-            _encoder = new DutyCycleEncoder(RobotMap.DIO.HOOD_ENCODER);
+            _hoodController = new TalonSRX(RobotMap.CAN.TALONSRX.HOOD);
+            _hoodController.setNeutralMode(NeutralMode.Brake);
+            _hoodController.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,100);
+            _hoodController.setSensorPhase(Constants.Hood.SENSOR_PHASE_INVERTED);
+            _hoodController.configForwardSoftLimitThreshold((int)(Constants.Hood.MAX_DEGREES/Constants.Hood.TICKS_TO_DEGREES), 30);
+            _hoodController.configForwardSoftLimitEnable(true, 30);
+            _hoodController.configReverseSoftLimitThreshold((int) (Constants.Hood.MIN_DEGREES/Constants.Hood.TICKS_TO_DEGREES), 30);
+            _hoodController.configReverseSoftLimitEnable(true, 30);
+            _hoodController.configMotionCruiseVelocity(Constants.Turret.CRUISE_VELOCITY);
+            _hoodController.configMotionAcceleration(Constants.Turret.ACCELERATION);
+            _hoodController.configVoltageMeasurementFilter(8);
+            _hoodController.enableVoltageCompensation(true);
+            _hoodController.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10,20);
+            _hoodController.configClosedloopRamp(0,50);
         } catch (Exception e) {
             error("Exception allocating hood motor" + e.getMessage());
         }
     }
 
     public void setSpeed(double speed) {
-        _hood.set(ControlMode.PercentOutput, speed);
+        _hoodController.set(ControlMode.PercentOutput, speed);
+    }
+
+    public void setPosition(double angle) {
+        _hoodController.set(ControlMode.MotionMagic, angle / Constants.Hood.TICKS_TO_DEGREES);
+    }
+
+    public int getPositionTicks() {
+        return _hoodController.getSelectedSensorPosition(0);
+    }
+
+    public double getPositionDegrees() {
+        return getPositionTicks() * Constants.Hood.TICKS_TO_DEGREES;
     }
 
 
@@ -38,8 +67,11 @@ public class Hood extends OutliersSubsystem {
     }
 
     public double getPosition() {
-        return _encoder.getDistance();
+        return getPositionDegrees();
     }
 
 
+    public boolean isAtSetpoint() {
+        return _hoodController.isMotionProfileFinished();
+    }
 }

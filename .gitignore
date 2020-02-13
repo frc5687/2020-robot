@@ -12,7 +12,7 @@
 
 # Package Files #
 *.jar
-!navx_frc.jar
+!Color-Sensor-V3.jar
 *.war
 *.ear
 *.zip
@@ -58,3 +58,4 @@ gradle/.launch/
 !gradle/*/*.jar
 */Version.java
 src/main/java/org/frc5687/infiniterecharge/robot/util/Version.java
+*.orig

@@ -7,7 +7,9 @@ import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Notifier;
 import org.frc5687.infiniterecharge.robot.Constants;
+import org.frc5687.infiniterecharge.robot.Robot;
 import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
@@ -21,10 +23,250 @@ public class Spinner extends OutliersSubsystem {
     private DoubleSolenoid _solenoid;
     private Map<Color, Rgb> _swatches = new HashMap<>();
     private Map<Color, Color> _fieldToRobotColorMap = new HashMap<>(); // see getColorRobotSeesForColorFieldSees()
-    private boolean FMSDataCorrupt = false;
+    private Color _previouslySensedColor = Color.unknown;
+    private boolean _fmsDataCorrupt = false;
+    private Notifier _sampleTask;
+    private int _wedgeCount = 0;
+
+    public Color getSoughtColor() {
+        String gameData;
+        gameData = DriverStation.getInstance().getGameSpecificMessage();
+        if(gameData.length() > 0){
+            switch (gameData.charAt(0)){
+                case 'B':
+                    return Color.blue;
+                case 'G':
+                    return  Color.green;
+                case 'R':
+                    return Color.red;
+                case 'Y':
+                    return Color.yellow;
+                default:
+                    error("Corrupt/unknown color returned from field: " + gameData);
+                    _fmsDataCorrupt = true;
+                    return Color.unknown;
+            }
+        }
+        return Color.unknown;
+    }
+
+    public Spinner(OutliersContainer container) {
+        super(container);
+
+        try {
+            debug("allocating spinner color sensor");
+            I2C.Port port = I2C.Port.kOnboard;
+            _colorSensor = new ColorSensorV3(port);
+            _colorSensor.configureColorSensor(
+                    ColorSensorV3.ColorSensorResolution.kColorSensorRes16bit,
+                    ColorSensorV3.ColorSensorMeasurementRate.kColorRate25ms,
+                    ColorSensorV3.GainFactor.kGain3x
+             );
+        } catch (Exception e) {
+            error("error allocating color sensor: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        try {
+            debug("allocating spinner motor controller");
+            _motorController = new VictorSPX(RobotMap.CAN.VICTORSPX.SPINNER);
+            _motorController.setNeutralMode(NeutralMode.Brake);
+            _solenoid = new DoubleSolenoid(RobotMap.PCM.SPINNER_DEPLOY, RobotMap.PCM.SPINNER_STOW);
+            // TODO: Not sure if this is really what we want, just stole from turret...
+            // _motorController.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,100);
+        } catch (Exception e) {
+            error("error allocating spinner motor controller: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        // We poll the color sensor to determine if it sufficiently matches one of our swatch colors. If we
+        // detect that it has changed since the last sample, we increment the wedge count, which can be used
+        // for autospin. Eventually we might want to add some filtering to the callback (especially if we use
+        // a sensor with a higher sample rate), or comparison to check whether the read wedge color is the
+        // color that we expected to see next. We start this task when we start spinning, and stop it when we
+        // stop spinning, so we don't steal too many CPU cycles when thw robot is busy doing other stuff.
+        _sampleTask = new Notifier(() -> {
+            Color newColor = senseColor();
+            if (!newColor.equals(_previouslySensedColor)) {
+                _wedgeCount++;
+            }
+            _previouslySensedColor = newColor;
+        });
+
+        // If you're testing color matching you'll want to run this task all the time, instead of only when it's
+        // spinning:
+        if (Robot.identityMode == Robot.IdentityMode.programming) {
+            _sampleTask.startPeriodic(Constants.Spinner.SENSOR_SAMPLE_PERIOD_SECONDS);
+        }
+
+        // TODO(mike) might want to move to Constants.java ?
+        _swatches.put(Color.red, new Rgb(0.60, 0.31, 0.08));
+        _swatches.put(Color.yellow, new Rgb(0.40, 0.49, 0.10));
+        _swatches.put(Color.green, new Rgb(0.21, 0.56, 0.23));
+        _swatches.put(Color.blue, new Rgb(0.21, 0.45, 0.35));
+
+        _fieldToRobotColorMap.put(Color.yellow, Color.green);
+        _fieldToRobotColorMap.put(Color.red, Color.blue);
+        _fieldToRobotColorMap.put(Color.green, Color.yellow);
+        _fieldToRobotColorMap.put(Color.blue, Color.red);
+    }
+
+    /**
+     * If a valid color has been cached (e.g., by the periodic notifier task), return that value. Otherwise take a
+     * reading from the sensor and attempt to match it.
+     * @return Color.red, Color.green, Color.blue, Color.yellow, or Color.unknown
+     */
+    public Color getColor() {
+        if (_previouslySensedColor == null || _previouslySensedColor.equals(Color.unknown)) {
+            _previouslySensedColor = senseColor();
+        }
+        return _previouslySensedColor;
+    }
+
+    /**
+     * Gets a sensor reading from the color sensor and attempts to match it against the
+     * swatches of red, green, yellow, or blue
+     * @return Color.red, Color.green, Color.blue, Color.yellow, or Color.unknown
+     */
+    public Color senseColor() {
+        edu.wpi.first.wpilibj.util.Color sensorReading = _colorSensor.getColor();
+        return matchColor(sensorReading);
+    }
+
+    /**
+     * The field's sensor is not in the same place as the robot's sensor... it's about 90 degrees away and thus
+     * is looking at a completely different color/wedge. This method determines what color the robot will see
+     * for a given color that the field sees (incidentally, this function also just happens to work for the
+     * inverse case: getting the color the field sees for the provided color the robot sees, because of how
+     * the pattern on the control panel works).
+     * @param seenByField The color seen by the field's sensor.
+     * @return The color the robot should see when the field sees _seenByField_
+     */
+    public Color getColorTheRobotSeesForColorTheFieldSees(Color seenByField) {
+        return _fieldToRobotColorMap.get(seenByField);
+    }
+
+    /**
+     * Deploys the spinner motor.
+     */
+    public void deploy() {
+        _solenoid.set(DoubleSolenoid.Value.kForward);
+    }
+
+    /**
+     * Retracts the spinner motor.
+     */
+    public void stow(){
+        _solenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+
+    public boolean isDeployed(){
+        return _solenoid.get().equals(DoubleSolenoid.Value.kForward);
+    }
+
+    public boolean isStowed(){
+        return _solenoid.get().equals(DoubleSolenoid.Value.kReverse);
+    }
+
+    public boolean isArmOff(){
+        return _solenoid.get().equals(DoubleSolenoid.Value.kOff);
+    }
+
+    public void armOff() {
+        _solenoid.set(DoubleSolenoid.Value.kOff);
+    }
+
+    /**
+     * Spins the spinner motor at regular speed.
+     */
+    public void spin() {
+        setSpeed(Constants.Spinner.MOTOR_PERCENT_SPEED);
+    }
+
+    /**
+     * Spins the spinner motor at low speed.
+     */
+    public void slow() {
+        setSpeed(Constants.Spinner.MOTOR_SLOW_PERCENT_SPEED);
+    }
+
+    /**
+     * Spins the spinner motor backwards at full speed.
+     */
+    public void spinBackwards() {
+        _motorController.set(ControlMode.PercentOutput, -1 * Constants.Spinner.MOTOR_PERCENT_SPEED);
+    }
+
+    /**
+     * Stops the spinner motor.
+     */
+    public void stop() {
+        _motorController.set(ControlMode.PercentOutput, 0);
+    }
 
     public void setSpeed(double speed) {
         _motorController.set(ControlMode.PercentOutput, speed);
+        if (speed != 0) {
+            _sampleTask.startPeriodic(Constants.Spinner.SENSOR_SAMPLE_PERIOD_SECONDS);
+        } else {
+            _sampleTask.stop();
+        }
+    }
+
+    public void resetWedgeCount() {
+        _wedgeCount = 0;
+    }
+
+    public int getWedgeCount() {
+        return _wedgeCount;
+    }
+
+    /**
+     * Checks to see if the sensor read color matches any of our swatches.
+     * @param sensorReading The raw reading from the color sensor
+     * @return Color.red, Color.green, Color.blue, Color.yellow, or Color.unknown
+     */
+    private Color matchColor(edu.wpi.first.wpilibj.util.Color sensorReading) {
+        if (closeEnoughTo(sensorReading, _swatches.get(Color.red))) {
+            return Color.red;
+        } else if (closeEnoughTo(sensorReading, _swatches.get(Color.green))) {
+            return Color.green;
+        } else if (closeEnoughTo(sensorReading, _swatches.get(Color.blue))) {
+            return Color.blue;
+        } else if (closeEnoughTo(sensorReading, _swatches.get(Color.yellow))) {
+            return Color.yellow;
+        }
+        return Color.unknown;
+    }
+
+    private boolean closeEnoughTo(edu.wpi.first.wpilibj.util.Color sensorReading, Rgb swatch) {
+        return Math.abs(sensorReading.red - swatch.red) <= Constants.Spinner.COLOR_TOLERANCE &&
+                Math.abs(sensorReading.green - swatch.green) <= Constants.Spinner.COLOR_TOLERANCE &&
+                Math.abs(sensorReading.blue - swatch.blue) <= Constants.Spinner.COLOR_TOLERANCE;
+    }
+
+    @Override
+    public void updateDashboard() {
+        if (_colorSensor != null) {
+            metric("Spinner/ColorTheFieldSees", getColorTheRobotSeesForColorTheFieldSees(getColor()).toString());
+            metric("Spinner/RawRed", _colorSensor.getRed());
+            metric("Spinner/RawGreen", _colorSensor.getGreen());
+            metric("Spinner/RawBlue", _colorSensor.getBlue());
+            metric("Spinner/NormRed", _colorSensor.getColor().red);
+            metric("Spinner/NormGreen", _colorSensor.getColor().green);
+            metric("Spinner/NormBlue", _colorSensor.getColor().blue);
+            metric("Spinner/Color", getColor().toString());
+            metric("Spinner/IR", _colorSensor.getIR());
+            metric("Spinner/Proximity", _colorSensor.getProximity());
+            metric("Spinner/FMSDataCorrupt", _fmsDataCorrupt);
+            metric("Spinner/WedgeCount", _wedgeCount);
+        }
+        if (_solenoid != null) {
+            metric("Spinner/ArmIsRaised", isDeployed());
+            metric("Spinner/ArmIsLowered", isStowed());
+            metric("Spinner/ArmIsOff", isArmOff());
+            metric("Spinner/SpinnerSpeed", _motorController.getSelectedSensorVelocity()); // units per 100ms
+        }
     }
 
     public static class Rgb {
@@ -43,8 +285,7 @@ public class Spinner extends OutliersSubsystem {
         green(1),
         blue(2),
         yellow(3),
-        unknown(4),
-        badData(5);
+        unknown(4);
 
         private int _value;
         Color(int value) {
@@ -67,150 +308,5 @@ public class Spinner extends OutliersSubsystem {
                     return "unknown";
             }
         }
-    }
-
-    public Color getSoughtColor() {
-        String gameData;
-        gameData = DriverStation.getInstance().getGameSpecificMessage();
-        if(gameData.length() > 0){
-            switch (gameData.charAt(0)){
-                case 'B':
-                    return Color.blue;
-                case 'G':
-                    return  Color.green;
-                case 'R':
-                    return Color.red;
-                case 'Y':
-                    return Color.yellow;
-                default:
-                    error("Corrupt/unknown color returned from field: " + gameData);
-                    FMSDataCorrupt = true;
-                    return Color.unknown;
-            }
-        }
-        return Color.unknown;
-    }
-
-    public Spinner(OutliersContainer container) {
-        super(container);
-
-        try {
-            debug("allocating spinner color sensor");
-            I2C.Port port = I2C.Port.kOnboard;
-            _colorSensor = new ColorSensorV3(port);
-        } catch (Exception e) {
-            error("error allocating color sensor: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        try {
-            debug("allocating spinner motor controller");
-            _motorController = new VictorSPX(RobotMap.CAN.VICTORSPX.SPINNER);
-            _motorController.setNeutralMode(NeutralMode.Brake);
-            _solenoid = new DoubleSolenoid(RobotMap.PCM.SPINNER_DEPLOY, RobotMap.PCM.SPINNER_STOW);
-            // TODO: Not sure if this is really what we want, just stole from turret...
-            // _motorController.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,100);
-        } catch (Exception e) {
-            error("error allocating spinner motor controller: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        // TODO(mike) might want to move to Constants.java ?
-        _swatches.put(Color.red, new Rgb(0.60, 0.31, 0.08));
-        _swatches.put(Color.yellow, new Rgb(0.40, 0.49, 0.10));
-        _swatches.put(Color.green, new Rgb(0.21, 0.56, 0.23));
-        _swatches.put(Color.blue, new Rgb(0.21, 0.45, 0.35));
-
-        _fieldToRobotColorMap.put(Color.yellow, Color.green);
-        _fieldToRobotColorMap.put(Color.red, Color.blue);
-        _fieldToRobotColorMap.put(Color.green, Color.yellow);
-        _fieldToRobotColorMap.put(Color.blue, Color.red);
-    }
-
-    public Color getColor() {
-        if (closeEnoughTo(_swatches.get(Color.red))) {
-            return Color.red;
-        } else if (closeEnoughTo(_swatches.get(Color.green))) {
-            return Color.green;
-        } else if (closeEnoughTo(_swatches.get(Color.blue))) {
-            return Color.blue;
-        } else if (closeEnoughTo(_swatches.get(Color.yellow))) {
-            return Color.yellow;
-        }
-        return Color.unknown;
-    }
-
-    /**
-     * The field's sensor is not in the same place as the robot's sensor... it's about 90 degrees away and thus
-     * is looking at a completely different color/wedge. This method determines what color the robot will see
-     * for a given color that the field sees (incidentally, this function also just happens to work for the
-     * inverse case: getting the color the field sees for the provided color the robot sees, because of how
-     * the pattern on the control panel works).
-     * @param seenByField The color seen by the field's sensor.
-     * @return The color the robot should see when the field sees _seenByField_
-     */
-    public Color getColorTheRobotSeesForColorTheFieldSees(Color seenByField) {
-        return _fieldToRobotColorMap.get(seenByField);
-    }
-
-    public void deploy() {
-        _solenoid.set(DoubleSolenoid.Value.kForward);
-    }
-
-    public void stow(){
-        _solenoid.set(DoubleSolenoid.Value.kReverse);
-    }
-
-    public boolean isRaised(){
-        return _solenoid.get().equals(DoubleSolenoid.Value.kForward);
-    }
-
-    public boolean isLowered(){
-        return _solenoid.get().equals(DoubleSolenoid.Value.kReverse);
-    }
-
-    public boolean isArmOff(){
-        return _solenoid.get().equals(DoubleSolenoid.Value.kOff);
-    }
-
-    public void armOff() {
-        _solenoid.set(DoubleSolenoid.Value.kOff);
-    }
-
-    public void spin() {
-        _motorController.set(ControlMode.PercentOutput, Constants.Spinner.MOTOR_PERCENT_SPEED);
-    }
-
-    public void spinBackwards() {
-        _motorController.set(ControlMode.PercentOutput, -1 * Constants.Spinner.MOTOR_PERCENT_SPEED);
-    }
-
-    public void stop() {
-        _motorController.set(ControlMode.PercentOutput, 0);
-    }
-
-    private boolean closeEnoughTo(Rgb swatch) {
-        edu.wpi.first.wpilibj.util.Color readColor = _colorSensor.getColor();
-        return Math.abs(readColor.red - swatch.red) <= Constants.Spinner.COLOR_TOLERANCE &&
-                Math.abs(readColor.green - swatch.green) <= Constants.Spinner.COLOR_TOLERANCE &&
-                Math.abs(readColor.blue - swatch.blue) <= Constants.Spinner.COLOR_TOLERANCE;
-    }
-
-    @Override
-    public void updateDashboard() {
-        metric("Spinner/ColorTheFieldSees", getColorTheRobotSeesForColorTheFieldSees(getColor()).toString());
-        metric("Spinner/RawRed", _colorSensor.getRed());
-        metric("Spinner/RawGreen", _colorSensor.getGreen());
-        metric("Spinner/RawBlue", _colorSensor.getBlue());
-        metric("Spinner/NormRed", _colorSensor.getColor().red);
-        metric("Spinner/NormGreen", _colorSensor.getColor().green);
-        metric("Spinner/NormBlue", _colorSensor.getColor().blue);
-        metric("Spinner/Color", getColor().toString());
-        metric("Spinner/IR", _colorSensor.getIR());
-        metric("Spinner/Proximity", _colorSensor.getProximity());
-        metric("Spinner/ArmIsRaised", isRaised());
-        metric("Spinner/ArmIsLowered", isLowered());
-        metric("Spinner/ArmIsOff", isArmOff());
-        metric("Spinner/SpinnerSpeed", _motorController.getSelectedSensorVelocity()); // units per 100ms
     }
 }
