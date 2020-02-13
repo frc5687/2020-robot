@@ -2,6 +2,7 @@ package org.frc5687.infiniterecharge.robot.commands;
 
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
+import org.frc5687.infiniterecharge.robot.subsystems.Skywalker;
 import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 
 public class AutoSpinRotations extends OutliersCommand {
@@ -10,10 +11,10 @@ public class AutoSpinRotations extends OutliersCommand {
     private int _wedgeCount = 0;
     private Spinner.Color _previousColor;
 
-    public AutoSpinRotations(Spinner spinner, OI oi) {
+    public AutoSpinRotations(Spinner spinner, OI oi, Skywalker skywalker) {
         _spinner = spinner;
         _oi = oi;
-        addRequirements(_spinner);
+        addRequirements(_spinner, skywalker);
     }
 
     @Override

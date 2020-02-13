@@ -90,7 +90,7 @@ public class OI extends OutliersProxy {
 
     }
 
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber, Hood hood){
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber, Hood hood, Skywalker skywalker){
         _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 1));
         _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
         _operatorYButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .8));
@@ -111,7 +111,7 @@ public class OI extends OutliersProxy {
 //        _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this, poseTracker));
         _operatorLeftTrigger.whileHeld(new AutoIntake(intake));
 
-        _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
+        _operatorYButton.whileHeld(new DriveSpinner(spinner, this, skywalker));
         // _operatorLeftYAxisUpButton.whenPressed(new DeploySpinner(spinner));
         // _operatorLeftYAxisDownButton.whenPressed(new StowSpinner(spinner));
     }

@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+import edu.wpi.first.wpilibj.VictorSP;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
@@ -13,13 +14,14 @@ import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 public class Indexer extends OutliersSubsystem {
 
     private CANSparkMax _indexerNeo;
+
+    private VictorSPX _agitatorVictor;
+
     private OI _oi;
 
     private DigitalIR _bottomIR;
     private DigitalIR _midIR;
     private DigitalIR _topIR;
-
-    private Spinner _spinner;
 
     public Indexer(OutliersContainer container) {
         super(container);
@@ -27,6 +29,8 @@ public class Indexer extends OutliersSubsystem {
         _indexerNeo = new CANSparkMax(RobotMap.CAN.SPARKMAX.INDEXER, CANSparkMaxLowLevel.MotorType.kBrushless);
         _indexerNeo.setInverted(Constants.Indexer.INVERTED);
         _indexerNeo.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
+        _agitatorVictor = new VictorSPX(RobotMap.CAN.VICTORSPX.AGITATOR);
 
         _bottomIR = new DigitalIR(RobotMap.DIO.BOTTOM_IR);
         _midIR = new DigitalIR(RobotMap.DIO.MID_IR);
@@ -50,6 +54,7 @@ public class Indexer extends OutliersSubsystem {
         _indexerNeo.set(speed);
     }
 
+    public void setAgitatorSpeed(double speed) { _agitatorVictor.set(ControlMode.PercentOutput, speed); }
 
     @Override
     public void updateDashboard() {

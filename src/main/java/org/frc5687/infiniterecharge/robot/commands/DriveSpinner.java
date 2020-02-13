@@ -1,6 +1,7 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
 import org.frc5687.infiniterecharge.robot.OI;
+import org.frc5687.infiniterecharge.robot.subsystems.Skywalker;
 import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 
 public class DriveSpinner extends OutliersCommand {
@@ -16,10 +17,10 @@ public class DriveSpinner extends OutliersCommand {
      * The constructors parameters will always have the Subsystem is is trying to run
      * as Commands need to require the subsystem they are trying to use.
      */
-    public DriveSpinner(Spinner spinner, OI oi) {
+    public DriveSpinner(Spinner spinner, OI oi, Skywalker skywalker) {
         _spinner = spinner;
         _oi = oi;
-        addRequirements(_spinner);
+        addRequirements(_spinner, skywalker);
     }
 
     @Override

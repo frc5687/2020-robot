@@ -11,20 +11,21 @@ import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 public class Skywalker extends OutliersSubsystem {
-    private VictorSPX _skywalkerController;
     private OI _oi;
 
-    public Skywalker(OutliersContainer container, OI oi) {
-        super(container);
-        _oi = oi;
+    private Spinner _spinner;
 
-        _skywalkerController = new VictorSPX(RobotMap.CAN.VICTORSPX.SKYWALKER);
-        _skywalkerController.setNeutralMode(NeutralMode.Brake);
+    public Skywalker(OutliersContainer container, Spinner spinner) {
+        super(container);
+        if (_spinner==null) {
+            throw new RuntimeException("Spinner must be allocated before passing to Skywalker constructor.");
+        }
+        _spinner = spinner;
     }
 
 
     public void setSpeed(double speed) {
-        _skywalkerController.set(ControlMode.PercentOutput, speed);
+        _spinner.setSpeed(speed);
     }
 
     @Override

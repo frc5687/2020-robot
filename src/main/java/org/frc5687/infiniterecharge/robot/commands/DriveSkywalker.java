@@ -2,6 +2,7 @@ package org.frc5687.infiniterecharge.robot.commands;
 
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.subsystems.Skywalker;
+import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 
 public class DriveSkywalker extends OutliersCommand{
     private Skywalker _skywalker;
@@ -12,10 +13,10 @@ public class DriveSkywalker extends OutliersCommand{
         super.initialize();
     }
 
-    public DriveSkywalker(Skywalker skywalker, OI oi) {
+    public DriveSkywalker(Skywalker skywalker, Spinner spinner, OI oi) {
         _skywalker = skywalker;
         _oi = oi;
-        addRequirements(_skywalker);
+        addRequirements(_skywalker, spinner);
     }
 
     @Override

@@ -32,8 +32,8 @@ public class RobotMap {
             public static final int HOOD = 6;
         }
         public static class VICTORSPX {
-            public static final int SPINNER = 10;
-            public static final int SKYWALKER = 7;
+            public static final int SPINNER_SKYWALKER = 7;
+            public static final int AGITATOR = 10;
         }
 
     }
