@@ -154,6 +154,15 @@ public class Turret extends OutliersSubsystem {
         _turretController.setSelectedSensorPosition((int) _position);
     }
 
+    public double getTurretToDriveTrainHeading() {
+        if (getPositionDegrees() >= 0) {
+            return 180 - getPositionDegrees();
+
+        } else if (getPositionDegrees() < 0) {
+            return -getPositionDegrees() - 180;
+        }
+        return 0;
+    }
 
     public int getPositionTicks() {
         return _turretController.getSelectedSensorPosition(0);

@@ -204,11 +204,16 @@ public class DriveTrain extends OutliersSubsystem {
         return (getLeftDistance() + getRightDistance()) / 2;
     }
     public double getLeftVelocity() {
-        return _leftEncoder.getVelocity() * 2 * Math.PI * Units.inchesToMeters(2) / 60; //Meters Per Sec
+        return _leftEncoder.getVelocity() * 2 * Math.PI * Constants.DriveTrain.WHEEL_RADIUS / 60; //Inches Per Sec
     }
     public double getRightVelocity() {
-        return _rightEncoder.getVelocity() * 2 * Math.PI * Units.inchesToMeters(2.0) / 60 ; //Meters Per Sec
+        return _rightEncoder.getVelocity() * 2 * Math.PI * Constants.DriveTrain.WHEEL_RADIUS / 60 ; //Inches Per Sec
     }
+
+    public double getVelocity() {
+        return (getLeftVelocity() + getRightVelocity()) / 2;
+    }
+
 
     public void pauseMotors() {
         _oldLeftSpeedFront = _leftMaster.get();

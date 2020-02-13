@@ -55,6 +55,10 @@ public class Shooter extends OutliersSubsystem {
         return _shooterLeft.getSelectedSensorVelocity();
     }
 
+    public double getBallVelocity() {
+        return (getVelocity() * 2 * Math.PI * Constants.Shooter.WHEEL_RADIUS) / 2;
+    }
+
     public boolean isAtVelocity(double RPM) {
         return Math.abs(getVelocity() - RPM) < Constants.Shooter.RPM_TOLERANCE;
     }

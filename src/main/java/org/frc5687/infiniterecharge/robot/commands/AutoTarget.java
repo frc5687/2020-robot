@@ -20,6 +20,7 @@ public class AutoTarget extends OutliersCommand {
     private PoseTracker _poseTracker;
     private MedianFilter _filter;
 
+
     public AutoTarget(Turret turret, Shooter shooter, Hood hood, Limelight limelight, DriveTrain driveTrain, PoseTracker poseTracker) {
         _turret = turret;
         _shooter = shooter;
@@ -40,7 +41,8 @@ public class AutoTarget extends OutliersCommand {
     @Override
     public void execute() {
         _hood.setPosition(_hood.getHoodDesiredAngle(_driveTrain.distanceToTarget()));
-        _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees());
+        metric("TargetDriveAngle",getTargetDrivingAngle());
+//        _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees());
     }
 
     @Override
@@ -59,6 +61,22 @@ public class AutoTarget extends OutliersCommand {
         double angleCompensation = turretAngle - poseAngle;
         double targetAngle = limelightAngle + angleCompensation;
         return _filter.calculate(targetAngle);
+    }
+
+    protected double getTargetDrivingAngle() {
+        double driveX = Math.cos(Math.toRadians(_driveTrain.getHeading().getDegrees())) * _driveTrain.getVelocity();
+        double driveY = Math.sin(Math.toRadians(_driveTrain.getHeading().getDegrees())) * _driveTrain.getVelocity();
+        double turretX = Math.cos(Math.toRadians(180 - _turret.getTurretToDriveTrainHeading())) * _shooter.getBallVelocity(); //_limelight.getTargetDistance();
+        double turretY = Math.sin(Math.toRadians(180 - _turret.getTurretToDriveTrainHeading())) * _shooter.getBallVelocity(); //_limelight.getTargetDistance();
+        double combinedX = driveX + turretX;
+        double combinedY = driveY + turretY;
+        double angle = Math.toDegrees(Math.atan(combinedY/combinedX));
+        metric("drivex", driveX);
+        metric("drivey", driveY);
+        metric("turretY", turretY);
+        metric("Turretx", turretX);
+        metric("angle", angle);
+        return angle;
     }
 
     @Override
