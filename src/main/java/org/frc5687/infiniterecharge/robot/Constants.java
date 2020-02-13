@@ -80,7 +80,7 @@ public class Constants {
         public static final double ROTATION_SENSITIVITY_LOW_GEAR = .8;
         public static final double TURNING_SENSITIVITY_HIGH_GEAR = .8;
         public static final double TURNING_SENSITIVITY_LOW_GEAR = .8;
-        public static final double SPEED_LIMIT = 0.75;
+        public static final double SPEED_LIMIT = 0.85;
     }
 
     public static class Turret {
@@ -149,8 +149,10 @@ public class Constants {
     }
     public class Limelight {
         public static final double TARGET_HEIGHT = 94;
-        public static final double LIMELIGHT_HEIGHT = 34;
-        public static final double LIMELIGHT_ANGLE = -1.57;
+        public static final double LOW_TARGET_HEIGHT = 16.5;
+        public static final double LIMELIGHT_HEIGHT = 8.125;
+
+        public static final double LIMELIGHT_ANGLE = 0;
         public static final double OVERALL_LATENCY_MILLIS = 11;
     }
 
