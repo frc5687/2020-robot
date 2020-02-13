@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.frc5687.infiniterecharge.robot.commands.*;
+import org.frc5687.infiniterecharge.robot.commands.drive.EightBallAuto;
 import org.frc5687.infiniterecharge.robot.commands.drive.TenBallAuto;
 import org.frc5687.infiniterecharge.robot.util.*;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
@@ -106,11 +107,11 @@ public class OI extends OutliersProxy {
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
 
-        _driverAButton.whenPressed(new AutoDrivePath(driveTrain, imu, "BallsToTrench", 0, false));
+        _driverAButton.whenPressed(new AutoDrivePath(driveTrain, imu, "StartingToGenerator", 0, false));
 //        _driverAButton.whenPressed(new AutoAlign(driveTrain, 0));
 //        _driverAButton.whenPressed(new AutoAlign(driveTrain, 90));
 
-        _driverBButton.whenPressed(new TenBallAuto(driveTrain, turret, shooter, hood, intake, imu));
+        _driverBButton.whenPressed(new EightBallAuto(driveTrain, turret, shooter, hood, intake, imu));
 
         _driverYButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -90));
         _driverXButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -180));

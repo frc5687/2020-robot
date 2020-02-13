@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.util.Units;
 
 public class Constants {
-    public static final int CYCLES_PER_SECOND = 50;
     public static final int  TICKS_PER_UPDATE = 10;
     public static final double METRIC_FLUSH_PERIOD = 1.0;
+    public static final double UPDATE_PERIOD = 0.01;
 
     public static class Intake {
         public static final boolean INTAKE_MOTOR_INVERTED = true;
-        public static final double INTAKE_SPEED = 0.75;
+        public static final double INTAKE_SPEED = 1.0;
     }
 
     public static class Climber {
@@ -72,7 +72,7 @@ public class Constants {
         public static final double SLOW_SPEED_COMP = 0.4;
         public static final double MEDIUM_SPEED_COMP = 0.6;
 
-        public static final double kP = 0.015;
+        public static final double kP = 0.019;
         public static final double kI = 0.00;
         public static final double kD = 0.001;
         public static final double ANGLE_TOLERANCE = 1;
@@ -141,7 +141,7 @@ public class Constants {
         public static final long STOP_MOTOR_TIME = 60;
         public static final long SHIFT_TIME = 60;
 
-        public static final double SHIFT_UP_THRESHOLD = 50; // in inches per second graTODO tune
+        public static final double SHIFT_UP_THRESHOLD = 50; // in]\[ inches per second graTODO tune
         public static final double SHIFT_DOWN_THRESHOLD = 40; // in inches per second TODO tune
 
         public static final long AUTO_WAIT_PERIOD = 500;

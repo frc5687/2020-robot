@@ -132,7 +132,7 @@ public class Robot extends OutliersRobot implements ILoggingSource{
 
         CommandScheduler.getInstance().run();
         update();
-        updateDashboard();
+//        updateDashboard();
 
     }
 
