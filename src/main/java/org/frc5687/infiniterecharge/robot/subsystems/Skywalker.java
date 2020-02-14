@@ -11,21 +11,9 @@ import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 public class Skywalker extends OutliersSubsystem {
-    private OI _oi;
 
-    private Spinner _spinner;
-
-    public Skywalker(OutliersContainer container, Spinner spinner) {
+    public Skywalker(OutliersContainer container) {
         super(container);
-        if (_spinner==null) {
-            throw new RuntimeException("Spinner must be allocated before passing to Skywalker constructor.");
-        }
-        _spinner = spinner;
-    }
-
-
-    public void setSpeed(double speed) {
-        _spinner.setSpeed(speed);
     }
 
     @Override
