@@ -28,19 +28,23 @@ public class AutoTarget extends OutliersCommand {
         _limelight = limelight;
         _poseTracker = poseTracker;
         _filter = new MedianFilter(10);
+        addRequirements(_turret);
     }
 
     @Override
     public void initialize() {
         super.initialize();
+        error("Starting AutoTarget");
+        _turret.setControlMode(Turret.Control.MotionMagic);
         _limelight.enableLEDs();
         _filter.reset();
     }
 
     @Override
     public void execute() {
-        _hood.setPosition(_hood.getHoodDesiredAngle(_driveTrain.distanceToTarget()));
+//        _hood.setPosition(_hood.getHoodDesiredAngle(_driveTrain.distanceToTarget()));
         _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees());
+//        error("Setpoint is " + (_limelight.getHorizontalAngle() + _turret.getPositionDegrees()));
     }
 
     @Override
@@ -64,7 +68,7 @@ public class AutoTarget extends OutliersCommand {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        _hood.setPosition(Constants.Hood.MIN_DEGREES);
+//        _hood.setPosition(Constants.Hood.MIN_DEGREES);
         _limelight.disableLEDs();
     }
 }

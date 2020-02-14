@@ -52,7 +52,7 @@ public class Shooter extends OutliersSubsystem {
     }
 
     public double getVelocity() {
-        return _shooterLeft.getSelectedSensorVelocity();
+        return _shooterRight.getSelectedSensorVelocity();
     }
 
     public boolean isAtVelocity(double RPM) {

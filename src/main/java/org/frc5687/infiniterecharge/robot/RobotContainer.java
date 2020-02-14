@@ -94,7 +94,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             setDefaultCommand(_intake, new IntakeSpin(_intake, _oi));
             setDefaultCommand(_indexer, new IdleIndexer(_indexer, _intake, _spinner));
             setDefaultCommand(_shooter, new DriveShooter(_shooter, _oi));
-//            setDefaultCommand(_turret, new AutoTurretTracking(_turret, _driveTrain, _limelight, _oi, _poseTracker));
+//            setDefaultCommand(_turret, new DriveTurret(_turret, _driveTrain, _limelight, _oi));
         }
     }
 
@@ -113,13 +113,14 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
     }
 
     public void zeroSensors() {
-        // _turret.zeroSensors();
+         _turret.zeroSensors();
+         _hood.zeroSensors();
     }
 
     public void periodic() {
         _oi.poll();
         if (_oi.isKillAllPressed()) {
-            new KillAll(_driveTrain, _shooter, _indexer, _intake).schedule();
+            new KillAll(_driveTrain, _shooter, _indexer, _intake, _turret, _hood).schedule();
         }
     }
 

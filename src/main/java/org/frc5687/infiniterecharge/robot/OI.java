@@ -93,27 +93,28 @@ public class OI extends OutliersProxy {
     }
 
     public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber, Hood hood){
-        _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 1));
-        _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
-        _operatorYButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .8));
-        _operatorRightBumper.toggleWhenPressed(new ShootSpeedSetpoint(shooter, this, 1.0));
-        _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this));
+        _operatorAButton.whenPressed(new Shoot(shooter, indexer, turret, this, 0.3));
+//        _operatorBButton.whenPressed(new Shoot(shooter, indexer, turret, this, .9));
+//        _operatorXButton.whenPressed(new Shoot(shooter, indexer, turret, this, .87));
+//        _operatorYButton.whenPressed(new Shoot(shooter, indexer, turret, this, .8));
+//        _operatorRightBumper.whenPressed(new ShootSpeedSetpoint(shooter, this, 0.6));
+//        _operatorRightTrigger.whenPressed(new Shoot(shooter, indexer, turret, this, .83));
 
         _operatorStartButton.whileHeld(new ExtendElevator(climber));
-        _operatorXButton.whileHeld(new RetractElevator(climber));
+//        _operatorXButton.whileHeld(new RetractElevator(climber));
         _operatorEndButton.whileHeld(new RetractWinch(climber));
 
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
 
-        _driverAButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -90));
-        _driverBButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 0));
-        _driverYButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 90));
-        _driverXButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this,    180));
+        _driverAButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 0));
+        _driverBButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -90));
+        _driverYButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -180));
+        _driverXButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 90));
         _driverRightTrigger.whenHeld(new AutoTarget(turret, shooter, hood,limelight,driveTrain, poseTracker));
         _operatorLeftTrigger.whileHeld(new AutoIntake(intake));
 
-        _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
+//        _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
         // _operatorLeftYAxisUpButton.whenPressed(new DeploySpinner(spinner));
         // _operatorLeftYAxisDownButton.whenPressed(new StowSpinner(spinner));
     }
@@ -162,6 +163,7 @@ public class OI extends OutliersProxy {
         if (getSubSystem()!=SubSystem.Shooter) { return 0; }
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.Turret.DEADBAND);
+
         return speed;
     }
 
