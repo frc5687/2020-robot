@@ -29,10 +29,10 @@ public class Hood extends OutliersSubsystem {
             _hoodController.setNeutralMode(NeutralMode.Brake);
             _hoodController.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,100);
             _hoodController.setSensorPhase(Constants.Hood.SENSOR_PHASE_INVERTED);
-            _hoodController.configForwardSoftLimitThreshold((int)(Constants.Hood.MAX_DEGREES/Constants.Hood.TICKS_TO_DEGREES), 30);
-            _hoodController.configForwardSoftLimitEnable(true, 30);
-            _hoodController.configReverseSoftLimitThreshold((int) (Constants.Hood.MIN_DEGREES/Constants.Hood.TICKS_TO_DEGREES), 30);
-            _hoodController.configReverseSoftLimitEnable(true, 30);
+//            _hoodController.configForwardSoftLimitThreshold((int)(Constants.Hood.MAX_DEGREES/Constants.Hood.TICKS_TO_DEGREES), 30);
+//            _hoodController.configForwardSoftLimitEnable(true, 30);
+//            _hoodController.configReverseSoftLimitThreshold((int) (Constants.Hood.MIN_DEGREES/Constants.Hood.TICKS_TO_DEGREES), 30);
+//            _hoodController.configReverseSoftLimitEnable(true, 30);
             _hoodController.configMotionCruiseVelocity(Constants.Turret.CRUISE_VELOCITY);
             _hoodController.configMotionAcceleration(Constants.Turret.ACCELERATION);
             _hoodController.configVoltageMeasurementFilter(8);

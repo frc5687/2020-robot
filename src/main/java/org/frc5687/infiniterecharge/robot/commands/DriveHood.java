@@ -23,6 +23,7 @@ public class DriveHood extends OutliersCommand {
         super.execute();
         double speed = _oi.getHoodSpeed();
         _hood.setSpeed(speed);
+        error("Speed" + speed);
     }
 
     @Override
