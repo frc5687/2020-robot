@@ -58,14 +58,18 @@ public class Hood extends OutliersSubsystem {
         return _hoodController.getSelectedSensorPosition(0);
     }
 
+    public int getPositionAbsolute() { return
+            _hoodController.getSensorCollection().getPulseWidthPosition();}
+
     public double getPositionDegrees() {
-        return getPositionTicks() * Constants.Hood.TICKS_TO_DEGREES;
+        return (1.0 / getPositionAbsolute()) * Constants.Hood.TICKS_TO_DEGREES;
     }
 
 
     @Override
     public void updateDashboard() {
         metric("Position", getPosition());
+        metric("PositionAbs", getPositionAbsolute());
     }
 
     public double getPosition() {

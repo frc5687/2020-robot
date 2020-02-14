@@ -120,12 +120,13 @@ public class Constants {
 
     public static class Hood {
         public static final double DEADBAND = 0.1;
-        public static final double MIN_DEGREES = 0.0;
-        public static final boolean SENSOR_PHASE_INVERTED = false;
-        public static final double MAX_DEGREES = 360.00;
-        public static final double TICKS_TO_DEGREES = 12;
+        public static final double MIN_DEGREES = 20;
+        public static final boolean SENSOR_PHASE_INVERTED = true;
+        public static final double MAX_DEGREES = 67;
+        public static final double TICKS_TO_DEGREES = 392124.145;// 0.038332795242141;
         public static final double STOWED = 0;
         public static final double DISTANCE_ANGLE_CONVERSION = 0.001;
+        public static final double ABS_OFFSET = 0.0;
         public static final int CRUISE_VELOCITY = 5000;
         public static final int ACCELERATION = 16000;
     }
