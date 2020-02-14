@@ -127,7 +127,7 @@ public class OI extends OutliersProxy {
     }
 
     public double getShooterSpeed() {
-        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
+//        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
 
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_Y.getNumber());
         speed = applyDeadband(speed, Constants.Shooter.DEADBAND);
