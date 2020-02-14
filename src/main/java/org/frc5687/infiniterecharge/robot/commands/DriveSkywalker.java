@@ -18,7 +18,7 @@ public class DriveSkywalker extends OutliersCommand{
         _skywalker = skywalker;
         _spinner = spinner;
         _oi = oi;
-        addRequirements(_skywalker, spinner);
+        addRequirements(_skywalker, _spinner);
     }
 
     @Override

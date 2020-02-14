@@ -107,6 +107,7 @@ public class Spinner extends OutliersSubsystem {
      */
     public void deploy() {
         _solenoid.set(DoubleSolenoid.Value.kForward);
+        info("Deployed spinner");
     }
 
     /**
@@ -114,6 +115,7 @@ public class Spinner extends OutliersSubsystem {
      */
     public void stow(){
         _solenoid.set(DoubleSolenoid.Value.kReverse);
+        info("Stowed spinner");
     }
 
     public boolean isDeployed(){

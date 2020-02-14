@@ -17,10 +17,10 @@ public class DriveSpinner extends OutliersCommand {
      * The constructors parameters will always have the Subsystem is is trying to run
      * as Commands need to require the subsystem they are trying to use.
      */
-    public DriveSpinner(Spinner spinner, OI oi, Skywalker skywalker) {
+    public DriveSpinner(Spinner spinner, OI oi) {
         _spinner = spinner;
         _oi = oi;
-        addRequirements(_spinner, skywalker);
+        addRequirements(_spinner);
     }
 
     @Override
@@ -32,6 +32,7 @@ public class DriveSpinner extends OutliersCommand {
          * _spinner.enableBreakMode(); <---- this method need to be create in the Subsystem class.
          */
         super.initialize();
+        info("Deployed spinner");
         _spinner.deploy();
     }
 
