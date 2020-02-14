@@ -11,7 +11,7 @@ public class Constants {
 
     public static class Intake {
         public static final boolean INTAKE_MOTOR_INVERTED = true;
-        public static final double INTAKE_SPEED = 0.75;
+        public static final double INTAKE_SPEED = 1.0;
     }
 
     public static class Climber {
@@ -88,12 +88,12 @@ public class Constants {
         public static final double TOLERANCE = 2;
         public static final boolean SENSOR_PHASE_INVERTED = false;
         public static final double TICKS_TO_DEGREES = 0.08695652173913;
-        public static final double MIN_DEGREES = -180;
-        public static final double MAX_DEGREES = 90;
+        public static final double MIN_DEGREES = -200;
+        public static final double MAX_DEGREES = 95;
         public static final double MAX_VOLTAGE = 12.0;
         public static final int CRUISE_VELOCITY = 5000; // in ticks
         public static final int ACCELERATION = 16000; // in ticks
-        public static final double ABS_OFFSET = 273;// if the turret coasts this value changes, need to find a way to set this position.
+        public static final double ABS_OFFSET = 258;// if the turret coasts this value changes, need to find a way to set this position.
 
 
         public static class Position {
