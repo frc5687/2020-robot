@@ -49,7 +49,7 @@ public class AutoTarget extends OutliersCommand {
         _turret.setControlMode(Turret.Control.MotionMagic);
         _limelight.enableLEDs();
         _filter.reset();
-//        _hood.setPosition(_angle);
+        _hood.setPosition(_angle);
         _shooter.setShooterSpeed(_speed);
     }
 
@@ -82,7 +82,7 @@ public class AutoTarget extends OutliersCommand {
     public void end(boolean interrupted) {
         super.end(interrupted);
         error("Ending AutoTarget");
-//        _hood.setPosition(Constants.Hood.MIN_DEGREES);
+        _hood.setPosition(Constants.Hood.MIN_DEGREES);
         _shooter.setShooterSpeed(Constants.Shooter.IDLE_SHOOTER_SPEED_PERCENT);
         _limelight.disableLEDs();
     }

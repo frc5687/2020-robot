@@ -74,7 +74,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             _skywalker = new Skywalker(this);
             _shooter = new Shooter(this, _oi, _driveTrain);
             _indexer = new Indexer(this);
-            _hood = new Hood(this, _oi);
+            _hood = new Hood(this,_limelight, _oi);
 
 
             _poseTracker = new PoseTracker(this);
@@ -170,8 +170,8 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
                 _driveTrain
         );
 
-        return ramseteCommand.andThen(() -> _driveTrain.tankDriveVolts(0, 0));
-
+//        return ramseteCommand.andThen(() -> _driveTrain.tankDriveVolts(0, 0));
+            return null;
     }
 
     @Override
