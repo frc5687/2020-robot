@@ -150,11 +150,11 @@ public class Drive extends OutliersCommand {
             }
         }
         stickSpeed = limitSpeed(stickSpeed);
-        if (_driveState == DriveState.normal) {
+//        if (_driveState == DriveState.normal) {
             _driveTrain.cheesyDrive(stickSpeed, wheelRotation, _oi.isCreepPressed(), false);
-        } else {
-            _driveTrain.cheesyDrive(stickSpeed, _turnSpeed, false, true);
-        }
+//        } else {
+//            _driveTrain.cheesyDrive(stickSpeed, _turnSpeed, false, true);
+//        }
     }
     @Override
     public boolean isFinished() {
