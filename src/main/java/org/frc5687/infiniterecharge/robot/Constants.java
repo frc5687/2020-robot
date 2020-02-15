@@ -131,7 +131,7 @@ public class Constants {
         public static final double ABS_OFFSET = 589;
         public static final int CRUISE_VELOCITY = 5000;
         public static final int ACCELERATION = 16000;
-        public static final double kP = 0.085;
+        public static final double kP = 0.1;
         public static final double kI = 0.00;
         public static final double kD = 0.01;
         public static final double kF = 2.5;
@@ -207,6 +207,7 @@ public class Constants {
         public static final double IDLE_SHOOTER_SPEED_PERCENT = 0.5;  /* TBD RPMs INSTEAD OF PERCENT */
         public static final double NEAR_TARGET_SHOOTER_SPEED_PERCENT = 0.8;   /* TBD RPMs INSTEAD OF PERCENT */
         public static final double FAR_TARGET_SHOOTER_SPEED_PERCENT = 1.0;   /* TBD RPMs INSTEAD OF PERCENT */
+        public static final double TICKS_TO_ROTATIONS = 2048;
     }
 
     public class Indexer {
