@@ -14,8 +14,10 @@ public class AutoShootAndGo extends SequentialCommandGroup {
 
     public AutoShootAndGo(Turret turret, Shooter shooter, Hood hood, Limelight limelight, DriveTrain driveTrain, PoseTracker poseTracker, Indexer indexer) {
         addCommands(
-            new ParallelDeadlineGroup(new AutoShoot(shooter, indexer, turret, null, 0), new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, null, Constants.Hood.NEAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.NEAR_TARGET_SHOOTER_SPEED_PERCENT)),
-            new AutoDrive(driveTrain, -48)
+            new ParallelDeadlineGroup(
+                    new AutoShoot(shooter, indexer, turret, null, 0),
+                    new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, null, Constants.Hood.NEAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.NEAR_TARGET_SHOOTER_SPEED_PERCENT)),
+            new AutoDrive(driveTrain, 48)
         );
    }
 

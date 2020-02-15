@@ -6,7 +6,7 @@ import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
 public class AutoDrive extends PIDCommand {
     public AutoDrive(DriveTrain driveTrain, double distance) {
         super(
-                new PIDController(Constants.DriveTrain.kP, Constants.DriveTrain.kI, Constants.DriveTrain.kD),
+                new PIDController(Constants.DriveStraight.kP, Constants.DriveStraight.kI, Constants.DriveStraight.kD),
                 // Close loop on heading
                 driveTrain::getDistance,
                 // Set reference to target

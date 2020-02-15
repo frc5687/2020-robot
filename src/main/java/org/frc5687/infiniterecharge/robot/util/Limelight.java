@@ -83,6 +83,7 @@ public class Limelight extends OutliersProxy {
     }
 
     public void setPipeline(Pipeline pipeline) {
+        metric("Pipeline", pipeline.toString());
         _pipeline.setNumber(pipeline.getValue());
     }
 
