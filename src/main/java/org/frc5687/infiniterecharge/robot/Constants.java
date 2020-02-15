@@ -96,6 +96,7 @@ public class Constants {
         public static final int CRUISE_VELOCITY = 5000; // in ticks
         public static final int ACCELERATION = 16000; // in ticks
         public static final double ABS_OFFSET = 258;// if the turret coasts this value changes, need to find a way to set this position.
+        public static final double MANUAL_OFFSET = -1.0;
 
 
         public static class Position {

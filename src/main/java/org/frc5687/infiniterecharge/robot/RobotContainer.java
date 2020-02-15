@@ -61,6 +61,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
         _limelight = new Limelight("limelight");
         _driveLimelight = new Limelight("limelight-drive");
 
+        _limelight.setPipeline(Limelight.Pipeline.Wide);
 
         // Then subsystems....
         if (Robot.identityMode!= Robot.IdentityMode.programming) {

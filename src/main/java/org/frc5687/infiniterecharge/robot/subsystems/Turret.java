@@ -33,7 +33,7 @@ public class Turret extends OutliersSubsystem {
     private double _positionABS;
     private double _position;
 
-
+    private double _manualOffset = 0;
 
     public Turret(OutliersContainer container, DriveTrain driveTrain, Limelight limelight, OI oi) {
         super(container);
@@ -156,6 +156,9 @@ public class Turret extends OutliersSubsystem {
         _turretController.setSelectedSensorPosition((int) _position);
     }
 
+    public void adjustOffset(double amount) {
+        _manualOffset += amount;
+    }
 
     public int getPositionTicks() {
         return _turretController.getSelectedSensorPosition(0);
@@ -186,6 +189,10 @@ public class Turret extends OutliersSubsystem {
 
     public TurretPose getPose() {
         return new TurretPose(getPositionDegrees());
+    }
+
+    public double getManualOffset() {
+        return _manualOffset;
     }
 
     public enum Control {
