@@ -60,10 +60,12 @@ public class AutoTarget extends OutliersCommand {
     @Override
     public void execute() {
         _hood.setPipeline();
-        if (_oi!=null) {
-            _hood.setSpeed(_oi.getHoodSpeed());
+//        if (_oi!=null) {
+//            _hood.setSpeed(_oi.getHoodSpeed());
+//        }
+        if (!_shooter.isShooting()) {
+            _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees());
         }
-        _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees());
         error("Setpoint is " + (_limelight.getHorizontalAngle() + _turret.getPositionDegrees()));
     }
 
