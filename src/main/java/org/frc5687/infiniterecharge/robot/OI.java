@@ -106,6 +106,7 @@ public class OI extends OutliersProxy {
         _driverRightTrigger.whenHeld(new AutoTarget(turret, shooter, hood,limelight,driveTrain, poseTracker));
         _operatorLeftTrigger.whileHeld(new AutoIntake(intake));
 
+
 //        _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
         // _operatorLeftYAxisUpButton.whenPressed(new DeploySpinner(spinner));
         // _operatorLeftYAxisDownButton.whenPressed(new StowSpinner(spinner));

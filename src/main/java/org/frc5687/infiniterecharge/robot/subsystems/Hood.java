@@ -13,6 +13,7 @@ import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.commands.DriveHood;
+import org.frc5687.infiniterecharge.robot.util.Helpers;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 import java.util.concurrent.CompletionService;
@@ -24,6 +25,7 @@ public class Hood extends OutliersSubsystem {
 
     private double _positionABS;
     private double _position;
+    private double _setPoint;
 
     public Hood(OutliersContainer container, OI oi) {
         super(container);
@@ -53,6 +55,7 @@ public class Hood extends OutliersSubsystem {
         } catch (Exception e) {
             error("Exception allocating hood motor" + e.getMessage());
         }
+        setPosition(getAbsoluteDegrees());
     }
 
     public void setSpeed(double speed) {
@@ -60,12 +63,18 @@ public class Hood extends OutliersSubsystem {
     }
 
     public void setPosition(double angle) {
-        _hoodController.set(ControlMode.MotionMagic, angle / Constants.Hood.TICKS_TO_DEGREES);
+        _setPoint = Helpers.limit(angle, Constants.Hood.MIN_DEGREES, Constants.Hood.MAX_DEGREES);
+        _hoodController.set(ControlMode.MotionMagic, _setPoint / Constants.Hood.TICKS_TO_DEGREES);
     }
 
     public int getPositionTicks() {
         return _hoodController.getSelectedSensorPosition(0);
     }
+
+    public double getSetPoint() {
+        return _setPoint;
+    }
+
 
     public double getPositionDegrees() {
         return getPositionTicks() * Constants.Hood.TICKS_TO_DEGREES;
