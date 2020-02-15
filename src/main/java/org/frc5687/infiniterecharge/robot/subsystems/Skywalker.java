@@ -11,20 +11,9 @@ import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 public class Skywalker extends OutliersSubsystem {
-    private VictorSPX _skywalkerController;
-    private OI _oi;
 
-    public Skywalker(OutliersContainer container, OI oi) {
+    public Skywalker(OutliersContainer container) {
         super(container);
-        _oi = oi;
-
-        _skywalkerController = new VictorSPX(RobotMap.CAN.VICTORSPX.SKYWALKER);
-        _skywalkerController.setNeutralMode(NeutralMode.Brake);
-    }
-
-
-    public void setSpeed(double speed) {
-        _skywalkerController.set(ControlMode.PercentOutput, speed);
     }
 
     @Override

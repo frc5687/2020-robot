@@ -12,7 +12,7 @@
 
 # Package Files #
 *.jar
-!navx_frc.jar
+!Color-Sensor-V3.jar
 *.war
 *.ear
 *.zip
