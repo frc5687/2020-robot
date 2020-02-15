@@ -124,8 +124,8 @@ public class Constants {
     public static class Hood {
         public static final double DEADBAND = 0.1;
         public static final double MIN_DEGREES = 20;
-        public static final boolean INVERTED = true;
-        public static final boolean SENSOR_PHASE_INVERTED = true;
+        public static final boolean INVERTED = false;
+        public static final boolean SENSOR_PHASE_INVERTED = false;
         public static final double MAX_DEGREES = 67;
         public static final double TICKS_TO_DEGREES = 0.04119194;// 0.038332795242141;
         public static final double STOWED = 0;
@@ -133,10 +133,11 @@ public class Constants {
         public static final double ABS_OFFSET = -4.0;
         public static final int CRUISE_VELOCITY = 5000;
         public static final int ACCELERATION = 16000;
-        public static final double kP = 0.1;
-        public static final double kI = 0.00;
-        public static final double kD = 0.01;
-        public static final double kF = 2.5;
+        public static final double kP = 0.9;
+        public static final double kI = 0.005;
+        public static final double kD = 0.05;
+        public static final double kF = 5;
+
         public static final double SENSITIVITY = .1; //TODO
         public static final double NEAR_TARGET_HOOD_ANGLE_DEGREES = 58;
         public static final double FAR_TARGET_HOOD_ANGLE_DEGREES = Hood.MAX_DEGREES;
@@ -215,7 +216,7 @@ public class Constants {
     public class Indexer {
         public static final boolean INVERTED = false;
         public static final double ADVANCE_SPEED = 0.75; // TODO: Need a real value here!
-        public static final double AGITATOR_SPEED = -0.75; // Dropped from -1 at Week 0
+        public static final double AGITATOR_SPEED = -1.0;
     }
 
     public class Auto {
@@ -235,7 +236,10 @@ public class Constants {
 
     public class DriveStraight {
         public static final double kP = 0.1;
-        public static final double kI = 0.00;
-        public static final double kD = 0.00;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+
+
+
     }
 }

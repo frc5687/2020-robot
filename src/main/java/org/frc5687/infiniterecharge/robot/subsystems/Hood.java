@@ -25,6 +25,7 @@ public class Hood extends OutliersSubsystem {
 
     public Hood(OutliersContainer container, Limelight limelight, OI oi) {
         super(container);
+        _limelight = limelight;
         _oi = oi;
         _limelight = limelight;
         try {
@@ -62,7 +63,8 @@ public class Hood extends OutliersSubsystem {
     public void setPosition(double angle) {
         _setPoint = angle; // Helpers.limit(angle, Constants.Hood.MIN_DEGREES, Constants.Hood.MAX_DEGREES);
         metric("Setpoint", _setPoint);
-        //_hoodController.set(ControlMode.MotionMagic, _setPoint / Constants.Hood.TICKS_TO_DEGREES);
+        metric("Setpoint Ticks", _setPoint / Constants.Hood.TICKS_TO_DEGREES);
+        _hoodController.set(ControlMode.MotionMagic, _setPoint / Constants.Hood.TICKS_TO_DEGREES);
     }
 
     public int getPositionTicks() {
@@ -71,6 +73,10 @@ public class Hood extends OutliersSubsystem {
 
     public double getSetPoint() {
         return _setPoint;
+    }
+
+    public double getMotorSpeed() {
+        return _hoodController.getMotorOutputPercent();
     }
 
 
@@ -93,6 +99,7 @@ public class Hood extends OutliersSubsystem {
         metric("PositionAbs", getAbsoluteDegrees());
         metric("ABS raw", getPositionAbsoluteRAW());
         metric("Raw Ticks", getPositionTicks());
+        metric("Output Percent", getMotorSpeed());
     }
 
     public double getPosition() {

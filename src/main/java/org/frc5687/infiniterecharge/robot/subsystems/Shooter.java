@@ -76,6 +76,15 @@ public class Shooter extends OutliersSubsystem {
         return _driveTrain.distanceToTarget() * 50;
     }
 
+    public boolean isShooting() {
+        return _shooting;
+    }
+
+    public void setShooting(boolean shooting) {
+        _shooting = shooting;
+    }
+
+
 
     public boolean isShooting() {
         return _shooting;
