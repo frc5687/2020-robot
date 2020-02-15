@@ -5,18 +5,10 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.controller.PIDController;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
-import org.frc5687.infiniterecharge.robot.commands.DriveHood;
-import org.frc5687.infiniterecharge.robot.util.Helpers;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
-
-import java.util.concurrent.CompletionService;
 
 public class Hood extends OutliersSubsystem {
 
@@ -63,8 +55,9 @@ public class Hood extends OutliersSubsystem {
     }
 
     public void setPosition(double angle) {
-        _setPoint = Helpers.limit(angle, Constants.Hood.MIN_DEGREES, Constants.Hood.MAX_DEGREES);
-        _hoodController.set(ControlMode.MotionMagic, _setPoint / Constants.Hood.TICKS_TO_DEGREES);
+        _setPoint = angle; // Helpers.limit(angle, Constants.Hood.MIN_DEGREES, Constants.Hood.MAX_DEGREES);
+        metric("Setpoint", _setPoint);
+        //_hoodController.set(ControlMode.MotionMagic, _setPoint / Constants.Hood.TICKS_TO_DEGREES);
     }
 
     public int getPositionTicks() {

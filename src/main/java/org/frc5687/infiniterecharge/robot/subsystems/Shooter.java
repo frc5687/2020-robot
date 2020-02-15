@@ -48,6 +48,7 @@ public class Shooter extends OutliersSubsystem {
 
 
     public void setShooterSpeed(double speed) {
+        metric("Speed", speed);
         _shooterRight.set(TalonFXControlMode.PercentOutput, speed);
     }
 
