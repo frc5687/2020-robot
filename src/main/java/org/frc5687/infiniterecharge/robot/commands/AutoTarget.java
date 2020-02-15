@@ -42,7 +42,7 @@ public class AutoTarget extends OutliersCommand {
 
     @Override
     public void execute() {
-        _hood.setPosition(40);
+        _hood.setPosition(60);
 //        _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees());
 //        error("Setpoint is " + (_limelight.getHorizontalAngle() + _turret.getPositionDegrees()));
     }

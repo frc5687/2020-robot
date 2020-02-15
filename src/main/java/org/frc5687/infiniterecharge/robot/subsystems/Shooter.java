@@ -37,7 +37,9 @@ public class Shooter extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        metric("Velocity", getVelocity());
+        metric("Velocity/Ticks", getVelocity());
+        metric("Position", getPosition());
+        metric("Velocity/RPM", getRPM());
     }
 
 
@@ -48,12 +50,17 @@ public class Shooter extends OutliersSubsystem {
     public void setVelocitySpeed(double RPM) {_shooterRight.set(TalonFXControlMode.Velocity, RPM);}
 
     public double getPosition() {
-        return _shooterLeft.getSelectedSensorPosition();
+        return _shooterRight.getSelectedSensorPosition();
     }
 
     public double getVelocity() {
         return _shooterRight.getSelectedSensorVelocity();
     }
+
+    public double getRPM() {
+        return getVelocity() * Constants.Shooter.TICKS_TO_ROTATIONS * 600;
+    }
+
 
     public boolean isAtVelocity(double RPM) {
         return Math.abs(getVelocity() - RPM) < Constants.Shooter.RPM_TOLERANCE;

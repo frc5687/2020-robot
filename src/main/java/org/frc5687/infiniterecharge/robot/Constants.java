@@ -131,7 +131,7 @@ public class Constants {
         public static final double ABS_OFFSET = -71;
         public static final int CRUISE_VELOCITY = 5000;
         public static final int ACCELERATION = 16000;
-        public static final double kP = 0.085;
+        public static final double kP = 0.1;
         public static final double kI = 0.00;
         public static final double kD = 0.01;
         public static final double kF = 2.5;
@@ -201,6 +201,7 @@ public class Constants {
         public static final double kD = 0.0;
         public static final double kF = 0.0;
         public static final long TIMEOUT = 100;
+        public static final double TICKS_TO_ROTATIONS = 2048;
     }
 
     public class Indexer {
