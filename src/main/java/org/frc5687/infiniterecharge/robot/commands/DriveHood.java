@@ -23,7 +23,7 @@ public class DriveHood extends OutliersCommand {
     public void execute() {
         super.execute();
         double speed = _oi.getHoodSpeed();
-        _hood.setSpeed(speed);
+//        _hood.setSpeed(speed);
          _hood.setPosition(_hood.getSetPoint() + speed * Constants.Hood.SENSITIVITY);
     }
 
