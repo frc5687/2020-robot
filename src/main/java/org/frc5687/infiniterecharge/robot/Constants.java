@@ -15,7 +15,7 @@ public class Constants {
     }
 
     public static class Climber {
-        public static final boolean ELEVATOR_MOTOR_INVERTED = true;
+        public static final boolean ELEVATOR_MOTOR_INVERTED = false;
         public static final boolean WINCH_MOTOR_INVERTED = true;
         public static final double ELEVATOR_EXTEND_SPEED = 0.5;
         public static final double ELEVATOR_TENSION_SPEED = 0.0;
@@ -86,7 +86,8 @@ public class Constants {
     public static class Turret {
         public static final double DEADBAND = 0.1;
         public static final double TOLERANCE = 2;
-        public static final boolean SENSOR_PHASE_INVERTED = false;
+        public static final boolean INVERTED = true;
+        public static final boolean SENSOR_PHASE_INVERTED = true;
         public static final double TICKS_TO_DEGREES = 0.08695652173913;
         public static final double MIN_DEGREES = -200;
         public static final double MAX_DEGREES = 95;
@@ -120,11 +121,23 @@ public class Constants {
 
     public static class Hood {
         public static final double DEADBAND = 0.1;
-        public static final double MIN_DEGREES = 0.0;
-        public static final boolean SENSOR_PHASE_INVERTED = false;
-        public static final double MAX_DEGREES = 360.00;
-        public static final double TICKS_TO_DEGREES = 12;
+        public static final double MIN_DEGREES = 20;
+        public static final boolean INVERTED = true;
+        public static final boolean SENSOR_PHASE_INVERTED = true;
+        public static final double MAX_DEGREES = 80;
+        public static final double TICKS_TO_DEGREES = -0.0421146953405018;// 0.038332795242141;
         public static final double STOWED = 0;
+        public static final double DISTANCE_ANGLE_CONVERSION = 0.001;
+        public static final double ABS_OFFSET = 589;
+        public static final int CRUISE_VELOCITY = 5000;
+        public static final int ACCELERATION = 16000;
+        public static final double kP = 0.1;
+        public static final double kI = 0.00;
+        public static final double kD = 0.01;
+        public static final double kF = 2.5;
+        public static final double SENSITIVITY = .1; //TODO
+        public static final double NEAR_TARGET_HOOD_ANGLE_DEGREES = 58;
+        public static final double FAR_TARGET_HOOD_ANGLE_DEGREES = Hood.MAX_DEGREES;
     }
 
     public static class OI {
@@ -148,7 +161,7 @@ public class Constants {
         public static final long MANUAL_WAIT_PERIOD = 3000;
     }
     public class Limelight {
-        public static final double TARGET_HEIGHT = 94;
+        public static final double TARGET_HEIGHT = 92;
         public static final double LOW_TARGET_HEIGHT = 16.5;
         public static final double LIMELIGHT_HEIGHT = 8.125;
 
@@ -163,6 +176,7 @@ public class Constants {
         public static double MID_LENGTH_FIELD = LENGTH_FIELD / 2;
         public static Pose2d TARGET_POSE = new Pose2d(MID_LENGTH_FIELD,MID_LENGTH_FIELD - Units.inchesToMeters(94.66), new Rotation2d(0));
         public static Pose2d LOADING_STATION_POSE = new Pose2d(-MID_LENGTH_FIELD, 1.700911, new Rotation2d(0));
+        public static Pose2d STARTING_POSITION_ONE = new Pose2d(0,0, new Rotation2d(0));
 
     }
 
@@ -189,6 +203,11 @@ public class Constants {
         public static final double kD = 0.0;
         public static final double kF = 0.0;
         public static final long TIMEOUT = 100;
+
+        public static final double IDLE_SHOOTER_SPEED_PERCENT = 0.5;  /* TBD RPMs INSTEAD OF PERCENT */
+        public static final double NEAR_TARGET_SHOOTER_SPEED_PERCENT = 0.8;   /* TBD RPMs INSTEAD OF PERCENT */
+        public static final double FAR_TARGET_SHOOTER_SPEED_PERCENT = 1.0;   /* TBD RPMs INSTEAD OF PERCENT */
+        public static final double TICKS_TO_ROTATIONS = 2048;
     }
 
     public class Indexer {

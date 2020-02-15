@@ -1,7 +1,9 @@
 package org.frc5687.infiniterecharge.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
@@ -33,27 +35,37 @@ public class Shooter extends OutliersSubsystem {
         _shooterLeft.setInverted(Constants.Shooter.LEFT_INVERTED);
         _shooterRight.setInverted(Constants.Shooter.RIGHT_INVERTED);
         _shooterRight.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        _shooterRight.getStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10);
+        _shooterRight.selectProfileSlot(0,0);
     }
 
     @Override
     public void updateDashboard() {
-        metric("Velocity", getVelocity());
+        metric("Velocity/Ticks", getVelocity());
+        metric("Position", getPosition());
+        metric("Velocity/RPM", getRPM());
     }
 
 
     public void setShooterSpeed(double speed) {
+        metric("Speed", speed);
         _shooterRight.set(TalonFXControlMode.PercentOutput, speed);
     }
 
     public void setVelocitySpeed(double RPM) {_shooterRight.set(TalonFXControlMode.Velocity, RPM);}
 
     public double getPosition() {
-        return _shooterLeft.getSelectedSensorPosition();
+        return _shooterRight.getSelectedSensorPosition();
     }
 
     public double getVelocity() {
-        return _shooterLeft.getSelectedSensorVelocity();
+        return _shooterRight.getSelectedSensorVelocity();
     }
+
+    public double getRPM() {
+        return getVelocity() / Constants.Shooter.TICKS_TO_ROTATIONS * 600;
+    }
+
 
     public boolean isAtVelocity(double RPM) {
         return Math.abs(getVelocity() - RPM) < Constants.Shooter.RPM_TOLERANCE;
