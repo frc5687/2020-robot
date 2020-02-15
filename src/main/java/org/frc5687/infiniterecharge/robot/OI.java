@@ -107,9 +107,7 @@ public class OI extends OutliersProxy {
         _operatorLeftTrigger.whileHeld(new AutoIntake(intake));
 
 
-//        _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
-        // _operatorLeftYAxisUpButton.whenPressed(new DeploySpinner(spinner));
-        // _operatorLeftYAxisDownButton.whenPressed(new StowSpinner(spinner));
+        _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
     }
 
     public boolean isAutoTargetPressed() {
