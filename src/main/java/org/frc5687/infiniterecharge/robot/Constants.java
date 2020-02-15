@@ -219,6 +219,9 @@ public class Constants {
     }
 
     public class Auto {
+        public static final long AUTO_SHOOT_DELAY = 2000;
+        public static final long AUTO_SHOOT_RUNON = 2000;
+
         public class Drive {
             public static final double SPEED = 1.0;
             public static final double MIN_SPEED = 0.25;
@@ -228,5 +231,14 @@ public class Constants {
             public static final double MAX_IMU_ANGLE = 180.0;
             public static final double MIN_IMU_ANGLE = -MAX_IMU_ANGLE;
         }
+    }
+
+    public class DriveStraight {
+        public static final double kP = 0.1;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+
+
+
     }
 }

@@ -21,10 +21,13 @@ public class Hood extends OutliersSubsystem {
     private double _position;
     private double _setPoint;
 
+    private Limelight.Pipeline _pipeline = Limelight.Pipeline.Wide;
+
     public Hood(OutliersContainer container, Limelight limelight, OI oi) {
         super(container);
         _limelight = limelight;
         _oi = oi;
+        _limelight = limelight;
         try {
             debug("Allocating hood motor");
             _hoodController = new TalonSRX(RobotMap.CAN.TALONSRX.HOOD);
@@ -89,14 +92,6 @@ public class Hood extends OutliersSubsystem {
         return _positionABS;
     }
 
-    public void setPipeline() {
-        if (getAbsoluteDegrees() < 65) {
-            _limelight.setPipeline(Limelight.Pipeline.TwoTimes);
-        } else if (getAbsoluteDegrees() > 60) {
-            _limelight.setPipeline(Limelight.Pipeline.Wide);
-        }
-    }
-
 
     @Override
     public void updateDashboard() {
@@ -123,5 +118,16 @@ public class Hood extends OutliersSubsystem {
         _position = _positionABS;
         _position = _position/Constants.Hood.TICKS_TO_DEGREES;
         _hoodController.setSelectedSensorPosition((int) _position);
+    }
+
+    public void setPipeline() {
+
+        if (getAbsoluteDegrees() > 60 && _pipeline != Limelight.Pipeline.TwoTimes) {
+            _pipeline = Limelight.Pipeline.TwoTimes;
+            _limelight.setPipeline(_pipeline);
+        } else if (getAbsoluteDegrees() < 60) {
+            _pipeline = Limelight.Pipeline.Wide;
+            _limelight.setPipeline(_pipeline);
+        }
     }
 }

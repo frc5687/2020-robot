@@ -77,6 +77,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             _hood = new Hood(this,_limelight, _oi);
 
 
+
             _poseTracker = new PoseTracker(this);
             // Must initialize buttons AFTER subsystems are allocated...
             _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker, _intake, _shooter, _indexer, _spinner, _climber, _hood, _skywalker);
@@ -169,9 +170,9 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
                 _driveTrain::tankDriveVolts,
                 _driveTrain
         );
-
-//        return ramseteCommand.andThen(() -> _driveTrain.tankDriveVolts(0, 0));
-            return null;
+        // return ramseteCommand.andThen(() -> _driveTrain.tankDriveVolts(0, 0));
+        return new AutoShootAndGo(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer);
+        // return null;
     }
 
     @Override

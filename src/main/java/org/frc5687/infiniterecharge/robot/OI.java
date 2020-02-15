@@ -91,8 +91,8 @@ public class OI extends OutliersProxy {
     }
 
     public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber, Hood hood, Skywalker skywalker){
-        _operatorRightBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, Constants.Hood.NEAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.NEAR_TARGET_SHOOTER_SPEED_PERCENT));
-        _operatorLeftBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, Constants.Hood.FAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.FAR_TARGET_SHOOTER_SPEED_PERCENT));
+        _operatorRightBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, this, Constants.Hood.NEAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.NEAR_TARGET_SHOOTER_SPEED_PERCENT));
+        _operatorLeftBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, this, Constants.Hood.FAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.FAR_TARGET_SHOOTER_SPEED_PERCENT));
 
         _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this, .8));
 
@@ -174,7 +174,7 @@ public class OI extends OutliersProxy {
 //        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
 
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber());
-        speed = applyDeadband(speed, Constants.Hood.DEADBAND);
+        speed = applyDeadband(speed, Constants.Hood.DEADBAND) / 2;
         return speed;
     }
 
