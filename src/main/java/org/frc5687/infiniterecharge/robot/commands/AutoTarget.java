@@ -19,8 +19,17 @@ public class AutoTarget extends OutliersCommand {
     private Limelight _limelight;
     private PoseTracker _poseTracker;
     private MedianFilter _filter;
+    private double _speed;
+    private double _angle;
 
-    public AutoTarget(Turret turret, Shooter shooter, Hood hood, Limelight limelight, DriveTrain driveTrain, PoseTracker poseTracker) {
+    public AutoTarget(Turret turret,
+                      Shooter shooter,
+                      Hood hood,
+                      Limelight limelight,
+                      DriveTrain driveTrain,
+                      PoseTracker poseTracker,
+                      double angle,
+                      double speed) {
         _turret = turret;
         _shooter = shooter;
         _hood = hood;
@@ -28,7 +37,9 @@ public class AutoTarget extends OutliersCommand {
         _limelight = limelight;
         _poseTracker = poseTracker;
         _filter = new MedianFilter(10);
-        addRequirements(_turret, _hood);
+        _angle = angle;
+        _speed = speed;
+        addRequirements(_turret, _shooter, _hood);
     }
 
     @Override
@@ -38,13 +49,14 @@ public class AutoTarget extends OutliersCommand {
         _turret.setControlMode(Turret.Control.MotionMagic);
         _limelight.enableLEDs();
         _filter.reset();
+//        _hood.setPosition(_angle);
+        _shooter.setShooterSpeed(_speed);
     }
 
     @Override
     public void execute() {
-        _hood.setPosition(40);
-//        _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees());
-//        error("Setpoint is " + (_limelight.getHorizontalAngle() + _turret.getPositionDegrees()));
+        _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees());
+        error("Setpoint is " + (_limelight.getHorizontalAngle() + _turret.getPositionDegrees()));
     }
 
 
@@ -70,7 +82,8 @@ public class AutoTarget extends OutliersCommand {
     public void end(boolean interrupted) {
         super.end(interrupted);
         error("Ending AutoTarget");
-        _hood.setPosition(Constants.Hood.MIN_DEGREES);
+//        _hood.setPosition(Constants.Hood.MIN_DEGREES);
+        _shooter.setShooterSpeed(Constants.Shooter.IDLE_SHOOTER_SPEED_PERCENT);
         _limelight.disableLEDs();
     }
 }

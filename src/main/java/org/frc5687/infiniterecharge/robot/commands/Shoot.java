@@ -1,6 +1,5 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
@@ -24,7 +23,7 @@ public class Shoot extends OutliersCommand {
         _turret = turret;
         _oi = oi;
         _speed = speed;
-        addRequirements(_shooter, _indexer);
+        addRequirements(_indexer);
         logMetrics("Velocity");
     }
 
@@ -39,12 +38,12 @@ public class Shoot extends OutliersCommand {
         super.execute();
 
 //        _setpoint = _shooter.getDistanceSetpoint();
-        _shooter.setShooterSpeed(_speed);
+//        _shooter.setShooterSpeed(_speed);
         metric("Velocity", _shooter.getVelocity());
-        if ((_turret.isTargetInTolerance() && _shooter.isAtVelocity(_setpoint)) || _oi.isOverridePressed()) {
+//        if ((_turret.isTargetInTolerance() && _shooter.isAtVelocity(_setpoint)) || _oi.isOverridePressed()) {
             _endTime = System.currentTimeMillis() + Constants.Shooter.TIMEOUT;
             _indexer.setIndexerSpeed(Constants.Indexer.ADVANCE_SPEED);
-        }
+//        }
     }
 
 
