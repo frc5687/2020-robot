@@ -38,4 +38,9 @@ public class AutoShoot extends Shoot {
     public boolean isFinished() {
         return _endMillis > 0 &&  System.currentTimeMillis() > _endMillis;
     }
+
+    public void end(boolean interrupted) {
+        super.end(interrupted);
+    }
+
 }

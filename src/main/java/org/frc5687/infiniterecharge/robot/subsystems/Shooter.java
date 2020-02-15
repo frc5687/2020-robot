@@ -16,6 +16,7 @@ public class Shooter extends OutliersSubsystem {
     private TalonFX _shooterRight;
     private TalonFX _shooterLeft;
     private OI _oi;
+    private boolean _shooting = false;
 
 
     public Shooter(OutliersContainer container, OI oi, DriveTrain driveTrain) {
@@ -75,5 +76,12 @@ public class Shooter extends OutliersSubsystem {
         return _driveTrain.distanceToTarget() * 50;
     }
 
+
+    public boolean isShooting() {
+        return _shooting;
+    }
+    public void setShooting(boolean value) {
+        _shooting = value;
+    }
 
 }
