@@ -81,6 +81,7 @@ public class Constants {
         public static final double TURNING_SENSITIVITY_HIGH_GEAR = .8;
         public static final double TURNING_SENSITIVITY_LOW_GEAR = .8;
         public static final double SPEED_LIMIT = 0.85;
+        public static final double DISTANCE_TOLERANCE = 2.0;
     }
 
     public static class Turret {
@@ -217,6 +218,9 @@ public class Constants {
     }
 
     public class Auto {
+        public static final long AUTO_SHOOT_DELAY = 2000;
+        public static final long AUTO_SHOOT_RUNON = 500;
+
         public class Drive {
             public static final double SPEED = 1.0;
             public static final double MIN_SPEED = 0.25;

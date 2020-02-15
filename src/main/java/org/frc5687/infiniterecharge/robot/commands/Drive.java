@@ -227,7 +227,7 @@ public class Drive extends OutliersCommand {
         limit = Math.min(limit, _stickyLimit);
         if (_driveLimelight.isTargetSighted()) {
             error("Limiting speed for middle hatch");
-            limit = Math.min(0.5, limit);
+            // TODO: Ben says this limit is bad with limelight obstructions limit = Math.min(0.5, limit);
         }
         double limited = Helpers.limit(speed, -limit, limit);
         metric("limit", limit);

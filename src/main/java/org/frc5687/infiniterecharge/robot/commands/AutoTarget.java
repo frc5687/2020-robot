@@ -2,6 +2,7 @@ package org.frc5687.infiniterecharge.robot.commands;
 
 import edu.wpi.first.wpilibj.MedianFilter;
 import org.frc5687.infiniterecharge.robot.Constants;
+import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotPose;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
 import org.frc5687.infiniterecharge.robot.subsystems.Hood;
@@ -21,6 +22,7 @@ public class AutoTarget extends OutliersCommand {
     private MedianFilter _filter;
     private double _speed;
     private double _angle;
+    private OI _oi;
 
     public AutoTarget(Turret turret,
                       Shooter shooter,
@@ -28,6 +30,7 @@ public class AutoTarget extends OutliersCommand {
                       Limelight limelight,
                       DriveTrain driveTrain,
                       PoseTracker poseTracker,
+                      OI oi,
                       double angle,
                       double speed) {
         _turret = turret;
@@ -39,6 +42,7 @@ public class AutoTarget extends OutliersCommand {
         _filter = new MedianFilter(10);
         _angle = angle;
         _speed = speed;
+        _oi = oi;
         addRequirements(_turret, _shooter, _hood);
     }
 
@@ -55,6 +59,10 @@ public class AutoTarget extends OutliersCommand {
 
     @Override
     public void execute() {
+        _hood.setPipeline();
+        if (_oi!=null) {
+            _hood.setSpeed(_oi.getHoodSpeed());
+        }
         _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees());
         error("Setpoint is " + (_limelight.getHorizontalAngle() + _turret.getPositionDegrees()));
     }

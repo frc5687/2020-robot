@@ -8,20 +8,25 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
+import org.frc5687.infiniterecharge.robot.util.Limelight;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 public class Hood extends OutliersSubsystem {
 
     private OI _oi;
     private TalonSRX _hoodController;
+    private Limelight _limelight;
 
     private double _positionABS;
     private double _position;
     private double _setPoint;
 
-    public Hood(OutliersContainer container, OI oi) {
+    private Limelight.Pipeline _pipeline = Limelight.Pipeline.Wide;
+
+    public Hood(OutliersContainer container, Limelight limelight, OI oi) {
         super(container);
         _oi = oi;
+        _limelight = limelight;
         try {
             debug("Allocating hood motor");
             _hoodController = new TalonSRX(RobotMap.CAN.TALONSRX.HOOD);
@@ -106,5 +111,16 @@ public class Hood extends OutliersSubsystem {
         _position = _positionABS;
         _position = _position/Constants.Hood.TICKS_TO_DEGREES;
         _hoodController.setSelectedSensorPosition((int) _position);
+    }
+
+    public void setPipeline() {
+
+        if (getAbsoluteDegrees() > 60 && _pipeline != Limelight.Pipeline.TwoTimes) {
+            _pipeline = Limelight.Pipeline.TwoTimes;
+            _limelight.setPipeline(_pipeline);
+        } else if (getAbsoluteDegrees() < 60) {
+            _pipeline = Limelight.Pipeline.Wide;
+            _limelight.setPipeline(_pipeline);
+        }
     }
 }
