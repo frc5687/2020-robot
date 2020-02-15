@@ -1,5 +1,6 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
+import org.frc5687.infiniterecharge.robot.subsystems.Skywalker;
 import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 
 public class DeploySpinner extends OutliersCommand {

@@ -149,6 +149,7 @@ public class Drive extends OutliersCommand {
                     break;
             }
         }
+        stickSpeed = limitSpeed(stickSpeed);
         if (_driveState == DriveState.normal) {
             _driveTrain.cheesyDrive(stickSpeed, wheelRotation, _oi.isCreepPressed(), false);
         } else {

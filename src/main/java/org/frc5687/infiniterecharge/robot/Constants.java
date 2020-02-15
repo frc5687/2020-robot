@@ -11,7 +11,7 @@ public class Constants {
 
     public static class Intake {
         public static final boolean INTAKE_MOTOR_INVERTED = true;
-        public static final double INTAKE_SPEED = 0.75;
+        public static final double INTAKE_SPEED = 1.0;
     }
 
     public static class Climber {
@@ -80,7 +80,7 @@ public class Constants {
         public static final double ROTATION_SENSITIVITY_LOW_GEAR = .8;
         public static final double TURNING_SENSITIVITY_HIGH_GEAR = .8;
         public static final double TURNING_SENSITIVITY_LOW_GEAR = .8;
-        public static final double SPEED_LIMIT = 0.75;
+        public static final double SPEED_LIMIT = 0.85;
     }
 
     public static class Turret {
@@ -88,12 +88,12 @@ public class Constants {
         public static final double TOLERANCE = 2;
         public static final boolean SENSOR_PHASE_INVERTED = false;
         public static final double TICKS_TO_DEGREES = 0.08695652173913;
-        public static final double MIN_DEGREES = -138;
-        public static final double MAX_DEGREES = 200;
+        public static final double MIN_DEGREES = -200;
+        public static final double MAX_DEGREES = 95;
         public static final double MAX_VOLTAGE = 12.0;
         public static final int CRUISE_VELOCITY = 5000; // in ticks
         public static final int ACCELERATION = 16000; // in ticks
-        public static final double ABS_OFFSET = 140;// if the turret coasts this value changes, need to find a way to set this position.
+        public static final double ABS_OFFSET = 258;// if the turret coasts this value changes, need to find a way to set this position.
 
 
         public static class Position {
@@ -152,8 +152,10 @@ public class Constants {
     }
     public class Limelight {
         public static final double TARGET_HEIGHT = 92;
-        public static final double LIMELIGHT_HEIGHT = 34;
-        public static final double LIMELIGHT_ANGLE = -1.5;
+        public static final double LOW_TARGET_HEIGHT = 16.5;
+        public static final double LIMELIGHT_HEIGHT = 8.125;
+
+        public static final double LIMELIGHT_ANGLE = 0;
         public static final double OVERALL_LATENCY_MILLIS = 11;
     }
 
@@ -170,7 +172,10 @@ public class Constants {
     public class Spinner {
         public static final double MOTOR_PERCENT_SPEED = 0.5; // TODO: Need a real value here!
         public static final double COLOR_TOLERANCE = 0.06;
-        public static final double PRE_INDEXER_SPEED = -1.0;
+        public static final double MOTOR_SLOW_PERCENT_SPEED = 0.2; // TODO: Need a real value here!
+        public static final int AUTOSPIN_SLOW_AT_WEDGES = 20;
+        public static final int AUTOSPIN_STOP_AT_WEDGES = 25;
+        public static final double SENSOR_SAMPLE_PERIOD_SECONDS = 0.01;
     }
 
     public class RotarySwitch {
@@ -192,6 +197,7 @@ public class Constants {
     public class Indexer {
         public static final boolean INVERTED = false;
         public static final double ADVANCE_SPEED = 0.75; // TODO: Need a real value here!
+        public static final double AGITATOR_SPEED = -1.0;
     }
 
     public class Auto {

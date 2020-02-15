@@ -5,13 +5,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.frc5687.infiniterecharge.robot.commands.*;
-import org.frc5687.infiniterecharge.robot.util.*;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.*;
-import org.frc5687.infiniterecharge.robot.util.AxisButton;
-import org.frc5687.infiniterecharge.robot.util.Gamepad;
-import org.frc5687.infiniterecharge.robot.util.OutliersProxy;
-import org.frc5687.infiniterecharge.robot.util.POV;
+
 import static org.frc5687.infiniterecharge.robot.util.Helpers.applyDeadband;
 
 public class OI extends OutliersProxy {
@@ -92,10 +88,7 @@ public class OI extends OutliersProxy {
 
     }
 
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber, Hood hood){
-        _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 1));
-        _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
-        _operatorYButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .8));
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber, Hood hood, Skywalker skywalker){
         _operatorRightBumper.toggleWhenPressed(new ShootSpeedSetpoint(shooter, this, 1.0));
         _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this));
 
@@ -136,7 +129,7 @@ public class OI extends OutliersProxy {
     }
 
     public double getShooterSpeed() {
-        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
+//        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
 
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_Y.getNumber());
         speed = applyDeadband(speed, Constants.Shooter.DEADBAND);
