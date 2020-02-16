@@ -64,7 +64,7 @@ public class Shooter extends OutliersSubsystem {
     }
 
     public double getBallVelocity() {
-        return (getRPM() * 2 * Math.PI * Constants.Shooter.WHEEL_RADIUS) / 2;
+        return (getRPM() * Math.PI * Constants.Shooter.WHEEL_RADIUS) / 60; //inches per second.
     }
 
     public double getRPM() {

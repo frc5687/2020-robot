@@ -92,6 +92,16 @@ public class AutoTarget extends OutliersCommand {
         return _filter.calculate(targetAngle);
     }
 
+    protected double getMovingAngle() {
+        double driveX = Math.cos(Math.toRadians(-_driveTrain.getHeading().getDegrees())) * -_driveTrain.getVelocity();
+        double driveY = Math.sin(Math.toRadians(-_driveTrain.getHeading().getDegrees())) * -_driveTrain.getVelocity();
+        double turretX = Math.cos(Math.toRadians(_turret.getTurretToDriveTrainHeading())) * _shooter.getBallVelocity();
+        double turretY = Math.sin(Math.toRadians(_turret.getTurretToDriveTrainHeading())) * _shooter.getBallVelocity();
+        double combinedX = driveX + turretX;
+        double combinedY = driveY + turretY;
+        return Math.toDegrees(Math.atan(combinedY/combinedX));
+    }
+
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
