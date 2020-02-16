@@ -31,6 +31,7 @@ public class Shoot extends OutliersCommand {
     public void initialize() {
         _endTime = null;
         SmartDashboard.putBoolean("MetricTracker/Shoot", true);
+        _shooter.setShooting(true);
     }
 
     @Override
@@ -56,4 +57,9 @@ public class Shoot extends OutliersCommand {
 //        return System.currentTimeMillis() >= _endTime;
     }
 
+    @Override
+    public void end(boolean interrupted) {
+        super.end(interrupted);
+        _shooter.setShooting(false);
+    }
 }

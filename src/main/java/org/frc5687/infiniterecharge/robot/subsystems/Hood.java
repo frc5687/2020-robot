@@ -8,19 +8,24 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
+import org.frc5687.infiniterecharge.robot.util.Limelight;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 public class Hood extends OutliersSubsystem {
 
     private OI _oi;
     private TalonSRX _hoodController;
+    private Limelight _limelight;
 
     private double _positionABS;
     private double _position;
     private double _setPoint;
 
-    public Hood(OutliersContainer container, OI oi) {
+    private Limelight.Pipeline _pipeline = Limelight.Pipeline.Wide;
+
+    public Hood(OutliersContainer container, Limelight limelight, OI oi) {
         super(container);
+        _limelight = limelight;
         _oi = oi;
         try {
             debug("Allocating hood motor");
@@ -57,7 +62,8 @@ public class Hood extends OutliersSubsystem {
     public void setPosition(double angle) {
         _setPoint = angle; // Helpers.limit(angle, Constants.Hood.MIN_DEGREES, Constants.Hood.MAX_DEGREES);
         metric("Setpoint", _setPoint);
-        //_hoodController.set(ControlMode.MotionMagic, _setPoint / Constants.Hood.TICKS_TO_DEGREES);
+        metric("Setpoint Ticks", _setPoint / Constants.Hood.TICKS_TO_DEGREES);
+        _hoodController.set(ControlMode.MotionMagic, _setPoint / Constants.Hood.TICKS_TO_DEGREES);
     }
 
     public int getPositionTicks() {
@@ -66,6 +72,10 @@ public class Hood extends OutliersSubsystem {
 
     public double getSetPoint() {
         return _setPoint;
+    }
+
+    public double getMotorSpeed() {
+        return _hoodController.getMotorOutputPercent();
     }
 
 
@@ -88,6 +98,7 @@ public class Hood extends OutliersSubsystem {
         metric("PositionAbs", getAbsoluteDegrees());
         metric("ABS raw", getPositionAbsoluteRAW());
         metric("Raw Ticks", getPositionTicks());
+        metric("Output Percent", getMotorSpeed());
     }
 
     public double getPosition() {
@@ -106,5 +117,16 @@ public class Hood extends OutliersSubsystem {
         _position = _positionABS;
         _position = _position/Constants.Hood.TICKS_TO_DEGREES;
         _hoodController.setSelectedSensorPosition((int) _position);
+    }
+
+    public void setPipeline() {
+
+        if (getAbsoluteDegrees() > 60 && _pipeline != Limelight.Pipeline.TwoTimes) {
+            _pipeline = Limelight.Pipeline.TwoTimes;
+            _limelight.setPipeline(_pipeline);
+        } else if (getAbsoluteDegrees() < 60) {
+            _pipeline = Limelight.Pipeline.Wide;
+            _limelight.setPipeline(_pipeline);
+        }
     }
 }

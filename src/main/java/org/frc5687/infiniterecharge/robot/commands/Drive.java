@@ -150,11 +150,11 @@ public class Drive extends OutliersCommand {
             }
         }
         stickSpeed = limitSpeed(stickSpeed);
-        if (_driveState == DriveState.normal) {
+//        if (_driveState == DriveState.normal) {
             _driveTrain.cheesyDrive(stickSpeed, wheelRotation, _oi.isCreepPressed(), false);
-        } else {
-            _driveTrain.cheesyDrive(stickSpeed, _turnSpeed, false, true);
-        }
+//        } else {
+//            _driveTrain.cheesyDrive(stickSpeed, _turnSpeed, false, true);
+//        }
     }
     @Override
     public boolean isFinished() {
@@ -227,7 +227,7 @@ public class Drive extends OutliersCommand {
         limit = Math.min(limit, _stickyLimit);
         if (_driveLimelight.isTargetSighted()) {
             error("Limiting speed for middle hatch");
-            limit = Math.min(0.5, limit);
+            // TODO: Ben says this limit is bad with limelight obstructions limit = Math.min(0.5, limit);
         }
         double limited = Helpers.limit(speed, -limit, limit);
         metric("limit", limit);
