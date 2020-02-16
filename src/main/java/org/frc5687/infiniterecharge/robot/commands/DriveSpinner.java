@@ -1,6 +1,7 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
 import org.frc5687.infiniterecharge.robot.OI;
+import org.frc5687.infiniterecharge.robot.subsystems.Skywalker;
 import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 
 public class DriveSpinner extends OutliersCommand {
@@ -31,6 +32,7 @@ public class DriveSpinner extends OutliersCommand {
          * _spinner.enableBreakMode(); <---- this method need to be create in the Subsystem class.
          */
         super.initialize();
+        info("Deployed spinner");
         _spinner.deploy();
     }
 

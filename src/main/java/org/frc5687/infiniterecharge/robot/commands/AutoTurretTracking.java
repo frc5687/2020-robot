@@ -1,9 +1,8 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
+import org.frc5687.infiniterecharge.robot.RobotPose;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
 import org.frc5687.infiniterecharge.robot.subsystems.Turret;
 import org.frc5687.infiniterecharge.robot.util.Limelight;
@@ -35,10 +34,9 @@ public class AutoTurretTracking extends OutliersCommand {
 
     @Override
     public void execute() {
-//        double position = (_limelight.getHorizontalAngle() + _turret.getPositionDegrees()) /Constants.Turret.TICKS_TO_DEGREES;
-        double position = _driveTrain.getAngleToTarget() / Constants.Turret.TICKS_TO_DEGREES;
-
-       _turret.setMotionMagicSpeed(position);
+        double position = _driveTrain.getAngleToTarget();
+        metric("angle target", position);
+       _turret.setMotionMagicSetpoint(position);
     }
 
     public double getVisionSetpoint() {
@@ -46,14 +44,13 @@ public class AutoTurretTracking extends OutliersCommand {
         double turretAngle = _turret.getPositionDegrees();
 
         long timekey = System.currentTimeMillis() - (long)_limelight.getLatency();
-        TurretPose pose = (TurretPose)_poseTracker.get(timekey);
+        RobotPose pose = (RobotPose)_poseTracker.get(timekey);
 
-        double poseAngle = pose == null ? turretAngle : pose.getAngle();
+        double poseAngle = pose == null ? turretAngle : pose.getTurretPose().getAngle();
 
         double offsetCompensation = turretAngle - poseAngle;
-        double targetAngle = limelightAngle - offsetCompensation;
+        double targetAngle = limelightAngle + offsetCompensation;
         return targetAngle;
-
     }
 
     @Override
