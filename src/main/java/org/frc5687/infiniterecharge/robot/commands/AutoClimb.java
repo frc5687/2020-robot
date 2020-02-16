@@ -4,16 +4,18 @@ import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.subsystems.Climber;
 import org.frc5687.infiniterecharge.robot.subsystems.Skywalker;
 import org.frc5687.infiniterecharge.robot.Constants;
+import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 
 public class AutoClimb extends OutliersCommand {
     private Climber _climber;
     private Skywalker _skywalker;
+    private Spinner _spinner;
 
-    public AutoClimb (Climber climber, Skywalker skywalker){
+    public AutoClimb (Climber climber, Skywalker skywalker, Spinner spinner){
         _climber = climber;
         _skywalker = skywalker;
-
-        addRequirements(_climber ,_skywalker);
+        _spinner = spinner;
+        addRequirements(_climber ,_skywalker, _spinner);
     }
 
     @Override
@@ -41,7 +43,7 @@ public class AutoClimb extends OutliersCommand {
             speed = Constants.Skywalker.SKYWALKER_TENSION_SPEED;
         }
 
-        _skywalker.setSpeed(speed);
+        _spinner.setSpeed(speed);
 
     }
 }
