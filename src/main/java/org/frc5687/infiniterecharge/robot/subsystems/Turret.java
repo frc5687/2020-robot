@@ -33,7 +33,7 @@ public class Turret extends OutliersSubsystem {
     private double _positionABS;
     private double _position;
 
-
+    private double _manualOffset = 0;
 
     public Turret(OutliersContainer container, DriveTrain driveTrain, Limelight limelight, OI oi) {
         super(container);
@@ -44,6 +44,7 @@ public class Turret extends OutliersSubsystem {
         try {
             debug("allocating turret motor");
             _turretController = new TalonSRX(RobotMap.CAN.TALONSRX.TURRET);
+            _turretController.setInverted(Constants.Turret.INVERTED);
             _turretController.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,100);
             _turretController.setSensorPhase(Constants.Turret.SENSOR_PHASE_INVERTED);
             _turretController.configForwardSoftLimitThreshold((int)(Constants.Turret.MAX_DEGREES/Constants.Turret.TICKS_TO_DEGREES), 30);
@@ -92,7 +93,8 @@ public class Turret extends OutliersSubsystem {
     }
 
     public void setMotionMagicSetpoint(double angle) {
-        _turretController.set(ControlMode.MotionMagic, angle/Constants.Turret.TICKS_TO_DEGREES);
+
+        _turretController.set(ControlMode.MotionMagic, (angle/Constants.Turret.TICKS_TO_DEGREES));
     }
 
     public boolean isAtSetpoint() {
@@ -163,6 +165,9 @@ public class Turret extends OutliersSubsystem {
         }
         return 0;
     }
+    public void adjustOffset(double amount) {
+        _manualOffset += amount;
+    }
 
     public int getPositionTicks() {
         return _turretController.getSelectedSensorPosition(0);
@@ -195,10 +200,15 @@ public class Turret extends OutliersSubsystem {
         return new TurretPose(getPositionDegrees());
     }
 
+    public double getManualOffset() {
+        return _manualOffset;
+    }
+
     public enum Control {
         Position(0),
         Velocity(1),
-        MotionMagic(2);
+        MotionMagic(2),
+        PercentOut(3);
 
         private int _value;
 

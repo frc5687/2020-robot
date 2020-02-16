@@ -2,6 +2,7 @@ package org.frc5687.infiniterecharge.robot.commands;
 
 import edu.wpi.first.wpilibj.MedianFilter;
 import org.frc5687.infiniterecharge.robot.Constants;
+import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotPose;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
 import org.frc5687.infiniterecharge.robot.subsystems.Hood;
@@ -19,9 +20,19 @@ public class AutoTarget extends OutliersCommand {
     private Limelight _limelight;
     private PoseTracker _poseTracker;
     private MedianFilter _filter;
+    private double _speed;
+    private double _angle;
+    private OI _oi;
 
-
-    public AutoTarget(Turret turret, Shooter shooter, Hood hood, Limelight limelight, DriveTrain driveTrain, PoseTracker poseTracker) {
+    public AutoTarget(Turret turret,
+                      Shooter shooter,
+                      Hood hood,
+                      Limelight limelight,
+                      DriveTrain driveTrain,
+                      PoseTracker poseTracker,
+                      OI oi,
+                      double angle,
+                      double speed) {
         _turret = turret;
         _shooter = shooter;
         _hood = hood;
@@ -29,21 +40,39 @@ public class AutoTarget extends OutliersCommand {
         _limelight = limelight;
         _poseTracker = poseTracker;
         _filter = new MedianFilter(10);
+        _angle = angle;
+        _speed = speed;
+        _oi = oi;
+        addRequirements(_turret, _shooter, _hood);
     }
 
     @Override
     public void initialize() {
         super.initialize();
+        error("Starting AutoTarget");
+        _turret.setControlMode(Turret.Control.MotionMagic);
         _limelight.enableLEDs();
         _filter.reset();
+        _hood.setPosition(_angle);
+        _shooter.setShooterSpeed(_speed);
     }
 
     @Override
     public void execute() {
-        _hood.setPosition(_hood.getHoodDesiredAngle(_driveTrain.distanceToTarget()));
-        metric("TargetDriveAngle",getTargetDrivingAngle());
-//        _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees());
+        _hood.setPipeline();
+//        if (_oi!=null) {
+//            _hood.setSpeed(_oi.getHoodSpeed());
+//        }
+        if (!_shooter.isShooting()) {
+            _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees());
+        }
+        error("Setpoint is " + (_limelight.getHorizontalAngle() + _turret.getPositionDegrees()));
+        if (!_shooter.isShooting()) {
+            _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees() + _turret.getManualOffset());
+            error("Setpoint is " + (_limelight.getHorizontalAngle() + _turret.getPositionDegrees()));
+        }
     }
+
 
     @Override
     public boolean isFinished() {
@@ -63,26 +92,12 @@ public class AutoTarget extends OutliersCommand {
         return _filter.calculate(targetAngle);
     }
 
-    protected double getTargetDrivingAngle() {
-        double driveX = Math.cos(Math.toRadians(_driveTrain.getHeading().getDegrees())) * _driveTrain.getVelocity();
-        double driveY = Math.sin(Math.toRadians(_driveTrain.getHeading().getDegrees())) * _driveTrain.getVelocity();
-        double turretX = Math.cos(Math.toRadians(180 - _turret.getTurretToDriveTrainHeading())) * _shooter.getBallVelocity(); //_limelight.getTargetDistance();
-        double turretY = Math.sin(Math.toRadians(180 - _turret.getTurretToDriveTrainHeading())) * _shooter.getBallVelocity(); //_limelight.getTargetDistance();
-        double combinedX = driveX + turretX;
-        double combinedY = driveY + turretY;
-        double angle = Math.toDegrees(Math.atan(combinedY/combinedX));
-        metric("drivex", driveX);
-        metric("drivey", driveY);
-        metric("turretY", turretY);
-        metric("Turretx", turretX);
-        metric("angle", angle);
-        return angle;
-    }
-
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
+        error("Ending AutoTarget");
         _hood.setPosition(Constants.Hood.MIN_DEGREES);
+        _shooter.setShooterSpeed(Constants.Shooter.IDLE_SHOOTER_SPEED_PERCENT);
         _limelight.disableLEDs();
     }
 }

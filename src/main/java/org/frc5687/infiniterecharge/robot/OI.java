@@ -5,13 +5,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.frc5687.infiniterecharge.robot.commands.*;
-import org.frc5687.infiniterecharge.robot.util.*;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.*;
-import org.frc5687.infiniterecharge.robot.util.AxisButton;
-import org.frc5687.infiniterecharge.robot.util.Gamepad;
-import org.frc5687.infiniterecharge.robot.util.OutliersProxy;
-import org.frc5687.infiniterecharge.robot.util.POV;
+
 import static org.frc5687.infiniterecharge.robot.util.Helpers.applyDeadband;
 
 public class OI extends OutliersProxy {
@@ -29,6 +25,7 @@ public class OI extends OutliersProxy {
     private Button _driverLeftBumper;
 
     private Button _operatorRightBumper;
+    private Button _operatorLeftBumper;
 
     private Button _operatorStartButton;
     private Button _operatorEndButton;
@@ -64,7 +61,8 @@ public class OI extends OutliersProxy {
         _driverRightTrigger = new AxisButton(_driverGamepad, Gamepad.Axes.RIGHT_TRIGGER.getNumber(), Constants.OI.AXIS_BUTTON_THRESHHOLD);
         _operatorRightTrigger = new AxisButton(_operatorGamepad, Gamepad.Axes.RIGHT_TRIGGER.getNumber(), Constants.OI.AXIS_BUTTON_THRESHHOLD);
         _operatorLeftTrigger = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_TRIGGER.getNumber(), Constants.OI.AXIS_BUTTON_THRESHHOLD);
-        _operatorRightBumper = new JoystickButton(_operatorGamepad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
+        _operatorLeftBumper = new JoystickButton(_operatorGamepad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
+        _operatorRightBumper = new JoystickButton(_operatorGamepad, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
 
         _driverRightBumper = new JoystickButton(_driverGamepad, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _driverLeftBumper = new JoystickButton(_driverGamepad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
@@ -92,30 +90,30 @@ public class OI extends OutliersProxy {
 
     }
 
-    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber, Hood hood){
-        _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 1));
-        _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .9));
-        _operatorYButton.whenPressed(new ShootSpeedSetpoint(shooter, this, .8));
-        _operatorRightBumper.toggleWhenPressed(new ShootSpeedSetpoint(shooter, this, 1.0));
-        _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this));
+    public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber, Hood hood, Skywalker skywalker){
+        _operatorRightBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, this, Constants.Hood.NEAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.NEAR_TARGET_SHOOTER_SPEED_PERCENT));
+        _operatorLeftBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, this, Constants.Hood.FAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.FAR_TARGET_SHOOTER_SPEED_PERCENT));
+
+        _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this, .8));
 
         _operatorStartButton.whileHeld(new ExtendElevator(climber));
         _operatorXButton.whileHeld(new RetractElevator(climber));
         _operatorEndButton.whileHeld(new RetractWinch(climber));
 
+//        _operatorXButton.whenPressed(new AdjustTurret(turret, -1));
+//        _operatorBButton.whenPressed(new AdjustTurret(turret, 1));
+
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
 
-        _driverAButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -90));
-        _driverBButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 0));
-        _driverYButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 90));
-        _driverXButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this,    180));
-        _driverRightTrigger.whenHeld(new AutoTarget(turret, shooter, hood,limelight,driveTrain, poseTracker));
+        _driverAButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 0));
+        _driverBButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -90));
+        _driverYButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -180));
+        _driverXButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 90));
         _operatorLeftTrigger.whileHeld(new AutoIntake(intake));
 
+
         _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
-        // _operatorLeftYAxisUpButton.whenPressed(new DeploySpinner(spinner));
-        // _operatorLeftYAxisDownButton.whenPressed(new StowSpinner(spinner));
     }
 
     public boolean isAutoTargetPressed() {
@@ -136,7 +134,7 @@ public class OI extends OutliersProxy {
     }
 
     public double getShooterSpeed() {
-        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
+//        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
 
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_Y.getNumber());
         speed = applyDeadband(speed, Constants.Shooter.DEADBAND);
@@ -162,6 +160,7 @@ public class OI extends OutliersProxy {
         if (getSubSystem()!=SubSystem.Shooter) { return 0; }
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.Turret.DEADBAND);
+
         return speed;
     }
 
@@ -178,7 +177,7 @@ public class OI extends OutliersProxy {
 //        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
 
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber());
-        speed = applyDeadband(speed, Constants.Hood.DEADBAND);
+        speed = applyDeadband(speed, Constants.Hood.DEADBAND) / 2;
         return speed;
     }
 

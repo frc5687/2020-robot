@@ -61,7 +61,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
         _limelight = new Limelight("limelight");
         _driveLimelight = new Limelight("limelight-drive");
 
-
+        _limelight.setPipeline(Limelight.Pipeline.Wide);
 
         // Then subsystems....
         if (Robot.identityMode!= Robot.IdentityMode.programming) {
@@ -72,15 +72,16 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             _turret = new Turret(this, _driveTrain, _limelight, _oi);
             _spinner = new Spinner(this);
             _climber = new Climber(this, _oi);
-            _skywalker = new Skywalker(this, _oi);
+            _skywalker = new Skywalker(this);
             _shooter = new Shooter(this, _oi, _driveTrain);
             _indexer = new Indexer(this);
-            _hood = new Hood(this, _oi);
+            _hood = new Hood(this,_limelight, _oi);
+
 
 
             _poseTracker = new PoseTracker(this);
             // Must initialize buttons AFTER subsystems are allocated...
-            _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker, _intake, _shooter, _indexer, _spinner, _climber, _hood);
+            _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker, _intake, _shooter, _indexer, _spinner, _climber, _hood, _skywalker);
 
             // Initialize the other stuff
             _driveTrain.enableBrakeMode();
@@ -90,11 +91,11 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             setDefaultCommand(_hood, new DriveHood(_hood, _oi));
             setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi, _intake, _driveLimelight, _poseTracker, _imu));
             setDefaultCommand(_climber, new IdleClimber(_climber));
-            setDefaultCommand(_skywalker, new DriveSkywalker(_skywalker, _oi));
+            // setDefaultCommand(_skywalker, new DriveSkywalker(_skywalker, _spinner, _oi));
             setDefaultCommand(_intake, new IntakeSpin(_intake, _oi));
-            setDefaultCommand(_indexer, new IdleIndexer(_indexer, _intake, _spinner));
+            setDefaultCommand(_indexer, new IdleIndexer(_indexer, _intake));
             setDefaultCommand(_shooter, new DriveShooter(_shooter, _oi));
-//            setDefaultCommand(_turret, new AutoTurretTracking(_turret, _driveTrain, _limelight, _oi, _poseTracker));
+//            setDefaultCommand(_turret, new DriveTurret(_turret, _driveTrain, _limelight, _oi));
         }
     }
 
@@ -114,12 +115,13 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
     public void zeroSensors() {
          _turret.zeroSensors();
+         _hood.zeroSensors();
     }
 
     public void periodic() {
         _oi.poll();
         if (_oi.isKillAllPressed()) {
-            new KillAll(_driveTrain, _shooter, _indexer, _intake).schedule();
+            new KillAll(_driveTrain, _shooter, _indexer, _intake, _turret, _hood).schedule();
         }
     }
 
@@ -169,9 +171,9 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
                 _driveTrain::tankDriveVolts,
                 _driveTrain
         );
-
-        return ramseteCommand.andThen(() -> _driveTrain.tankDriveVolts(0, 0));
-
+        // return ramseteCommand.andThen(() -> _driveTrain.tankDriveVolts(0, 0));
+        return new AutoShootAndGo(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer);
+        // return null;
     }
 
     @Override
