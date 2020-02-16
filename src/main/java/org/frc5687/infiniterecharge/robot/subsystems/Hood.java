@@ -27,7 +27,6 @@ public class Hood extends OutliersSubsystem {
         super(container);
         _limelight = limelight;
         _oi = oi;
-        _limelight = limelight;
         try {
             debug("Allocating hood motor");
             _hoodController = new TalonSRX(RobotMap.CAN.TALONSRX.HOOD);
