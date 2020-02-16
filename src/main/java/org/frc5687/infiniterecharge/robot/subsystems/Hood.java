@@ -143,7 +143,7 @@ public class Hood extends OutliersSubsystem {
     }
 
     public void emergencyStow() {
-        if
+
     }
 
 }
