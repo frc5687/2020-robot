@@ -188,12 +188,15 @@ public class Constants {
     }
 
     public class Spinner {
-        public static final double MOTOR_PERCENT_SPEED = 0.5; // TODO: Need a real value here!
-        public static final double COLOR_TOLERANCE = 0.06;
-        public static final double MOTOR_SLOW_PERCENT_SPEED = 0.2; // TODO: Need a real value here!
-        public static final int AUTOSPIN_SLOW_AT_WEDGES = 20;
-        public static final int AUTOSPIN_STOP_AT_WEDGES = 25;
+        public static final double MOTOR_PERCENT_SPEED = 1.0;
+        public static final double COLOR_TOLERANCE = 0.09;
+        public static final double MOTOR_SLOW_PERCENT_SPEED = 0.75;
+        public static final int AUTOSPIN_SLOW_AT_WEDGES = 28;
+        public static final int AUTOSPIN_STOP_AT_WEDGES = 30;
         public static final double SENSOR_SAMPLE_PERIOD_SECONDS = 0.01;
+        public static final boolean ASYNC_COLOR_SAMPLING = true;
+        public static final boolean USE_HOMEMADE_COLOR_MATCHING_ALGORITHM = true; // false = use REV Robotic's Algo
+        public static final double REV_ALOGORITHM_CONFIDENCE_FACTOR = 0.75; // default is 0.95
     }
 
     public class RotarySwitch {
