@@ -131,6 +131,7 @@ public class Constants {
         public static final boolean SENSOR_PHASE_INVERTED = false;
         public static final double MAX_DEGREES = 67;
         public static final double TICKS_TO_DEGREES = 0.04119194;// 0.038332795242141;
+        public static final double STOW_DISTANCE_IN = 24;
         public static final double STOWED = 0;
         public static final double DISTANCE_ANGLE_CONVERSION = 0.001;
         public static final double ABS_OFFSET = -4.0;

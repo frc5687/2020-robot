@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.cuforge.libcu.Lasershark;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
@@ -16,6 +17,8 @@ public class Hood extends OutliersSubsystem {
     private OI _oi;
     private TalonSRX _hoodController;
     private Limelight _limelight;
+    private Lasershark _laserShark;
+
 
     private double _positionABS;
     private double _position;
@@ -27,6 +30,7 @@ public class Hood extends OutliersSubsystem {
         super(container);
         _limelight = limelight;
         _oi = oi;
+        _laserShark = new Lasershark(RobotMap.DIO.FRONT_SHARK);
         try {
             debug("Allocating hood motor");
             _hoodController = new TalonSRX(RobotMap.CAN.TALONSRX.HOOD);
@@ -99,6 +103,10 @@ public class Hood extends OutliersSubsystem {
         metric("ABS raw", getPositionAbsoluteRAW());
         metric("Raw Ticks", getPositionTicks());
         metric("Output Percent", getMotorSpeed());
+        metric("LaserShark/DistanceInch", _laserShark.getDistanceInches());
+        metric("LaserShark/DistanceFeet", _laserShark.getDistanceFeet());
+        metric("LaserShark/DistanceMeters", _laserShark.getDistanceMeters());
+        metric("LaserShark/DistanceCM", _laserShark.getDistanceCentimeters());
     }
 
     public double getPosition() {
@@ -129,4 +137,13 @@ public class Hood extends OutliersSubsystem {
             _limelight.setPipeline(_pipeline);
         }
     }
+
+    public double getDistance() {
+        return _laserShark.getDistanceInches();
+    }
+
+    public void emergencyStow() {
+        if
+    }
+
 }

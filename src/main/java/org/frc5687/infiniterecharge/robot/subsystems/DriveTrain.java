@@ -40,7 +40,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     private Pose2d _pose;
     private Shifter _shifter;
-    private Lasershark _laserShark;
+
 
     private double _xLength;
     private double _yLength;
@@ -112,7 +112,7 @@ public class DriveTrain extends OutliersSubsystem {
         resetDriveEncoders();
         _driveKinematics = new DifferentialDriveKinematics(Constants.DriveTrain.WIDTH);
         _odometry = new DifferentialDriveOdometry(getHeading());
-        _laserShark = new Lasershark(RobotMap.DIO.FRONT_SHARK);
+
 
     }
 
@@ -247,10 +247,6 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Distance/Left", getLeftDistance());
         metric("DistanceTarget", distanceToTarget());
         metric("AngleTarget", getAngleToTarget());
-        metric("LaserShark/DistanceInch", _laserShark.getDistanceInches());
-        metric("LaserShark/DistanceFeet", _laserShark.getDistanceFeet());
-        metric("LaserShark/DistanceMeters", _laserShark.getDistanceMeters());
-        metric("LaserShark/DistanceCM", _laserShark.getDistanceCentimeters());
     }
 
     public DifferentialDriveKinematics getKinematics() {
