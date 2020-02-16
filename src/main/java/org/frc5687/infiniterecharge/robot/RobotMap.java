@@ -32,8 +32,8 @@ public class RobotMap {
             public static final int HOOD = 6;
         }
         public static class VICTORSPX {
-            public static final int SPINNER = 10;
-            public static final int SKYWALKER = 7;
+            public static final int SPINNER_SKYWALKER = 7;
+            public static final int AGITATOR = 10;
         }
 
     }
@@ -66,8 +66,8 @@ public class RobotMap {
             public static final int SHIFTER_LOW = 3;
             public static final int INTAKE_HIGH = 0;
             public static final int INTAKE_LOW = 1;
-            public static final int SPINNER_DEPLOY = 6;
-            public static final int SPINNER_STOW = 7;
+            public static final int SPINNER_DEPLOY = 4;
+            public static final int SPINNER_STOW = 5;
         }
 
 
@@ -107,6 +107,8 @@ public class RobotMap {
             public static final int DRIVE_LEFT_A = 5;
             public static final int DRIVE_RIGHT_B = 6;
             public static final int DRIVE_RIGHT_A = 7;
+            public static final int UP_IR = 3;
+            public static final int DOWN_IR = 4;
 
             public static final int FRONT_SHARK = 8;
             public static final int REAR_SHARK = 9;

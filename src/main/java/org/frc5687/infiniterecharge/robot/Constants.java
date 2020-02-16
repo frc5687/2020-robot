@@ -11,11 +11,11 @@ public class Constants {
 
     public static class Intake {
         public static final boolean INTAKE_MOTOR_INVERTED = true;
-        public static final double INTAKE_SPEED = 0.75;
+        public static final double INTAKE_SPEED = 1.0;
     }
 
     public static class Climber {
-        public static final boolean ELEVATOR_MOTOR_INVERTED = true;
+        public static final boolean ELEVATOR_MOTOR_INVERTED = false;
         public static final boolean WINCH_MOTOR_INVERTED = true;
         public static final double ELEVATOR_EXTEND_SPEED = 0.5;
         public static final double ELEVATOR_TENSION_SPEED = 0.0;
@@ -27,6 +27,9 @@ public class Constants {
     public static class Skywalker {
         public static final boolean SKYWALKER_MOTOR_INVERTED = true;
         public static final double DEADBAND = 0.25;
+        public static final double UPSPEED = .50;
+        public static final double DOWNSPEED = -.50;
+        public static final double SKYWALKER_TENSION_SPEED = 0;
     }
 
     public static class DriveTrain {
@@ -80,20 +83,23 @@ public class Constants {
         public static final double ROTATION_SENSITIVITY_LOW_GEAR = .8;
         public static final double TURNING_SENSITIVITY_HIGH_GEAR = .8;
         public static final double TURNING_SENSITIVITY_LOW_GEAR = .8;
-        public static final double SPEED_LIMIT = 0.75;
+        public static final double SPEED_LIMIT = 0.85;
+        public static final double DISTANCE_TOLERANCE = 2.0;
     }
 
     public static class Turret {
         public static final double DEADBAND = 0.1;
         public static final double TOLERANCE = 2;
-        public static final boolean SENSOR_PHASE_INVERTED = false;
+        public static final boolean INVERTED = true;
+        public static final boolean SENSOR_PHASE_INVERTED = true;
         public static final double TICKS_TO_DEGREES = 0.08695652173913;
-        public static final double MIN_DEGREES = -180;
-        public static final double MAX_DEGREES = 90;
+        public static final double MIN_DEGREES = -200;
+        public static final double MAX_DEGREES = 95;
         public static final double MAX_VOLTAGE = 12.0;
         public static final int CRUISE_VELOCITY = 5000; // in ticks
         public static final int ACCELERATION = 16000; // in ticks
-        public static final double ABS_OFFSET = 273;// if the turret coasts this value changes, need to find a way to set this position.
+        public static final double ABS_OFFSET = 258;// if the turret coasts this value changes, need to find a way to set this position.
+        public static final double MANUAL_OFFSET = -1.0;
 
 
         public static class Position {
@@ -120,11 +126,24 @@ public class Constants {
 
     public static class Hood {
         public static final double DEADBAND = 0.1;
-        public static final double MIN_DEGREES = 0.0;
+        public static final double MIN_DEGREES = 20;
+        public static final boolean INVERTED = false;
         public static final boolean SENSOR_PHASE_INVERTED = false;
-        public static final double MAX_DEGREES = 360.00;
-        public static final double TICKS_TO_DEGREES = 12;
+        public static final double MAX_DEGREES = 67;
+        public static final double TICKS_TO_DEGREES = 0.04119194;// 0.038332795242141;
         public static final double STOWED = 0;
+        public static final double DISTANCE_ANGLE_CONVERSION = 0.001;
+        public static final double ABS_OFFSET = -4.0;
+        public static final int CRUISE_VELOCITY = 5000;
+        public static final int ACCELERATION = 16000;
+        public static final double kP = 0.9;
+        public static final double kI = 0.005;
+        public static final double kD = 0.05;
+        public static final double kF = 5;
+
+        public static final double SENSITIVITY = .1; //TODO
+        public static final double NEAR_TARGET_HOOD_ANGLE_DEGREES = 58;
+        public static final double FAR_TARGET_HOOD_ANGLE_DEGREES = Hood.MAX_DEGREES;
     }
 
     public static class OI {
@@ -148,9 +167,11 @@ public class Constants {
         public static final long MANUAL_WAIT_PERIOD = 3000;
     }
     public class Limelight {
-        public static final double TARGET_HEIGHT = 94;
-        public static final double LIMELIGHT_HEIGHT = 34;
-        public static final double LIMELIGHT_ANGLE = -1.57;
+        public static final double TARGET_HEIGHT = 92;
+        public static final double LOW_TARGET_HEIGHT = 16.5;
+        public static final double LIMELIGHT_HEIGHT = 8.125;
+
+        public static final double LIMELIGHT_ANGLE = 0;
         public static final double OVERALL_LATENCY_MILLIS = 11;
     }
 
@@ -161,13 +182,17 @@ public class Constants {
         public static double MID_LENGTH_FIELD = LENGTH_FIELD / 2;
         public static Pose2d TARGET_POSE = new Pose2d(MID_LENGTH_FIELD,MID_LENGTH_FIELD - Units.inchesToMeters(94.66), new Rotation2d(0));
         public static Pose2d LOADING_STATION_POSE = new Pose2d(-MID_LENGTH_FIELD, 1.700911, new Rotation2d(0));
+        public static Pose2d STARTING_POSITION_ONE = new Pose2d(0,0, new Rotation2d(0));
 
     }
 
     public class Spinner {
         public static final double MOTOR_PERCENT_SPEED = 0.5; // TODO: Need a real value here!
         public static final double COLOR_TOLERANCE = 0.06;
-        public static final double PRE_INDEXER_SPEED = -1.0;
+        public static final double MOTOR_SLOW_PERCENT_SPEED = 0.2; // TODO: Need a real value here!
+        public static final int AUTOSPIN_SLOW_AT_WEDGES = 20;
+        public static final int AUTOSPIN_STOP_AT_WEDGES = 25;
+        public static final double SENSOR_SAMPLE_PERIOD_SECONDS = 0.01;
     }
 
     public class RotarySwitch {
@@ -184,14 +209,23 @@ public class Constants {
         public static final double kD = 0.0;
         public static final double kF = 0.0;
         public static final long TIMEOUT = 100;
+
+        public static final double IDLE_SHOOTER_SPEED_PERCENT = 0.5;  /* TBD RPMs INSTEAD OF PERCENT */
+        public static final double NEAR_TARGET_SHOOTER_SPEED_PERCENT = 0.8;   /* TBD RPMs INSTEAD OF PERCENT */
+        public static final double FAR_TARGET_SHOOTER_SPEED_PERCENT = 1.0;   /* TBD RPMs INSTEAD OF PERCENT */
+        public static final double TICKS_TO_ROTATIONS = 2048;
     }
 
     public class Indexer {
         public static final boolean INVERTED = false;
         public static final double ADVANCE_SPEED = 0.75; // TODO: Need a real value here!
+        public static final double AGITATOR_SPEED = -1.0;
     }
 
     public class Auto {
+        public static final long AUTO_SHOOT_DELAY = 2000;
+        public static final long AUTO_SHOOT_RUNON = 2000;
+
         public class Drive {
             public static final double SPEED = 1.0;
             public static final double MIN_SPEED = 0.25;
@@ -201,5 +235,14 @@ public class Constants {
             public static final double MAX_IMU_ANGLE = 180.0;
             public static final double MIN_IMU_ANGLE = -MAX_IMU_ANGLE;
         }
+    }
+
+    public class DriveStraight {
+        public static final double kP = 0.1;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+
+
+
     }
 }

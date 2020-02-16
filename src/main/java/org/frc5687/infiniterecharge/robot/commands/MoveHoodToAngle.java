@@ -15,12 +15,13 @@ public class MoveHoodToAngle extends OutliersCommand {
 
     @Override
     public void initialize() {
-        _hood.setPosition(_angle);
+        super.initialize();
     }
 
     @Override
     public void execute() {
         super.execute();
+        _hood.setPosition(_angle);
     }
 
     @Override
