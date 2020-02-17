@@ -50,12 +50,12 @@ public class OI extends OutliersProxy {
     private AxisButton _operatorLeftYAxisUpButton;
     private AxisButton _operatorLeftYAxisDownButton;
 
-    private RotarySwitch _subsystemSelector;
 
     public OI(){
-        _subsystemSelector = new RotarySwitch(RobotMap.Analog.SUBSYSTEM_SELECTOR,  Constants.RotarySwitch.TOLERANCE, 0.07692, 0.15384, 0.23076, 0.30768, 0.3846, 0.46152, 0.53844, 0.61536, 0.69228, 0.7692, 0.84612, 0.92304);
         _driverGamepad = new Gamepad(0);
         _operatorGamepad = new Gamepad(1);
+        _launchpad = new Launchpad(2);
+
         _driverRightStickButton = new JoystickButton(_driverGamepad, Gamepad.Buttons.RIGHT_STICK.getNumber());
 
         _driverLeftTrigger = new AxisButton(_driverGamepad, Gamepad.Axes.LEFT_TRIGGER.getNumber(), Constants.OI.AXIS_BUTTON_THRESHHOLD);
@@ -113,7 +113,7 @@ public class OI extends OutliersProxy {
         _driverBButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -90));
         _driverYButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -180));
         _driverXButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, 90));
-        _operatorLeftTrigger.whileHeld(new AutoIntake(intake));
+        _operatorLeftTrigger.whileHeld(new AutoIntake(intake, lights));
 
 
         _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
@@ -138,7 +138,6 @@ public class OI extends OutliersProxy {
     }
 
     public double getShooterSpeed() {
-//        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
 
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_Y.getNumber());
         speed = applyDeadband(speed, Constants.Shooter.DEADBAND);
@@ -146,8 +145,6 @@ public class OI extends OutliersProxy {
     }
 
     public double getIndexerSpeed() {
-        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
-
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.Shooter.DEADBAND);
         return speed;
@@ -161,7 +158,6 @@ public class OI extends OutliersProxy {
     }
 
     public double getTurretSpeed() {
-        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.Turret.DEADBAND);
 
@@ -169,8 +165,6 @@ public class OI extends OutliersProxy {
     }
 
     public double getIntakeSpeed() {
-        if (getSubSystem()!=SubSystem.Intake) { return 0; }
-
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber());
         speed = applyDeadband(speed, Constants.DriveTrain.DEADBAND);
         return speed;
@@ -178,8 +172,6 @@ public class OI extends OutliersProxy {
 
 
     public double getHoodSpeed() {
-//        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
-
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber());
         speed = applyDeadband(speed, Constants.Hood.DEADBAND);
         return speed;
@@ -198,7 +190,6 @@ public class OI extends OutliersProxy {
 
     @Override
     public void updateDashboard() {
-        metric("SubSystemSelector", getSubSystem().toString());
     }
 
     private int _driverRumbleCount = 0;
@@ -264,24 +255,8 @@ public class OI extends OutliersProxy {
         return  _driverRightStickButton.get();
     }
 
-    private SubSystem getSubSystem() {
-        switch (_subsystemSelector.get()) {
-            case 1: return SubSystem.Intake;
-            case 2: return SubSystem.Shooter;
-            case 3: return SubSystem.Spinner;
-            case 4: return SubSystem.Climber;
-            default: return SubSystem.None;
-        }
-
-    }
-
     public double getSpinnerSpeed() {
         return getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
-    }
-
-    public void setConsoleColors(int r, int g, int b) {
-
-
     }
 
     private enum SubSystem {
@@ -290,6 +265,10 @@ public class OI extends OutliersProxy {
         Shooter,
         Spinner,
         Climber
+    }
+
+    public void setConsoleColor(int red, int green, int blue) {
+        setConsoleColor(red > 0, green > 0, blue > 0);
     }
 
     public void setConsoleColor(boolean red, boolean green, boolean blue) {

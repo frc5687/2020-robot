@@ -17,7 +17,7 @@ public class AutoShootAndNearTrench extends SequentialCommandGroup {
             ),
             new ParallelDeadlineGroup(
                 new AutoDrive(driveTrain, 194),
-                new AutoIntake(intake)
+                new AutoIntake(intake, lights)
             ),
             new ParallelDeadlineGroup(
                     new AutoShoot(shooter, indexer, turret, null, 0),

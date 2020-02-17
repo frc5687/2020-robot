@@ -19,6 +19,11 @@ public class Lights extends OutliersSubsystem {
     private boolean _defult;
     private OI _oi;
 
+    private boolean _indexerTop;
+    private boolean _indexerMiddle;
+    private boolean _indexerBottom;
+
+
     public Lights(OutliersContainer container, OI oi) {
         super(container);
         _shortController = new Spark(RobotMap.PWM.SHORT_LED_STRIP);
@@ -48,29 +53,53 @@ public class Lights extends OutliersSubsystem {
 
     @Override
     public void periodic() {
-        Color color = Color.blue;
+        Color consoleColor = Color.blue;
+        Color shortColor = Color.blue;
+        Color longColor = Color.blue;
 
         if (_controlPanelDetected) {
-            color = Color.red;
+            shortColor = longColor = consoleColor = Color.red;
         } else if (_readyToshoot) {
-            color = Color.green;
+            shortColor = longColor = consoleColor = Color.green;
         } else if (_targetingButnotReadytoShoot) {
-            color = Color.yellow;
+            shortColor = longColor = consoleColor = Color.yellow;
         } else if (_intakeDeployedandRunning) {
-            color = Color.purple;
-        } else if (_hopperFull) {
-            color = Color.white;
+            shortColor = longColor = consoleColor = Color.purple;
+        } else if (_indexerBottom && _indexerMiddle && _indexerTop) {
+            consoleColor = Color.white;
+            shortColor = Color.white;
+            longColor = Color.white;
+        } else if (_indexerMiddle && _indexerTop || _indexerMiddle && _indexerBottom || _indexerBottom && _indexerTop) {
+            consoleColor = Color.white;
+            shortColor = Color.black;
+            longColor = Color.white;
+        } else if (_indexerTop || _indexerMiddle || _indexerBottom) {
+            consoleColor = Color.white;
+            shortColor = Color.white;
+            longColor = Color.black;
         }
 
-        _shortController.set(color.getBlinkinColor());
-        _longController.set(color.getBlinkinColor());
-        _oi.setConsoleColors(color.getR(), color.getG(), color.getB());
-        metric("Color", color.toString());
+        _shortController.set(shortColor.getBlinkinColor());
+        _longController.set(longColor.getBlinkinColor());
+        _oi.setConsoleColor(consoleColor.getR(), consoleColor.getG(), consoleColor.getB());
+        metric("Color", consoleColor.toString());
     }
 
     @Override
     public void updateDashboard() {
 
+    }
+
+    public void setIndexerBottom(boolean triggered) {
+        _indexerBottom = triggered;
+    }
+
+    public void setIndexerMiddle(boolean triggered) {
+        _indexerMiddle = triggered;
+    }
+
+    public void setIndexerTop(boolean triggered) {
+        _indexerTop = triggered;
     }
 
 
@@ -80,7 +109,8 @@ public class Lights extends OutliersSubsystem {
         blue(Constants.Lights.SOLID_BLUE, 0, 0, 1),
         green(Constants.Lights.SOLID_GREEN, 0, 1,0),
         yellow(Constants.Lights.SOLID_YELLOW, 0, 1, 1),
-        white(Constants.Lights.SOLID_WHITE, 1 , 1, 1);
+        white(Constants.Lights.SOLID_WHITE, 1 , 1, 1),
+        black(Constants.Lights.SOLID_BLACK, 0, 0 ,0 );
 
         private double _blinkinValue;
         private int _r;

@@ -156,9 +156,9 @@ public class Constants {
         public static final int OVERRIDE = 8;
         public static final int PANIC = 6;
 
-        public static final int RED_CHANNEL = 0;
-        public static final int GREEN_CHANNEL = 0;
-        public static final int BLUE_CHANNEL = 0;
+        public static final int RED_CHANNEL = 2;
+        public static final int GREEN_CHANNEL = 3;
+        public static final int BLUE_CHANNEL = 1;
     }
 
     public static class Shifter {
