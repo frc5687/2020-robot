@@ -176,7 +176,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 //                new ZeroHood(_hood),
 //                new AutoShootAndGo(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer)
 //        );
-         return new ZeroHood(_hood);
+         return new ZeroHood(_hood, _turret);
     }
 
     @Override

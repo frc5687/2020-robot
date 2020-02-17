@@ -64,7 +64,6 @@ public class Turret extends OutliersSubsystem {
         } catch (Exception e) {
             error("error allocating turret motors " + e.getMessage());
         }
-        zeroSensors();
     }
 
     public void setSpeed(double speed) {

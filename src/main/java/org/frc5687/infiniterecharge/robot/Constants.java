@@ -202,12 +202,12 @@ public class Constants {
         public static final boolean RIGHT_INVERTED = true;
         public static final double DEADBAND = 0.1;
         public static final double RPM_TOLERANCE = 100; //RPM
-        public static final double kP = 0.65;
+        public static final double kP = 0.6;
         public static final double kI = 0.0015;
         public static final double kD = 0.60;
         public static final double kF = 0.05;
         public static final int I_ZONE = 150;
-        public static final long TIMEOUT = 100;
+        public static final long TIMEOUT = 30;
 
         public static final double IDLE_SHOOTER_SPEED_PERCENT = 0.5;  /* TBD RPMs INSTEAD OF PERCENT */
         public static final double NEAR_TARGET_SHOOTER_SPEED_PERCENT = 4000;   /* TBD RPMs INSTEAD OF PERCENT */
@@ -217,7 +217,7 @@ public class Constants {
 
     public class Indexer {
         public static final boolean INVERTED = false;
-        public static final double ADVANCE_SPEED = 1.0; // TODO: Need a real value here!
+        public static final double ADVANCE_SPEED = .75; // TODO: Need a real value here!
         public static final double AGITATOR_SPEED = -1.0;
     }
 
