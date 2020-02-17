@@ -290,5 +290,15 @@ public class OI extends OutliersProxy {
         Climber
     }
 
+    public void setConsoleColor(boolean red, boolean green, boolean blue) {
+        if (_launchpad==null) { return; }
+        try {
+            _launchpad.setOutput(Constants.OI.RED_CHANNEL, red);
+            _launchpad.setOutput(Constants.OI.GREEN_CHANNEL, green);
+            _launchpad.setOutput(Constants.OI.BLUE_CHANNEL, blue);
+        } catch (Exception e) {
+        }
+    }
+
 }
 
