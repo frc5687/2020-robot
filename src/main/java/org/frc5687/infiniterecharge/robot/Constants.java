@@ -27,6 +27,9 @@ public class Constants {
     public static class Skywalker {
         public static final boolean SKYWALKER_MOTOR_INVERTED = true;
         public static final double DEADBAND = 0.25;
+        public static final double UPSPEED = .50;
+        public static final double DOWNSPEED = -.50;
+        public static final double SKYWALKER_TENSION_SPEED = 0;
     }
 
     public static class DriveTrain {
@@ -152,6 +155,10 @@ public class Constants {
         public static final int KILL_ALL = 4;
         public static final int OVERRIDE = 8;
         public static final int PANIC = 6;
+
+        public static final int RED_CHANNEL = 0;
+        public static final int GREEN_CHANNEL = 0;
+        public static final int BLUE_CHANNEL = 0;
     }
 
     public static class Shifter {
@@ -185,12 +192,15 @@ public class Constants {
     }
 
     public class Spinner {
-        public static final double MOTOR_PERCENT_SPEED = 0.5; // TODO: Need a real value here!
-        public static final double COLOR_TOLERANCE = 0.06;
-        public static final double MOTOR_SLOW_PERCENT_SPEED = 0.2; // TODO: Need a real value here!
-        public static final int AUTOSPIN_SLOW_AT_WEDGES = 20;
-        public static final int AUTOSPIN_STOP_AT_WEDGES = 25;
+        public static final double MOTOR_PERCENT_SPEED = 1.0;
+        public static final double COLOR_TOLERANCE = 0.09;
+        public static final double MOTOR_SLOW_PERCENT_SPEED = 0.75;
+        public static final int AUTOSPIN_SLOW_AT_WEDGES = 28;
+        public static final int AUTOSPIN_STOP_AT_WEDGES = 30;
         public static final double SENSOR_SAMPLE_PERIOD_SECONDS = 0.01;
+        public static final boolean ASYNC_COLOR_SAMPLING = true;
+        public static final boolean USE_HOMEMADE_COLOR_MATCHING_ALGORITHM = true; // false = use REV Robotic's Algo
+        public static final double REV_ALOGORITHM_CONFIDENCE_FACTOR = 0.75; // default is 0.95
     }
 
     public class RotarySwitch {
@@ -243,5 +253,63 @@ public class Constants {
 
 
 
+    }
+
+    public class Lights {
+        public static final double SOLID_BLUE = 0.87;
+        public static final double PULSING_BLUE = -0.09;
+        public static final double BEATING_BLUE = 0.23;
+
+        public static final double SOLID_RED = 0.61;
+        public static final double PULSING_RED = -0.11;
+        public static final double BEATING_RED = 0.25;
+
+        public static final double SOLID_GREEN = 0.77;
+        public static final double PULSING_GREEN = 0.77; // replace
+        public static final double BEATING_GREEN = 0.00; // unused
+
+        public static final double SOLID_PURPLE = 0.91;
+        public static final double PULSING_PURPLE = 0.05;
+        public static final double BEATING_PURPLE = 0.00;
+
+        public static final double SOLID_ORANGE = 0.06;
+        public static final double PULSING_ORANGE = 0.07;
+        public static final double BEATING_ORANGE = 0.08;
+
+        public static final double SOLID_YELLOW = 0.69;
+        public static final double PULSING_YELLOW = 0.10;
+        public static final double BEATING_YELLOW = 0.11;
+
+        public static final double SOLID_BLACK = 0.99;
+
+        public static final double SOLID_HOT_PINK = 0.57;
+
+        public static final double CONFETTI = -0.87;
+
+        public static final double BLEND_1 = -0.03;
+        public static final double SCANNING_1 = -0.01;
+        public static final double CHASING_1 = 0.01;
+        public static final double SLOW_BEAT_1 = 0.03;
+        public static final double MEDIUM_BEAT_1 = 0.05;
+        public static final double FAST_BEAT_1 = 0.07;
+        public static final double BREATH_SLOW_1 = 0.09;
+        public static final double BREATH_FAST_1 = 0.11;
+        public static final double SHOT_1 = 0.13;
+        public static final double STROBE_1 = 0.15;
+
+        public static final double BLEND_2 = 0.17;
+        public static final double SCANNING_2 = 0.19;
+        public static final double CHASING_2 = 0.21;
+        public static final double SLOW_BEAT_2 = 0.23;
+        public static final double MEDIUM_BEAT_2 = 0.25;
+        public static final double FAST_BEAT_2 = 0.27;
+        public static final double BREATH_SLOW_2 = 0.29;
+        public static final double BREATH_FAST_2 = 0.31;
+        public static final double SHOT_2 = 0.33;
+        public static final double STROBE_2 = 0.35;
+
+
+        public static final double WHITE_SHOT = -0.81;
+        public static final double SOLID_WHITE = 0.93;
     }
 }

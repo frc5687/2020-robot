@@ -9,7 +9,7 @@ public class AutoSpinRotations extends OutliersCommand {
     private Spinner _spinner;
     private OI _oi;
     private int _wedgeCount = 0;
-    private Spinner.Color _previousColor;
+    private Spinner.MatchedColor _previousMatchedColor;
 
     public AutoSpinRotations(Spinner spinner, OI oi, Skywalker skywalker) {
         _spinner = spinner;
@@ -21,6 +21,7 @@ public class AutoSpinRotations extends OutliersCommand {
     public void initialize() {
         super.initialize();
         _spinner.resetWedgeCount();
+        _spinner.deploy();
         _spinner.spin();
     }
 
@@ -39,6 +40,7 @@ public class AutoSpinRotations extends OutliersCommand {
     @Override
     public void end(boolean interrupted) {
         _spinner.stop();
+        _spinner.stow();
         super.end(interrupted);
     }
 }

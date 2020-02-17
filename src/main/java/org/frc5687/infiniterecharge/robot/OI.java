@@ -13,6 +13,7 @@ import static org.frc5687.infiniterecharge.robot.util.Helpers.applyDeadband;
 public class OI extends OutliersProxy {
     protected Gamepad _driverGamepad;
     protected Gamepad _operatorGamepad;
+    protected Launchpad _launchpad;
     protected Button _driverRightStickButton;
 
     private Button _operatorLeftTrigger;
@@ -97,13 +98,14 @@ public class OI extends OutliersProxy {
         _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this, 5700));
 
         _operatorStartButton.whileHeld(new ExtendElevator(climber));
-        _operatorXButton.whileHeld(new RetractElevator(climber));
+        // _operatorXButton.whileHeld(new RetractElevator(climber));
         _operatorEndButton.whileHeld(new RetractWinch(climber));
 
 //        _operatorXButton.whenPressed(new AdjustTurret(turret, -1));
         _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 3100));
         _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 5700));
 
+        _operatorXButton.whileHeld(new AutoBalance(skywalker, spinner, this));
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
 
@@ -115,6 +117,7 @@ public class OI extends OutliersProxy {
 
 
         _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
+        //_operatorYButton.whenPressed(new AutoSpinRotations(spinner, this, skywalker));  // <~ When we're ready, this works!
     }
 
     public boolean isAutoTargetPressed() {
@@ -276,12 +279,27 @@ public class OI extends OutliersProxy {
         return getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
     }
 
+    public void setConsoleColors(int r, int g, int b) {
+
+
+    }
+
     private enum SubSystem {
         None,
         Intake,
         Shooter,
         Spinner,
         Climber
+    }
+
+    public void setConsoleColor(boolean red, boolean green, boolean blue) {
+        if (_launchpad==null) { return; }
+        try {
+            _launchpad.setOutput(Constants.OI.RED_CHANNEL, red);
+            _launchpad.setOutput(Constants.OI.GREEN_CHANNEL, green);
+            _launchpad.setOutput(Constants.OI.BLUE_CHANNEL, blue);
+        } catch (Exception e) {
+        }
     }
 
 }
