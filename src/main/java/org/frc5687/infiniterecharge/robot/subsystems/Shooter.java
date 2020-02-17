@@ -40,6 +40,9 @@ public class Shooter extends OutliersSubsystem {
         _shooterRight.getStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10);
         _shooterRight.configClosedloopRamp(0.25);
         _shooterRight.selectProfileSlot(0,0);
+
+        logMetrics("Velocity/Ticks", "Position", "Velocity/RPM", "Speed", "Shooting");
+        enableMetrics();
     }
 
     @Override
@@ -47,6 +50,7 @@ public class Shooter extends OutliersSubsystem {
         metric("Velocity/Ticks", getVelocity());
         metric("Position", getPosition());
         metric("Velocity/RPM", getRPM());
+        metric("Shooting", _shooting);
     }
 
 

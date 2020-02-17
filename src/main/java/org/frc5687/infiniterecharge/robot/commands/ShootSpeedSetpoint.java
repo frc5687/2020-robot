@@ -19,7 +19,7 @@ public class ShootSpeedSetpoint extends OutliersCommand {
     }
     @Override
     public void initialize() {
-        SmartDashboard.putBoolean("MetricTracker/ShootSpeedSetpoint", true);
+
         super.initialize();
         _shooter.setVelocitySpeed(_speed);
     }

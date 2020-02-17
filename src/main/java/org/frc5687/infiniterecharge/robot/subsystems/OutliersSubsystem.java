@@ -1,5 +1,6 @@
 package org.frc5687.infiniterecharge.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.frc5687.infiniterecharge.robot.util.ILoggingSource;
@@ -67,9 +68,18 @@ public abstract class OutliersSubsystem extends SubsystemBase implements ILoggin
     // metric("pants", 99);    <~ This metric won't get written to USB storage because it wasn't registered.
 
     protected void logMetrics(String... metrics) {
+        error("LogMetrics called for " + getClass().getSimpleName());
         _metricTracker = MetricTracker.createMetricTracker(getClass().getSimpleName(), metrics);
     }
 
     public abstract void updateDashboard();
+
+    protected void enableMetrics() {
+        if (_metricTracker!=null) { _metricTracker.enable(); }
+    }
+
+    protected void disableMetrics() {
+        if (_metricTracker!=null) { _metricTracker.disable(); }
+    }
 
 }
