@@ -13,19 +13,21 @@ public class ShootSpeedSetpoint extends OutliersCommand {
     public ShootSpeedSetpoint(Shooter shooter, OI oi, double speed) {
         _shooter = shooter;
         _oi = oi;
-        _speed = speed;
+        _speed = speed; // in RPM
         addRequirements(_shooter);
-        logMetrics("Velocity");
+        logMetrics("VelocityRPM");
     }
     @Override
     public void initialize() {
         SmartDashboard.putBoolean("MetricTracker/ShootSpeedSetpoint", true);
-        super.initialize(); }
+        super.initialize();
+        _shooter.setVelocitySpeed(_speed);
+    }
 
     @Override
     public void execute() {
-         _shooter.setShooterSpeed(_speed);
-         metric("Velocity", _shooter.getVelocity());
+//         _shooter.setShooterSpeed(_speed);
+         metric("VelocityRPM", _shooter.getRPM());
     }
 
     @Override

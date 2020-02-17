@@ -25,6 +25,7 @@ public class Turret extends OutliersSubsystem {
     private TalonSRX _turretController;
     private Limelight _limelight;
     private DriveTrain _driveTrain;
+    private Hood _hood;
     private OI _oi;
 
     private int _positionPIDSlot = 0;
@@ -35,9 +36,10 @@ public class Turret extends OutliersSubsystem {
 
     private double _manualOffset = 0;
 
-    public Turret(OutliersContainer container, DriveTrain driveTrain, Limelight limelight, OI oi) {
+    public Turret(OutliersContainer container, DriveTrain driveTrain, Hood hood, Limelight limelight, OI oi) {
         super(container);
         _driveTrain = driveTrain;
+        _hood = hood;
         _limelight = limelight;
         _oi = oi;
 
@@ -111,7 +113,7 @@ public class Turret extends OutliersSubsystem {
 
     public Pose2d updatePose() {
         Pose2d prevPose = _driveTrain.getPose();
-        double distance = Units.inchesToMeters(_limelight.getTargetDistance());
+        double distance = Units.inchesToMeters(_limelight.getTargetDistance(_hood.getLimelightAngle(), _hood.getLimelightHeight()));
         // big dumb turret angle doesn't effect pose.
 //        double alpha = (90 -(getPositionDegrees() + _limelight.getHorizontalAngle())) - _driveTrain.getHeading().getDegrees();
         double alpha = 90 - Math.abs(_limelight.getHorizontalAngle());

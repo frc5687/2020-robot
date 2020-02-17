@@ -54,7 +54,7 @@ public class AutoTarget extends OutliersCommand {
         _limelight.enableLEDs();
         _filter.reset();
         _hood.setPosition(_angle);
-        _shooter.setShooterSpeed(_speed);
+        _shooter.setVelocitySpeed(_speed);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class AutoTarget extends OutliersCommand {
         super.end(interrupted);
         error("Ending AutoTarget");
         _hood.setPosition(Constants.Hood.MIN_DEGREES);
-        _shooter.setShooterSpeed(Constants.Shooter.IDLE_SHOOTER_SPEED_PERCENT);
+//        _shooter.setShooterSpeed(Constants.Shooter.IDLE_SHOOTER_SPEED_PERCENT);
         _limelight.disableLEDs();
     }
 }

@@ -101,7 +101,8 @@ public class OI extends OutliersProxy {
         _operatorEndButton.whileHeld(new RetractWinch(climber));
 
 //        _operatorXButton.whenPressed(new AdjustTurret(turret, -1));
-//        _operatorBButton.whenPressed(new AdjustTurret(turret, 1));
+        _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 3000));
+        _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 6000));
 
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
@@ -177,7 +178,7 @@ public class OI extends OutliersProxy {
 //        if (getSubSystem()!=SubSystem.Shooter) { return 0; }
 
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber());
-        speed = applyDeadband(speed, Constants.Hood.DEADBAND) / 2;
+        speed = applyDeadband(speed, Constants.Hood.DEADBAND);
         return speed;
     }
 

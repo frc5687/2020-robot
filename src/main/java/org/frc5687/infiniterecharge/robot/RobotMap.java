@@ -102,11 +102,7 @@ public class RobotMap {
             public static final int TOP_IR = 0;
             public static final int MID_IR = 1;
             public static final int BOTTOM_IR = 2;
-            public static final int HOOD_ENCODER = 3;
-            public static final int DRIVE_LEFT_B = 4;
-            public static final int DRIVE_LEFT_A = 5;
-            public static final int DRIVE_RIGHT_B = 6;
-            public static final int DRIVE_RIGHT_A = 7;
+            public static final int HOOD_HALL = 6;
 
         /* Example:
         public static final int ARM_FRONT_LIMIT = 0;
