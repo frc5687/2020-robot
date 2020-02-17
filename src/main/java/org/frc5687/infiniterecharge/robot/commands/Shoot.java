@@ -15,7 +15,6 @@ public class Shoot extends OutliersCommand {
 
     private double _speed;
 
-    private double _setpoint;
     private Long _endTime;
     public Shoot(Shooter shooter, Indexer indexer, Turret turret, OI oi, double speed) {
         _shooter = shooter;
@@ -41,10 +40,10 @@ public class Shoot extends OutliersCommand {
 //        _setpoint = _shooter.getDistanceSetpoint();
 //        _shooter.setShooterSpeed(_speed);
         metric("Velocity", _shooter.getVelocity());
-//        if ((_turret.isTargetInTolerance() && _shooter.isAtVelocity(_setpoint)) || _oi.isOverridePressed()) {
+        if ((_turret.isTargetInTolerance() && _shooter.isAtVelocity(_speed)) || _oi.isOverridePressed()) {
             _endTime = System.currentTimeMillis() + Constants.Shooter.TIMEOUT;
             _indexer.setIndexerSpeed(Constants.Indexer.ADVANCE_SPEED);
-//        }
+        }
     }
 
 

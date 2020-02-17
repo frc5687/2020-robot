@@ -94,7 +94,7 @@ public class OI extends OutliersProxy {
         _operatorRightBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, this, Constants.Hood.NEAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.NEAR_TARGET_SHOOTER_SPEED_PERCENT));
         _operatorLeftBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, this, Constants.Hood.FAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.FAR_TARGET_SHOOTER_SPEED_PERCENT));
 
-        _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this, .8));
+        _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this, 3100));
 
         _operatorStartButton.whileHeld(new ExtendElevator(climber));
         _operatorXButton.whileHeld(new RetractElevator(climber));
