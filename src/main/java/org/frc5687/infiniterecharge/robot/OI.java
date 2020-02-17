@@ -92,10 +92,10 @@ public class OI extends OutliersProxy {
     }
 
     public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber, Hood hood, Skywalker skywalker, Lights lights){
-        _operatorRightBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,this));
-        _operatorLeftBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,this));
+        _operatorRightBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,this,5700, 67));
+        _operatorLeftBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,this,3150, 51));
 
-        _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this, 2150));
+        _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this, 5700));
 
         _operatorStartButton.whileHeld(new ExtendElevator(climber));
         // _operatorXButton.whileHeld(new RetractElevator(climber));

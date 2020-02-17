@@ -63,10 +63,8 @@ public class Lights extends OutliersSubsystem {
             shortColor = longColor = consoleColor = Color.green;
         } else if (_targetingButnotReadytoShoot) {
             shortColor = longColor = consoleColor = Color.yellow;
-        } else if (_intakeDeployedandRunning) {
-            shortColor = longColor = consoleColor = Color.purple;
-        } else if (_indexerBottom && _indexerMiddle && _indexerTop) {
             consoleColor = Color.white;
+        } else if (_indexerBottom && _indexerMiddle && _indexerTop) {
             shortColor = Color.white;
             longColor = Color.white;
         } else if (_indexerMiddle && _indexerTop || _indexerMiddle && _indexerBottom || _indexerBottom && _indexerTop) {
@@ -77,6 +75,8 @@ public class Lights extends OutliersSubsystem {
             consoleColor = Color.white;
             shortColor = Color.white;
             longColor = Color.black;
+        }  else if (_intakeDeployedandRunning) {
+            shortColor = longColor = consoleColor = Color.purple;
         }
 
         _shortController.set(shortColor.getBlinkinColor());

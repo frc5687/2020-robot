@@ -53,7 +53,7 @@ public class Hood extends OutliersSubsystem {
             _hoodController.config_kD(0, Constants.Hood.kD, 30);
             _hoodController.config_kF(0, Constants.Hood.kF, 30);
             _hoodController.config_IntegralZone(0, Constants.Hood.I_ZONE, 30);
-            _hoodController.configAllowableClosedloopError(0, (int) (1/Constants.Hood.TICKS_TO_DEGREES), 30);
+//            _hoodController.configAllowableClosedloopError(0, (int) (1/Constants.Hood.TICKS_TO_DEGREES), 30);
             _hoodController.selectProfileSlot(0, 0);
         } catch (Exception e) {
             error("Exception allocating hood motor" + e.getMessage());

@@ -29,7 +29,9 @@ public class AutoTarget extends OutliersCommand {
                       DriveTrain driveTrain,
                       PoseTracker poseTracker,
                       Lights lights,
-                      OI oi) {
+                      OI oi,
+                      double speed,
+                      double angle) {
         _turret = turret;
         _shooter = shooter;
         _hood = hood;
@@ -37,8 +39,10 @@ public class AutoTarget extends OutliersCommand {
         _limelight = limelight;
         _lights = lights;
         _poseTracker = poseTracker;
-        _filter = new MedianFilter(10);
+        _filter = new MedianFilter(5);
         _oi = oi;
+        _speed = speed;
+        _angle = angle;
         addRequirements(_turret, _shooter, _hood);
     }
 
@@ -49,27 +53,28 @@ public class AutoTarget extends OutliersCommand {
         _turret.setControlMode(Turret.Control.MotionMagic);
         _limelight.enableLEDs();
         _filter.reset();
-//        _hood.setPosition(_hood.getHoodDesiredAngle(_hood.filterLimelight()));
-//        _shooter.setVelocitySpeed(_shooter.getDistanceSetpoint(_hood.filterLimelight()));
+        _hood.setPosition(_angle);
+        _shooter.setVelocitySpeed(_speed);
 
         _lights.setTargeting(true);
     }
 
     @Override
     public void execute() {
-        metric("Hood Setpoint", _hood.getHoodDesiredAngle(400));
-        metric("Shooter Setpoint", _shooter.getDistanceSetpoint(400));
+//        metric("Hood Setpoint", _hood.getHoodDesiredAngle(400));
+//        metric("Shooter Setpoint", _shooter.getDistanceSetpoint(400));
         _hood.setPipeline();
 //        if (_oi!=null) {
 //            _hood.setSpeed(_oi.getHoodSpeed());
 //        }
+        metric("Filter ANgle", getTargetAngle());
         if (!_shooter.isShooting()) {
-            _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees());
+            _turret.setMotionMagicSetpoint(getTargetAngle());
         }
-        error("Setpoint is " + (_limelight.getHorizontalAngle() + _turret.getPositionDegrees()));
+        error("Setpoint is " + (getTargetAngle()));
         if (!_shooter.isShooting()) {
-            _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees() + _turret.getManualOffset());
-            error("Setpoint is " + (_limelight.getHorizontalAngle() + _turret.getPositionDegrees()));
+            _turret.setMotionMagicSetpoint(getTargetAngle() + _turret.getManualOffset());
+            error("Setpoint is " + getTargetAngle());
         }
 
         _lights.setReadyToshoot(_shooter.isAtTargetVelocity() && _turret.isTargetInTolerance());
@@ -91,7 +96,7 @@ public class AutoTarget extends OutliersCommand {
 
         double poseAngle = pose == null ? turretAngle : pose.getTurretPose().getAngle();
         double angleCompensation = turretAngle - poseAngle;
-        double targetAngle = limelightAngle + angleCompensation;
+        double targetAngle = limelightAngle + (turretAngle + angleCompensation);
         return _filter.calculate(targetAngle);
     }
 

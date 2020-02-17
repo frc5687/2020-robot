@@ -133,11 +133,11 @@ public class Constants {
         public static final double TICKS_TO_DEGREES = 0.04215247;// 0.038332795242141;
         public static final int CRUISE_VELOCITY = 5000;
         public static final int ACCELERATION = 16000;
-        public static final double kP = 0.95;
-        public static final double kI = 0.005;
-        public static final double kD = 0.05;
+        public static final double kP = 0.2;
+        public static final double kI = 0.01;
+        public static final double kD = 0.0001;
         public static final double kF = 5;
-        public static final int I_ZONE = 11;
+        public static final int I_ZONE =300;
 
         public static final double SENSITIVITY = 0.2; //TODO
         public static final double NEAR_TARGET_HOOD_ANGLE_DEGREES = 58;
