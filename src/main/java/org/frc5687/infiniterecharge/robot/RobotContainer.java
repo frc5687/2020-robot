@@ -45,6 +45,8 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
     private Intake _intake;
     private PoseTracker _poseTracker;
 
+    private Lights _lights;
+
     public RobotContainer(Robot robot) {
 
     }
@@ -86,6 +88,8 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             // Initialize the other stuff
             _driveTrain.enableBrakeMode();
             _driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
+
+            _lights = new Lights(this, _oi);
 
             // Now setup the default commands:
             setDefaultCommand(_hood, new DriveHood(_hood, _oi));
