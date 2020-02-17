@@ -18,7 +18,7 @@ public class AutoShootAndFarTrench extends SequentialCommandGroup {
             new MoveHoodToAngle(hood, Constants.Hood.MIN_DEGREES),
             new ParallelDeadlineGroup(
                 new AutoDrive(driveTrain, 250),
-                new AutoIntake(intake)
+                new AutoIntake(intake, lights)
             ),
             new ParallelDeadlineGroup(
                     new AutoShoot(shooter, indexer, turret, null, 0),

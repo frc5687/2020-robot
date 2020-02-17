@@ -3,6 +3,7 @@ package org.frc5687.infiniterecharge.robot.commands;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.subsystems.Indexer;
 import org.frc5687.infiniterecharge.robot.subsystems.Intake;
+import org.frc5687.infiniterecharge.robot.subsystems.Lights;
 import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 
 /***
@@ -17,11 +18,13 @@ import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 public class IdleIndexer extends OutliersCommand {
     private Indexer _indexer;
     private Intake _intake;
+    private Lights _lights;
 
-    public IdleIndexer(Indexer indexer, Intake intake) {
+    public IdleIndexer(Indexer indexer, Intake intake, Lights lights) {
         super();
         _indexer = indexer;
         _intake = intake;
+        _lights = lights;
         addRequirements(_indexer);
     }
 
@@ -65,6 +68,11 @@ public class IdleIndexer extends OutliersCommand {
         _indexer.setIndexerSpeed(speed);
 
         _indexer.setAgitatorSpeed(Constants.Indexer.AGITATOR_SPEED);
+
+        _lights.setIndexerBottom(_indexer.isBottomTriggered());
+        _lights.setIndexerMiddle(_indexer.isMidTriggered());
+        _lights.setIndexerTop(_indexer.isTopTriggered());
+
     }
 
 
