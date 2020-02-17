@@ -68,7 +68,6 @@ public abstract class OutliersSubsystem extends SubsystemBase implements ILoggin
     // metric("pants", 99);    <~ This metric won't get written to USB storage because it wasn't registered.
 
     protected void logMetrics(String... metrics) {
-        error("LogMetrics called for " + getClass().getSimpleName());
         _metricTracker = MetricTracker.createMetricTracker(getClass().getSimpleName(), metrics);
     }
 
