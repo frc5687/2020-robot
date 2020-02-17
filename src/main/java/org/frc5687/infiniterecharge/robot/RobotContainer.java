@@ -83,14 +83,16 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
 
             _poseTracker = new PoseTracker(this);
+
+            _lights = new Lights(this, _oi);
+
             // Must initialize buttons AFTER subsystems are allocated...
-            _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker, _intake, _shooter, _indexer, _spinner, _climber, _hood, _skywalker);
+            _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker, _intake, _shooter, _indexer, _spinner, _climber, _hood, _skywalker, _lights);
 
             // Initialize the other stuff
             _driveTrain.enableBrakeMode();
             _driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
 
-            _lights = new Lights(this, _oi);
 
             // Now setup the default commands:
             setDefaultCommand(_hood, new DriveHood(_hood, _oi));

@@ -4,10 +4,7 @@ import edu.wpi.first.wpilibj.MedianFilter;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotPose;
-import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
-import org.frc5687.infiniterecharge.robot.subsystems.Hood;
-import org.frc5687.infiniterecharge.robot.subsystems.Shooter;
-import org.frc5687.infiniterecharge.robot.subsystems.Turret;
+import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.Limelight;
 import org.frc5687.infiniterecharge.robot.util.PoseTracker;
 
@@ -17,6 +14,7 @@ public class AutoTarget extends OutliersCommand {
     private Shooter _shooter;
     private Hood _hood;
     private DriveTrain _driveTrain;
+    private Lights _lights;
     private Limelight _limelight;
     private PoseTracker _poseTracker;
     private MedianFilter _filter;
@@ -30,6 +28,7 @@ public class AutoTarget extends OutliersCommand {
                       Limelight limelight,
                       DriveTrain driveTrain,
                       PoseTracker poseTracker,
+                      Lights lights,
                       OI oi,
                       double angle,
                       double speed) {
@@ -38,6 +37,7 @@ public class AutoTarget extends OutliersCommand {
         _hood = hood;
         _driveTrain = driveTrain;
         _limelight = limelight;
+        _lights = lights;
         _poseTracker = poseTracker;
         _filter = new MedianFilter(10);
         _angle = angle;
@@ -55,6 +55,7 @@ public class AutoTarget extends OutliersCommand {
         _filter.reset();
         _hood.setPosition(_angle);
         _shooter.setVelocitySpeed(_speed);
+        _lights.setTargeting(true);
     }
 
     @Override
@@ -71,6 +72,9 @@ public class AutoTarget extends OutliersCommand {
             _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees() + _turret.getManualOffset());
             error("Setpoint is " + (_limelight.getHorizontalAngle() + _turret.getPositionDegrees()));
         }
+
+        _lights.setReadyToshoot(_shooter.isAtTargetVelocity() && _turret.isTargetInTolerance());
+
     }
 
 
@@ -95,6 +99,8 @@ public class AutoTarget extends OutliersCommand {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
+        _lights.setTargeting(false);
+        _lights.setReadyToshoot(false);
         error("Ending AutoTarget");
         _hood.setPosition(Constants.Hood.MIN_DEGREES);
 //        _shooter.setShooterSpeed(Constants.Shooter.IDLE_SHOOTER_SPEED_PERCENT);

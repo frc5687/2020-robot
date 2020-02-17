@@ -30,19 +30,19 @@ public class Lights extends OutliersSubsystem {
         _controlPanelDetected = value;
     }
 
-    public void set_readyToshoot (boolean value) {
+    public void setReadyToshoot(boolean value) {
         _readyToshoot = value;
     }
 
-    public void set_targetingButnotReadytoShoot (boolean value) {
+    public void setTargeting(boolean value) {
         _targetingButnotReadytoShoot = value;
     }
 
-    public void set_intakeDeployedandRunning (boolean value) {
+    public void setAutoIntaking(boolean value) {
         _intakeDeployedandRunning = value;
     }
 
-    public void set_hopperFull (boolean value) {
+    public void setHopperFull(boolean value) {
         _hopperFull = value;
     }
 

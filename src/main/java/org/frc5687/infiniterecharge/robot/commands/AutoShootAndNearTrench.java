@@ -9,11 +9,11 @@ import org.frc5687.infiniterecharge.robot.util.PoseTracker;
 
 public class AutoShootAndNearTrench extends SequentialCommandGroup {
 
-    public AutoShootAndNearTrench(Turret turret, Shooter shooter, Hood hood, Limelight limelight, DriveTrain driveTrain, PoseTracker poseTracker, Indexer indexer, Intake intake) {
+    public AutoShootAndNearTrench(Turret turret, Shooter shooter, Hood hood, Limelight limelight, DriveTrain driveTrain, PoseTracker poseTracker, Indexer indexer, Intake intake, Lights lights) {
         addCommands(
             new ParallelDeadlineGroup(
                     new AutoShoot(shooter, indexer, turret, null, 0),
-                    new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, null, Constants.Hood.NEAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.NEAR_TARGET_SHOOTER_SPEED_PERCENT)
+                    new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights, null, Constants.Hood.NEAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.NEAR_TARGET_SHOOTER_SPEED_PERCENT)
             ),
             new ParallelDeadlineGroup(
                 new AutoDrive(driveTrain, 194),
@@ -21,7 +21,7 @@ public class AutoShootAndNearTrench extends SequentialCommandGroup {
             ),
             new ParallelDeadlineGroup(
                     new AutoShoot(shooter, indexer, turret, null, 0),
-                    new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, null, Constants.Hood.FAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.FAR_TARGET_SHOOTER_SPEED_PERCENT)
+                    new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null, Constants.Hood.FAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.FAR_TARGET_SHOOTER_SPEED_PERCENT)
             )
         );
    }

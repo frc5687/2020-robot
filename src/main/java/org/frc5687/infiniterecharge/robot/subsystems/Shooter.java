@@ -17,6 +17,8 @@ public class Shooter extends OutliersSubsystem {
     private TalonFX _shooterLeft;
     private OI _oi;
     private boolean _shooting = false;
+    private double _targetRPM;
+
 
 
     public Shooter(OutliersContainer container, OI oi, DriveTrain driveTrain) {
@@ -60,7 +62,8 @@ public class Shooter extends OutliersSubsystem {
     }
 
     public void setVelocitySpeed(double RPM) {
-        _shooterRight.set(TalonFXControlMode.Velocity, (RPM * Constants.Shooter.TICKS_TO_ROTATIONS / 600));
+        _targetRPM = RPM;
+        _shooterRight.set(TalonFXControlMode.Velocity, (_targetRPM * Constants.Shooter.TICKS_TO_ROTATIONS / 600));
     }
 
     public double getPosition() {
@@ -77,6 +80,10 @@ public class Shooter extends OutliersSubsystem {
 
     public boolean isAtVelocity(double RPM) {
         return Math.abs(getRPM() - RPM) < Constants.Shooter.RPM_TOLERANCE;
+    }
+
+    public boolean isAtTargetVelocity() {
+        return Math.abs(getRPM() - _targetRPM) < Constants.Shooter.RPM_TOLERANCE;
     }
 
     public double getDistanceSetpoint(double distance) {
