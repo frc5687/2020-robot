@@ -17,14 +17,12 @@ import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 public class IdleIndexer extends OutliersCommand {
     private Indexer _indexer;
     private Intake _intake;
-    private Spinner _spinner;
 
-    public IdleIndexer(Indexer indexer, Intake intake, Spinner spinner) {
+    public IdleIndexer(Indexer indexer, Intake intake) {
         super();
         _indexer = indexer;
         _intake = intake;
-        _spinner = spinner;
-        addRequirements(_indexer, _spinner);
+        addRequirements(_indexer);
     }
 
     @Override
@@ -66,7 +64,7 @@ public class IdleIndexer extends OutliersCommand {
         }
         _indexer.setIndexerSpeed(speed);
 
-        _spinner.setSpeed(Constants.Spinner.PRE_INDEXER_SPEED);
+        _indexer.setAgitatorSpeed(Constants.Indexer.AGITATOR_SPEED);
     }
 
 

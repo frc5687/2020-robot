@@ -3,13 +3,15 @@ package org.frc5687.infiniterecharge.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.util.Color;
 import org.frc5687.infiniterecharge.robot.Constants;
-import org.frc5687.infiniterecharge.robot.Robot;
 import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
@@ -18,36 +20,40 @@ import java.util.Map;
 import java.lang.String;
 
 public class Spinner extends OutliersSubsystem {
+    // TODO(mike): Move to Constants somehow?
+    private final Color RED = ColorMatch.makeColor(0.50, 0.38, 0.13);
+    private final Color GREEN = ColorMatch.makeColor(0.19, 0.55, 0.25);
+    private final Color BLUE = ColorMatch.makeColor(0.19, 0.50, 0.40);
+    private final Color YELLOW = ColorMatch.makeColor(0.37, 0.51, 0.12);
+
     private ColorSensorV3 _colorSensor;
     private VictorSPX _motorController;
     private DoubleSolenoid _solenoid;
-    private Map<Color, Rgb> _swatches = new HashMap<>();
-    private Map<Color, Color> _fieldToRobotColorMap = new HashMap<>(); // see getColorRobotSeesForColorFieldSees()
-    private Color _previouslySensedColor = Color.unknown;
-    private boolean _fmsDataCorrupt = false;
+    private ColorMatch _revColorMatcher = new ColorMatch();
+    private Map<MatchedColor, Color> _swatches = new HashMap<>();
+    private MatchedColor _previouslyMatchedColor = MatchedColor.unknown;
+    private Map<MatchedColor, MatchedColor> _fieldToRobotColorMap = new HashMap<>();
     private Notifier _sampleTask;
     private int _wedgeCount = 0;
 
-    public Color getSoughtColor() {
+    public MatchedColor getSoughtColor() {
         String gameData;
         gameData = DriverStation.getInstance().getGameSpecificMessage();
-        if(gameData.length() > 0){
-            switch (gameData.charAt(0)){
+        if(gameData.length() > 0) {
+            switch (gameData.charAt(0)) {
                 case 'B':
-                    return Color.blue;
+                    return MatchedColor.blue;
                 case 'G':
-                    return  Color.green;
+                    return  MatchedColor.green;
                 case 'R':
-                    return Color.red;
+                    return MatchedColor.red;
                 case 'Y':
-                    return Color.yellow;
+                    return MatchedColor.yellow;
                 default:
                     error("Corrupt/unknown color returned from field: " + gameData);
-                    _fmsDataCorrupt = true;
-                    return Color.unknown;
             }
         }
-        return Color.unknown;
+        return MatchedColor.unknown;
     }
 
     public Spinner(OutliersContainer container) {
@@ -68,12 +74,10 @@ public class Spinner extends OutliersSubsystem {
         }
 
         try {
-            debug("allocating spinner motor controller");
-            _motorController = new VictorSPX(RobotMap.CAN.VICTORSPX.SPINNER);
+            debug("allocating spinner motor controller and solenoid");
+            _motorController = new VictorSPX(RobotMap.CAN.VICTORSPX.SPINNER_SKYWALKER);
             _motorController.setNeutralMode(NeutralMode.Brake);
             _solenoid = new DoubleSolenoid(RobotMap.PCM.SPINNER_DEPLOY, RobotMap.PCM.SPINNER_STOW);
-            // TODO: Not sure if this is really what we want, just stole from turret...
-            // _motorController.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,100);
         } catch (Exception e) {
             error("error allocating spinner motor controller: " + e.getMessage());
             e.printStackTrace();
@@ -86,29 +90,19 @@ public class Spinner extends OutliersSubsystem {
         // color that we expected to see next. We start this task when we start spinning, and stop it when we
         // stop spinning, so we don't steal too many CPU cycles when thw robot is busy doing other stuff.
         _sampleTask = new Notifier(() -> {
-            Color newColor = senseColor();
-            if (!newColor.equals(_previouslySensedColor)) {
+            MatchedColor newMatchedColor = senseColor();
+            if (!newMatchedColor.equals(_previouslyMatchedColor) && !newMatchedColor.equals(MatchedColor.unknown)) {
                 _wedgeCount++;
+                _previouslyMatchedColor = newMatchedColor;
             }
-            _previouslySensedColor = newColor;
         });
 
-        // If you're testing color matching you'll want to run this task all the time, instead of only when it's
-        // spinning:
-        if (Robot.identityMode == Robot.IdentityMode.programming) {
-            _sampleTask.startPeriodic(Constants.Spinner.SENSOR_SAMPLE_PERIOD_SECONDS);
-        }
+        _fieldToRobotColorMap.put(MatchedColor.yellow, MatchedColor.green);
+        _fieldToRobotColorMap.put(MatchedColor.red, MatchedColor.blue);
+        _fieldToRobotColorMap.put(MatchedColor.green, MatchedColor.yellow);
+        _fieldToRobotColorMap.put(MatchedColor.blue, MatchedColor.red);
 
-        // TODO(mike) might want to move to Constants.java ?
-        _swatches.put(Color.red, new Rgb(0.60, 0.31, 0.08));
-        _swatches.put(Color.yellow, new Rgb(0.40, 0.49, 0.10));
-        _swatches.put(Color.green, new Rgb(0.21, 0.56, 0.23));
-        _swatches.put(Color.blue, new Rgb(0.21, 0.45, 0.35));
-
-        _fieldToRobotColorMap.put(Color.yellow, Color.green);
-        _fieldToRobotColorMap.put(Color.red, Color.blue);
-        _fieldToRobotColorMap.put(Color.green, Color.yellow);
-        _fieldToRobotColorMap.put(Color.blue, Color.red);
+        setupColorMatchingAlgorithms();
     }
 
     /**
@@ -116,11 +110,14 @@ public class Spinner extends OutliersSubsystem {
      * reading from the sensor and attempt to match it.
      * @return Color.red, Color.green, Color.blue, Color.yellow, or Color.unknown
      */
-    public Color getColor() {
-        if (_previouslySensedColor == null || _previouslySensedColor.equals(Color.unknown)) {
-            _previouslySensedColor = senseColor();
+    public MatchedColor getColor() {
+        if (Constants.Spinner.ASYNC_COLOR_SAMPLING) {
+            if (_previouslyMatchedColor == null || _previouslyMatchedColor.equals(MatchedColor.unknown)) {
+                _previouslyMatchedColor = senseColor();
+            }
+            return _previouslyMatchedColor;
         }
-        return _previouslySensedColor;
+        return senseColor();
     }
 
     /**
@@ -128,8 +125,8 @@ public class Spinner extends OutliersSubsystem {
      * swatches of red, green, yellow, or blue
      * @return Color.red, Color.green, Color.blue, Color.yellow, or Color.unknown
      */
-    public Color senseColor() {
-        edu.wpi.first.wpilibj.util.Color sensorReading = _colorSensor.getColor();
+    public MatchedColor senseColor() {
+        Color sensorReading = _colorSensor.getColor();
         return matchColor(sensorReading);
     }
 
@@ -142,7 +139,7 @@ public class Spinner extends OutliersSubsystem {
      * @param seenByField The color seen by the field's sensor.
      * @return The color the robot should see when the field sees _seenByField_
      */
-    public Color getColorTheRobotSeesForColorTheFieldSees(Color seenByField) {
+    public MatchedColor getColorTheRobotSeesForColorTheFieldSees(MatchedColor seenByField) {
         return _fieldToRobotColorMap.get(seenByField);
     }
 
@@ -151,24 +148,32 @@ public class Spinner extends OutliersSubsystem {
      */
     public void deploy() {
         _solenoid.set(DoubleSolenoid.Value.kForward);
+        info("Deployed spinner");
+        if (Constants.Spinner.ASYNC_COLOR_SAMPLING) {
+            _sampleTask.startPeriodic(Constants.Spinner.SENSOR_SAMPLE_PERIOD_SECONDS);
+        }
     }
 
     /**
      * Retracts the spinner motor.
      */
-    public void stow(){
+    public void stow() {
         _solenoid.set(DoubleSolenoid.Value.kReverse);
+        info("Stowed spinner");
+        if (Constants.Spinner.ASYNC_COLOR_SAMPLING) {
+            _sampleTask.stop();
+        }
     }
 
-    public boolean isDeployed(){
+    public boolean isDeployed() {
         return _solenoid.get().equals(DoubleSolenoid.Value.kForward);
     }
 
-    public boolean isStowed(){
+    public boolean isStowed() {
         return _solenoid.get().equals(DoubleSolenoid.Value.kReverse);
     }
 
-    public boolean isArmOff(){
+    public boolean isArmOff() {
         return _solenoid.get().equals(DoubleSolenoid.Value.kOff);
     }
 
@@ -206,11 +211,6 @@ public class Spinner extends OutliersSubsystem {
 
     public void setSpeed(double speed) {
         _motorController.set(ControlMode.PercentOutput, speed);
-        if (speed != 0) {
-            _sampleTask.startPeriodic(Constants.Spinner.SENSOR_SAMPLE_PERIOD_SECONDS);
-        } else {
-            _sampleTask.stop();
-        }
     }
 
     public void resetWedgeCount() {
@@ -226,23 +226,53 @@ public class Spinner extends OutliersSubsystem {
      * @param sensorReading The raw reading from the color sensor
      * @return Color.red, Color.green, Color.blue, Color.yellow, or Color.unknown
      */
-    private Color matchColor(edu.wpi.first.wpilibj.util.Color sensorReading) {
-        if (closeEnoughTo(sensorReading, _swatches.get(Color.red))) {
-            return Color.red;
-        } else if (closeEnoughTo(sensorReading, _swatches.get(Color.green))) {
-            return Color.green;
-        } else if (closeEnoughTo(sensorReading, _swatches.get(Color.blue))) {
-            return Color.blue;
-        } else if (closeEnoughTo(sensorReading, _swatches.get(Color.yellow))) {
-            return Color.yellow;
+    private MatchedColor matchColor(edu.wpi.first.wpilibj.util.Color sensorReading) {
+        if (Constants.Spinner.USE_HOMEMADE_COLOR_MATCHING_ALGORITHM) {
+            // Use crappy algorithm from before we discovered the one in REV's SDK...
+            if (closeEnoughTo(sensorReading, _swatches.get(MatchedColor.red))) {
+                return MatchedColor.red;
+            } else if (closeEnoughTo(sensorReading, _swatches.get(MatchedColor.green))) {
+                return MatchedColor.green;
+            } else if (closeEnoughTo(sensorReading, _swatches.get(MatchedColor.blue))) {
+                return MatchedColor.blue;
+            } else if (closeEnoughTo(sensorReading, _swatches.get(MatchedColor.yellow))) {
+                return MatchedColor.yellow;
+            }
+        } else {
+            // Use REV Robotics' distance-based algorithm from their SDK...
+            _revColorMatcher.setConfidenceThreshold(Constants.Spinner.REV_ALOGORITHM_CONFIDENCE_FACTOR);
+            ColorMatchResult match = _revColorMatcher.matchClosestColor(sensorReading);
+            if (match.color.equals(RED)) {
+                return MatchedColor.red;
+            } else if (match.color.equals(GREEN)) {
+                return MatchedColor.green;
+            } if (match.color.equals(BLUE)) {
+                return MatchedColor.blue;
+            } if (match.color.equals(YELLOW)) {
+                return MatchedColor.yellow;
+            }
         }
-        return Color.unknown;
+        return MatchedColor.unknown;
     }
 
-    private boolean closeEnoughTo(edu.wpi.first.wpilibj.util.Color sensorReading, Rgb swatch) {
+    private boolean closeEnoughTo(edu.wpi.first.wpilibj.util.Color sensorReading, Color swatch) {
         return Math.abs(sensorReading.red - swatch.red) <= Constants.Spinner.COLOR_TOLERANCE &&
                 Math.abs(sensorReading.green - swatch.green) <= Constants.Spinner.COLOR_TOLERANCE &&
                 Math.abs(sensorReading.blue - swatch.blue) <= Constants.Spinner.COLOR_TOLERANCE;
+    }
+
+    private void setupColorMatchingAlgorithms() {
+        // Setup the colors to match for our homemade algorithm...
+        _swatches.put(MatchedColor.red, RED);
+        _swatches.put(MatchedColor.yellow, YELLOW);
+        _swatches.put(MatchedColor.green, GREEN);
+        _swatches.put(MatchedColor.blue, BLUE);
+
+        // Setup the color to match for REV's distance algorithm...
+        _revColorMatcher.addColorMatch(RED);
+        _revColorMatcher.addColorMatch(YELLOW);
+        _revColorMatcher.addColorMatch(GREEN);
+        _revColorMatcher.addColorMatch(BLUE);
     }
 
     @Override
@@ -258,7 +288,6 @@ public class Spinner extends OutliersSubsystem {
             metric("Spinner/Color", getColor().toString());
             metric("Spinner/IR", _colorSensor.getIR());
             metric("Spinner/Proximity", _colorSensor.getProximity());
-            metric("Spinner/FMSDataCorrupt", _fmsDataCorrupt);
             metric("Spinner/WedgeCount", _wedgeCount);
         }
         if (_solenoid != null) {
@@ -269,18 +298,7 @@ public class Spinner extends OutliersSubsystem {
         }
     }
 
-    public static class Rgb {
-        private double red;
-        private double green;
-        private double blue;
-        public Rgb(double red, double green, double blue) {
-            this.red = red;
-            this.green = green;
-            this.blue = blue;
-        }
-    }
-
-    public enum Color {
+    public enum MatchedColor {
         red(0),
         green(1),
         blue(2),
@@ -288,7 +306,7 @@ public class Spinner extends OutliersSubsystem {
         unknown(4);
 
         private int _value;
-        Color(int value) {
+        MatchedColor(int value) {
             this._value = value;
         }
         public int getValue() {

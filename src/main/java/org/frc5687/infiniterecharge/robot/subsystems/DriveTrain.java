@@ -239,8 +239,10 @@ public class DriveTrain extends OutliersSubsystem {
     public void updateDashboard() {
 
         metric("Heading", getPose().getRotation().getDegrees());
-        metric("Right", getRightDistance());
-        metric("Left", getLeftDistance());
+        metric("PoseX", getPose().getTranslation().getX());
+        metric("PoseY", getPose().getTranslation().getY());
+        metric("Distance/Right", getRightDistance());
+        metric("Distance/Left", getLeftDistance());
         metric("DistanceTarget", distanceToTarget());
         metric("AngleTarget", getAngleToTarget());
     }
@@ -250,7 +252,7 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public Rotation2d getHeading() {
-        return Rotation2d.fromDegrees(_imu.getYaw());
+        return Rotation2d.fromDegrees(-_imu.getYaw());
     }
 
     public Pose2d getPose() {
