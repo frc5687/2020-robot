@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.MedianFilter;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
@@ -96,6 +97,7 @@ public class Hood extends OutliersSubsystem {
         metric("Limelight Lens Angle", getLimelightAngle());
     }
 
+
     public double getPosition() {
         return getPositionDegrees();
     }
@@ -105,7 +107,7 @@ public class Hood extends OutliersSubsystem {
     }
 
     public double getHoodDesiredAngle(double distance) {
-        return (14.331 *Math.log(distance)) - 14.554;
+        return (13.138*Math.log(distance)) - 12.634;
     }
 
     public void zeroSensors() {
@@ -141,8 +143,9 @@ public class Hood extends OutliersSubsystem {
         return Constants.Hood.HEIGHT_TO_DECK + ((-0.0014*Math.pow(getPositionDegrees(), 2)) + (0.284*getPositionDegrees()) + 4.1184); //constants taken from excel formula
     }
 
+
     public double getLimelightAngle() {
-        return getPositionDegrees() + Constants.Hood.LIMELIGHT_OFFSET_DEGREES;
+        return (getPositionDegrees() + Constants.Hood.LIMELIGHT_OFFSET_DEGREES) - 90.5;
     }
 
     public boolean isHallTriggered() {

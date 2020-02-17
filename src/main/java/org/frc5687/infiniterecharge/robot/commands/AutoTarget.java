@@ -29,9 +29,7 @@ public class AutoTarget extends OutliersCommand {
                       DriveTrain driveTrain,
                       PoseTracker poseTracker,
                       Lights lights,
-                      OI oi,
-                      double angle,
-                      double speed) {
+                      OI oi) {
         _turret = turret;
         _shooter = shooter;
         _hood = hood;
@@ -40,8 +38,6 @@ public class AutoTarget extends OutliersCommand {
         _lights = lights;
         _poseTracker = poseTracker;
         _filter = new MedianFilter(10);
-        _angle = angle;
-        _speed = speed;
         _oi = oi;
         addRequirements(_turret, _shooter, _hood);
     }
@@ -53,13 +49,16 @@ public class AutoTarget extends OutliersCommand {
         _turret.setControlMode(Turret.Control.MotionMagic);
         _limelight.enableLEDs();
         _filter.reset();
-        _hood.setPosition(_angle);
-        _shooter.setVelocitySpeed(_speed);
+//        _hood.setPosition(_hood.getHoodDesiredAngle(_hood.filterLimelight()));
+//        _shooter.setVelocitySpeed(_shooter.getDistanceSetpoint(_hood.filterLimelight()));
+
         _lights.setTargeting(true);
     }
 
     @Override
     public void execute() {
+        metric("Hood Setpoint", _hood.getHoodDesiredAngle(400));
+        metric("Shooter Setpoint", _shooter.getDistanceSetpoint(400));
         _hood.setPipeline();
 //        if (_oi!=null) {
 //            _hood.setSpeed(_oi.getHoodSpeed());

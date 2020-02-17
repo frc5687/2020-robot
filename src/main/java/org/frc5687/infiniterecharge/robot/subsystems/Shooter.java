@@ -87,7 +87,7 @@ public class Shooter extends OutliersSubsystem {
     }
 
     public double getDistanceSetpoint(double distance) {
-        return (6.3193 * distance) + 2361.9;
+        return (7.2272 * distance) + 2200.9;
     }
 
     public boolean isShooting() {

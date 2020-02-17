@@ -13,7 +13,7 @@ public class AutoShootAndFarTrench extends SequentialCommandGroup {
         addCommands(
             new ParallelDeadlineGroup(
                     new AutoShoot(shooter, indexer, turret, null, 0),
-                    new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null, Constants.Hood.NEAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.NEAR_TARGET_SHOOTER_SPEED_PERCENT)
+                    new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null)
             ),
             new MoveHoodToAngle(hood, Constants.Hood.MIN_DEGREES),
             new ParallelDeadlineGroup(
@@ -22,7 +22,7 @@ public class AutoShootAndFarTrench extends SequentialCommandGroup {
             ),
             new ParallelDeadlineGroup(
                     new AutoShoot(shooter, indexer, turret, null, 0),
-                    new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null, Constants.Hood.FAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.FAR_TARGET_SHOOTER_SPEED_PERCENT)
+                    new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null)
             )
         );
    }
