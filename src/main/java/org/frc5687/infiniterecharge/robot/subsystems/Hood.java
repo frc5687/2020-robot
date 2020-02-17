@@ -57,8 +57,6 @@ public class Hood extends OutliersSubsystem {
         } catch (Exception e) {
             error("Exception allocating hood motor" + e.getMessage());
         }
-        zeroSensors();
-        setPosition(Constants.Hood.MIN_DEGREES);
     }
 
     public void setSpeed(double speed) {

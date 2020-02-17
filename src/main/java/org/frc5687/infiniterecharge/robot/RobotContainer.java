@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConst
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.frc5687.infiniterecharge.robot.commands.*;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.*;
@@ -115,7 +116,6 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
     public void zeroSensors() {
          _turret.zeroSensors();
-         CommandScheduler.getInstance().schedule(new ZeroHood(_hood));
     }
 
     public void periodic() {
@@ -172,8 +172,11 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
                 _driveTrain
         );
         // return ramseteCommand.andThen(() -> _driveTrain.tankDriveVolts(0, 0));
-        return new AutoShootAndGo(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer);
-        // return null;
+//        return new SequentialCommandGroup(
+//                new ZeroHood(_hood),
+//                new AutoShootAndGo(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer)
+//        );
+         return new ZeroHood(_hood);
     }
 
     @Override

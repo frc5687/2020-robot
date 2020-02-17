@@ -141,7 +141,7 @@ public class Constants {
         public static final double FAR_TARGET_HOOD_ANGLE_DEGREES = Hood.MAX_DEGREES;
         public static final double HEIGHT_TO_DECK = 17.75;
         public static final double LIMELIGHT_OFFSET_DEGREES = 23.0;
-        public static final double ZEROING_SPEED = -0.3;
+        public static final double ZEROING_SPEED = -0.75;
     }
 
     public static class OI {
@@ -201,10 +201,10 @@ public class Constants {
         public static final boolean LEFT_INVERTED = false;
         public static final boolean RIGHT_INVERTED = true;
         public static final double DEADBAND = 0.1;
-        public static final double RPM_TOLERANCE = 300; //RPM
-        public static final double kP = 0.05;
-        public static final double kI = 0.001;
-        public static final double kD = 0.7;
+        public static final double RPM_TOLERANCE = 100; //RPM
+        public static final double kP = 0.65;
+        public static final double kI = 0.0015;
+        public static final double kD = 0.60;
         public static final double kF = 0.05;
         public static final int I_ZONE = 150;
         public static final long TIMEOUT = 100;

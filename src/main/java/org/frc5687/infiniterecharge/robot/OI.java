@@ -101,7 +101,7 @@ public class OI extends OutliersProxy {
         _operatorEndButton.whileHeld(new RetractWinch(climber));
 
 //        _operatorXButton.whenPressed(new AdjustTurret(turret, -1));
-        _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 3000));
+        _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 3100));
         _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 6000));
 
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));

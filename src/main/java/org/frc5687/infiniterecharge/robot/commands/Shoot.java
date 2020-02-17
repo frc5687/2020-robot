@@ -41,6 +41,7 @@ public class Shoot extends OutliersCommand {
 //        _shooter.setShooterSpeed(_speed);
         metric("Velocity", _shooter.getVelocity());
         if ((_turret.isTargetInTolerance() && _shooter.isAtVelocity(_speed)) || _oi.isOverridePressed()) {
+            error("INDEXING NOW");
             _endTime = System.currentTimeMillis() + Constants.Shooter.TIMEOUT;
             _indexer.setIndexerSpeed(Constants.Indexer.ADVANCE_SPEED);
         }
