@@ -115,7 +115,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
     public void zeroSensors() {
          _turret.zeroSensors();
-         _hood.zeroSensors();
+         CommandScheduler.getInstance().schedule(new ZeroHood(_hood));
     }
 
     public void periodic() {

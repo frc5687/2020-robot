@@ -15,12 +15,11 @@ import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 public class Hood extends OutliersSubsystem {
 
-    private OI _oi;
     private TalonSRX _hoodController;
     private Limelight _limelight;
     private HallEffect _hoodHall;
+    private OI _oi;
 
-    private double _positionABS;
     private double _position;
     private double _setPoint;
 
@@ -81,31 +80,20 @@ public class Hood extends OutliersSubsystem {
         return _setPoint;
     }
 
-    public double getMotorSpeed() {
+    public double getMotorOutput() {
         return _hoodController.getMotorOutputPercent();
     }
 
-
     public double getPositionDegrees() {
         return getPositionTicks() * Constants.Hood.TICKS_TO_DEGREES;
-    }
-
-    public int getPositionAbsoluteRAW() { return
-            _hoodController.getSensorCollection().getPulseWidthPosition();}
-
-    public double getAbsoluteDegrees() {
-        _positionABS = (getPositionAbsoluteRAW() * Constants.Hood.TICKS_TO_DEGREES) - Constants.Hood.ABS_OFFSET;
-        return _positionABS;
     }
 
 
     @Override
     public void updateDashboard() {
         metric("Position", getPosition());
-        metric("PositionAbs", getAbsoluteDegrees());
-        metric("ABS raw", getPositionAbsoluteRAW());
         metric("Raw Ticks", getPositionTicks());
-        metric("Output Percent", getMotorSpeed());
+        metric("Output Percent", getMotorOutput());
         metric("Limelight Lens Height", getLimelightHeight());
         metric("Limelight Lens Angle", getLimelightAngle());
     }
@@ -123,8 +111,6 @@ public class Hood extends OutliersSubsystem {
     }
 
     public void zeroSensors() {
-//        _position = _positionABS;
-//        _position = _position/Constants.Hood.TICKS_TO_DEGREES;
         if (isHallTriggered()) {
             _position = Constants.Hood.MIN_DEGREES / Constants.Hood.TICKS_TO_DEGREES;
             _setPoint = Constants.Hood.MIN_DEGREES;
@@ -135,17 +121,19 @@ public class Hood extends OutliersSubsystem {
     @Override
     public void periodic() {
         if (isHallTriggered()) {
-            _position = Constants.Hood.MIN_DEGREES / Constants.Hood.TICKS_TO_DEGREES;
-//            _setPoint = Constants.Hood.MIN_DEGREES;
+            if (getMotorOutput() < 0) {
+                setSpeed(0);
+            }
             _hoodController.setSelectedSensorPosition((int) _position);
+            _position = Constants.Hood.MIN_DEGREES / Constants.Hood.TICKS_TO_DEGREES;
         }
     }
 
     public void setPipeline() {
-        if (getAbsoluteDegrees() > 60 && _pipeline != Limelight.Pipeline.TwoTimes) {
+        if (getPositionDegrees() > 60 && _pipeline != Limelight.Pipeline.TwoTimes) {
             _pipeline = Limelight.Pipeline.TwoTimes;
             _limelight.setPipeline(_pipeline);
-        } else if (getAbsoluteDegrees() < 60) {
+        } else if (getPositionDegrees() < 60) {
             _pipeline = Limelight.Pipeline.Wide;
             _limelight.setPipeline(_pipeline);
         }
