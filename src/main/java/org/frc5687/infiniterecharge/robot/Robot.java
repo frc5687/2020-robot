@@ -59,6 +59,7 @@ public class Robot extends OutliersRobot implements ILoggingSource{
         _robotContainer = new RobotContainer(this);
         _robotContainer.init();
         _robotContainer.zeroSensors();
+
         // Periodically flushes metrics (might be good to configure enable/disable via USB config file)
         new Notifier(MetricTracker::flushAll).startPeriodic(Constants.METRIC_FLUSH_PERIOD);
 
@@ -105,6 +106,7 @@ public class Robot extends OutliersRobot implements ILoggingSource{
 
     public void teleopInit() {
         _fmsConnected = DriverStation.getInstance().isFMSAttached();
+
         //_limelight.disableLEDs();
     }
 

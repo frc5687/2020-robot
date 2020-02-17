@@ -94,7 +94,7 @@ public class OI extends OutliersProxy {
         _operatorRightBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, this, Constants.Hood.NEAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.NEAR_TARGET_SHOOTER_SPEED_PERCENT));
         _operatorLeftBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, this, Constants.Hood.FAR_TARGET_HOOD_ANGLE_DEGREES, Constants.Shooter.FAR_TARGET_SHOOTER_SPEED_PERCENT));
 
-        _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this, 3100));
+        _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this, 5700));
 
         _operatorStartButton.whileHeld(new ExtendElevator(climber));
         _operatorXButton.whileHeld(new RetractElevator(climber));
@@ -102,7 +102,7 @@ public class OI extends OutliersProxy {
 
 //        _operatorXButton.whenPressed(new AdjustTurret(turret, -1));
         _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 3100));
-        _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 6000));
+        _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 5700));
 
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
