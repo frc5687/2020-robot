@@ -1,34 +1,34 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
 import org.frc5687.infiniterecharge.robot.Constants;
-import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.subsystems.Hood;
+import org.frc5687.infiniterecharge.robot.subsystems.Turret;
 
-public class DriveHood extends OutliersCommand {
+public class ZeroHood extends OutliersCommand {
     private Hood _hood;
-    private OI _oi;
+    private Turret _turret;
 
-    public DriveHood(Hood hood, OI oi) {
+    public ZeroHood(Hood hood, Turret turret) {
         _hood = hood;
-        _oi = oi;
+        _turret = turret;
         addRequirements(_hood);
     }
 
     @Override
     public void initialize() {
         super.initialize();
+        _turret.zeroSensors();
+        error("Zeroing Hood");
     }
 
     @Override
     public void execute() {
         super.execute();
-        double speed = _oi.getHoodSpeed();
-//        _hood.setSpeed(speed);
-         _hood.setPosition(_hood.getSetPoint() + speed * Constants.Hood.SENSITIVITY);
+        _hood.setSpeed(Constants.Hood.ZEROING_SPEED);
     }
 
     @Override
     public boolean isFinished() {
-        return false;
-    }
+        return _hood.isHallTriggered(); }
+
 }

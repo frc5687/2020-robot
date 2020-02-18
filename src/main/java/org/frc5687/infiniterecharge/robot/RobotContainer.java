@@ -17,7 +17,9 @@ import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConst
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.frc5687.infiniterecharge.robot.commands.*;
+import org.frc5687.infiniterecharge.robot.commands.drive.EightBallAuto;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.*;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
@@ -50,6 +52,8 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
     private Trajectory _trajectory;
     private PoseTracker _poseTracker;
 
+    private Lights _lights;
+
     public RobotContainer(Robot robot) {
 
     }
@@ -66,40 +70,47 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
         _limelight = new Limelight("limelight");
         _driveLimelight = new Limelight("limelight-drive");
 
+        _limelight.setPipeline(Limelight.Pipeline.Wide);
 
         if (Robot.identityMode!= Robot.IdentityMode.programming) {
             _pdp = new PDP();
             _shifter = new Shifter(this);
             _intake = new Intake(this, _oi);
             _driveTrain = new DriveTrain(this, _oi, _imu, _shifter);
-            _turret = new Turret(this, _driveTrain, _limelight, _oi);
+            _turret = new Turret(this, _driveTrain, _hood, _limelight, _oi);
             _spinner = new Spinner(this);
             _climber = new Climber(this, _oi);
-            _skywalker = new Skywalker(this, _oi);
+            _skywalker = new Skywalker(this);
             _shooter = new Shooter(this, _oi, _driveTrain);
             _indexer = new Indexer(this);
-            _hood = new Hood(this, _oi);
+            _hood = new Hood(this,_limelight, _oi);
+
 
 
             _poseTracker = new PoseTracker(this);
+
+            _lights = new Lights(this, _oi);
+
             // Must initialize buttons AFTER subsystems are allocated...
 
-            _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker, _intake, _shooter, _indexer, _spinner, _climber, _hood, _imu);
+            _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker, _intake, _shooter, _indexer, _spinner, _climber, _hood, _skywalker, _lights, _imu);
 
             // Initialize the other stuff
             // Initialize the other stuff
             _driveTrain.enableBrakeMode();
             _driveTrain.resetOdometry(new Pose2d(0,0,new Rotation2d(0)));
 
+
             // Now setup the default commands:
             setDefaultCommand(_hood, new DriveHood(_hood, _oi));
             setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi, _intake, _driveLimelight, _poseTracker, _imu));
             setDefaultCommand(_climber, new IdleClimber(_climber));
-            setDefaultCommand(_skywalker, new DriveSkywalker(_skywalker, _oi));
+            // setDefaultCommand(_skywalker, new DriveSkywalker(_skywalker, _spinner, _oi));
             setDefaultCommand(_intake, new IntakeSpin(_intake, _oi));
-            setDefaultCommand(_indexer, new IdleIndexer(_indexer, _intake, _spinner));
+            setDefaultCommand(_indexer, new IdleIndexer(_indexer, _intake, _lights));
             setDefaultCommand(_shooter, new DriveShooter(_shooter, _oi));
-            setDefaultCommand(_turret, new DriveTurret(_turret, _driveTrain, _limelight, _oi));
+//            setDefaultCommand(_turret, new DriveTurret(_turret, _driveTrain, _limelight, _oi));
+            _limelight.enableLEDs();
         }
     }
 
@@ -118,17 +129,13 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
     }
 
     public void zeroSensors() {
-        // _turret.zeroSensors();
+         _turret.zeroSensors();
     }
 
     public void periodic() {
         _oi.poll();
         if (_oi.isKillAllPressed()) {
-            new KillAll(_driveTrain, _shooter, _indexer, _intake).schedule();
-        }
-
-        if (_oi.isPanicPressed()) {
-            new MoveHoodToAngle(_hood, Constants.Hood.STOWED).schedule();
+            new KillAll(_driveTrain, _shooter, _indexer, _intake, _turret, _hood).schedule();
         }
     }
 
@@ -138,49 +145,10 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
     }
 
     public Command getAutonomousCommand() {
-        var autoVoltageConstraint =
-                new DifferentialDriveVoltageConstraint(
-                        _driveTrain.getDriveTrainFeedForward(),
-                        _driveTrain.getKinematics(),
-                        10
+        return new SequentialCommandGroup(
+                new ZeroHood(_hood, _turret),
+                new EightBallAuto(_driveTrain, _turret, _shooter,_hood,_intake, _imu, _indexer,_lights, _limelight, _poseTracker)
                 );
-        var interiorPoints = new ArrayList<Translation2d>();
-        interiorPoints.add(new Translation2d(2,-2));
-        interiorPoints.add(new Translation2d(3, -1));
-        interiorPoints.add(new Translation2d(4,0));
-        Trajectory test = TrajectoryGenerator.generateTrajectory(
-                new Pose2d(0, 0, new Rotation2d(0)),
-                interiorPoints,
-                new Pose2d(5, 0, new Rotation2d(0)),
-                _driveTrain.getDriveConfig(false)
-        );
-        var poseList = new ArrayList<Pose2d>();
-        poseList.add(new Pose2d(0,0, new Rotation2d(0)));
-        poseList.add(new Pose2d(2, -2, new Rotation2d(0)));
-        poseList.add(new Pose2d(4,0, new Rotation2d(-10)));
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-                poseList,
-                _driveTrain.getDriveConfig(false)
-        );
-
-        var transform = _driveTrain.getPose().minus(_trajectory.getInitialPose());
-        Trajectory trajectory2 = _trajectory.transformBy(transform);
-        RamseteCommand ramseteCommand = new RamseteCommand(
-                trajectory,
-                _driveTrain::getPose,
-                new RamseteController(Constants.DriveTrain.RAMSETE_B, Constants.DriveTrain.RAMSETE_ZETA),
-                _driveTrain.getDriveTrainFeedForward(),
-                _driveTrain.getKinematics(),
-                _driveTrain::getWheelSpeeds,
-                new PIDController(Constants.DriveTrain.KP_DRIVE_VELOCITY, 0, 0),
-                new PIDController(Constants.DriveTrain.KP_DRIVE_VELOCITY, 0, 0),
-                // RamseteCommand passes volts to the callback
-                _driveTrain::tankDriveVolts,
-                _driveTrain
-        );
-
-        return ramseteCommand.andThen(() -> _driveTrain.tankDriveVolts(0, 0));
-
     }
 
     @Override

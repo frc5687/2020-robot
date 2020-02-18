@@ -162,6 +162,14 @@ public class MetricTracker {
     }
 
 
+    public void enable() {
+        SmartDashboard.putBoolean("MetricTracker/" + _instrumentedClassName, true);
+    }
+
+    public void disable() {
+        SmartDashboard.putBoolean("MetricTracker/" + _instrumentedClassName, false);
+    }
+
     /**
      * Starts a new row of metrics. You'd call this, e.g., once per tick.  Normally this is called from the static
      * newMetricRowAll method, so there's no need to call it directly.

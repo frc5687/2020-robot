@@ -32,8 +32,8 @@ public class RobotMap {
             public static final int HOOD = 6;
         }
         public static class VICTORSPX {
-            public static final int SPINNER = 10;
-            public static final int SKYWALKER = 7;
+            public static final int SPINNER_SKYWALKER = 7;
+            public static final int AGITATOR = 10;
         }
 
     }
@@ -46,10 +46,8 @@ public class RobotMap {
             /*  Example:
             public static final int ARM_VICTORSP = 0;
             */
-            public static final int LEFT_FRONT_DRIVE_MOTOR = 0;
-            public static final int LEFT_BACK_DRIVE_MOTOR = 1;
-            public static final int RIGHT_FRONT_DRIVE_MOTOR = 2;
-            public static final int RIGHT_BACK_DRIVE_MOTOR = 3;
+            public static int SHORT_LED_STRIP = 0;
+            public static int LONG_LED_STRIP = 1;
         }
 
         /**
@@ -66,8 +64,8 @@ public class RobotMap {
             public static final int SHIFTER_LOW = 3;
             public static final int INTAKE_HIGH = 0;
             public static final int INTAKE_LOW = 1;
-            public static final int SPINNER_DEPLOY = 6;
-            public static final int SPINNER_STOW = 7;
+            public static final int SPINNER_DEPLOY = 4;
+            public static final int SPINNER_STOW = 5;
         }
 
 
@@ -102,11 +100,9 @@ public class RobotMap {
             public static final int TOP_IR = 0;
             public static final int MID_IR = 1;
             public static final int BOTTOM_IR = 2;
-            public static final int HOOD_ENCODER = 3;
-            public static final int DRIVE_LEFT_B = 4;
-            public static final int DRIVE_LEFT_A = 5;
-            public static final int DRIVE_RIGHT_B = 6;
-            public static final int DRIVE_RIGHT_A = 7;
+            public static final int HOOD_HALL = 6;
+            public static final int UP_IR = 3;
+            public static final int DOWN_IR = 4;
 
         /* Example:
         public static final int ARM_FRONT_LIMIT = 0;

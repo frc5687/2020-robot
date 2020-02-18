@@ -1,0 +1,28 @@
+package org.frc5687.infiniterecharge.robot.commands;
+
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import org.frc5687.infiniterecharge.robot.Constants;
+import org.frc5687.infiniterecharge.robot.subsystems.*;
+import org.frc5687.infiniterecharge.robot.util.Limelight;
+import org.frc5687.infiniterecharge.robot.util.PoseTracker;
+
+public class AutoShootAndNearTrench extends SequentialCommandGroup {
+
+    public AutoShootAndNearTrench(Turret turret, Shooter shooter, Hood hood, Limelight limelight, DriveTrain driveTrain, PoseTracker poseTracker, Indexer indexer, Intake intake, Lights lights) {
+        addCommands(
+            new ParallelDeadlineGroup(
+                    new AutoShoot(indexer),
+                    new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights, null, 5000, 60)
+            ),
+            new ParallelDeadlineGroup(
+                new AutoDrive(driveTrain, 194),
+                new AutoIntake(intake, lights)
+            ),
+            new ParallelDeadlineGroup(
+                    new AutoShoot(indexer),
+                    new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null,5000, 60)
+            )
+        );
+   }
+}

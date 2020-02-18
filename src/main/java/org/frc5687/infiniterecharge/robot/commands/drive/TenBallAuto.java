@@ -13,18 +13,18 @@ import org.frc5687.infiniterecharge.robot.subsystems.*;
 public class TenBallAuto extends SequentialCommandGroup {
     public TenBallAuto(DriveTrain driveTrain, Turret turret, Shooter shooter, Hood hood, Intake intake, AHRS imu) {
         addCommands(
-                new ParallelDeadlineGroup(
-                        new AutoDrivePath(driveTrain, imu, "Snipe", 0,false),
-                        new AutoIntake(intake)
-                )
-//                ,new WaitCommand(1)
-//                , new AutoAlign(driveTrain, 50)
-              ,  new AutoDrivePath(driveTrain, imu, "SnipeToShoot", 0, true)
-//              ,  new AutoAlign(driveTrain, 0)
-              ,  new ParallelDeadlineGroup(
-                        new AutoDrivePath(driveTrain, imu, "ShootToGenerator", 0, false),
-                        new AutoIntake(intake)
-                )
+//                new ParallelDeadlineGroup(
+//                        new AutoDrivePath(driveTrain, imu, "Snipe", 0,false),
+//                        new AutoIntake(intake)
+//                )
+////                ,new WaitCommand(1)
+////                , new AutoAlign(driveTrain, 50)
+//              ,  new AutoDrivePath(driveTrain, imu, "SnipeToShoot", 0, true)
+////              ,  new AutoAlign(driveTrain, 0)
+//              ,  new ParallelDeadlineGroup(
+//                        new AutoDrivePath(driveTrain, imu, "ShootToGenerator", 0, false),
+//                        new AutoIntake(intake)
+//                )
 //              ,  new AutoAlign(driveTrain, -100)
 //              ,  new ParallelDeadlineGroup(
 //                        new AutoDrivePath(driveTrain, imu, "BallsToTrench", 0, false),

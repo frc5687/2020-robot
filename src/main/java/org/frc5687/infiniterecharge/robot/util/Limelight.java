@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.MedianFilter;
 import org.frc5687.infiniterecharge.robot.Constants;
 
 import java.util.ArrayList;
@@ -83,6 +84,7 @@ public class Limelight extends OutliersProxy {
     }
 
     public void setPipeline(Pipeline pipeline) {
+        metric("Pipeline", pipeline.toString());
         _pipeline.setNumber(pipeline.getValue());
     }
 
@@ -138,21 +140,11 @@ public class Limelight extends OutliersProxy {
 
     }
     public double getTargetDistance() {
-        double heightOffset = (LIMELIGHT_HEIGHT - TARGET_HEIGHT);
+        double heightOffset = (LIMELIGHT_HEIGHT - LOW_TARGET_HEIGHT);
         double limeLightYAngle = getVerticalAngle();
         double angleY = (LIMELIGHT_ANGLE - limeLightYAngle);
         double tanY = Math.tan(angleY * (Math.PI / 180));
         double distance = (heightOffset)/tanY;
-        return distance;
-    }
-
-    //created new method as limelight angle and height will change when hood moves.
-    public double getTargetDistance(double angle, double height) {
-        double heightOffset = height - TARGET_HEIGHT;
-        double limeLightYAngle = getVerticalAngle();
-        double angleY = angle - limeLightYAngle;
-        double tany = Math.tan(angleY * (Math.PI/180));
-        double distance = heightOffset/tany;
         return distance;
     }
 
