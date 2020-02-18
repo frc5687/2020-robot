@@ -36,13 +36,10 @@ public class Shoot extends OutliersCommand {
     public void execute() {
         super.execute();
 
-//        _setpoint = _shooter.getDistanceSetpoint();
-//        _shooter.setShooterSpeed(_speed);
-//        metric("Velocity", _shooter.getVelocity());
         if ((_turret.isTargetInTolerance() && _shooter.isAtTargetVelocity()) || _oi.isOverridePressed()) {
             error("SHOOTING AT VELOCITY " + _shooter.getRPM());
             error("INDEXING NOW");
-//            _endTime = System.currentTimeMillis() + Constants.Shooter.TIMEOUT;
+            _endTime = System.currentTimeMillis() + Constants.Shooter.TIMEOUT;
             _indexer.setIndexerSpeed(Constants.Indexer.ADVANCE_SPEED);
         }
     }
@@ -53,8 +50,7 @@ public class Shoot extends OutliersCommand {
         if (_endTime == null) {
             return false;
         }
-        return false;
-//        return System.currentTimeMillis() >= _endTime;
+        return System.currentTimeMillis() >= _endTime;
     }
 
     @Override

@@ -19,8 +19,8 @@ public class EightBallAuto extends SequentialCommandGroup {
 //                , new AutoAlign(driveTrain, 35)
                 ,  new AutoDrivePath(driveTrain, imu, "HalfTrench", 0, true)
                 ,new ParallelDeadlineGroup(
-                        new AutoShoot(indexer)
-                        ,new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null,4300, 61)
+                        new AutoShoot(shooter, indexer, turret, null)
+                        ,new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null,4300, 61) //TODO: Tune
                         ,  new AutoAlign(driveTrain, 0)
                 )
                 ,  new ParallelDeadlineGroup(
@@ -28,9 +28,9 @@ public class EightBallAuto extends SequentialCommandGroup {
                         new AutoIntake(intake, lights)
                 )
                 ,new ParallelDeadlineGroup(
-                    new AutoShoot(indexer),
+                    new AutoShoot(shooter, indexer, turret, null),
                         new AutoAlign(driveTrain, 0),
-                        new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null,4500, 63)
+                        new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null,4500, 63) //TODO: Tune
                 )
         );
     }

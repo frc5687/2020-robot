@@ -7,36 +7,29 @@ import org.frc5687.infiniterecharge.robot.subsystems.Indexer;
 import org.frc5687.infiniterecharge.robot.subsystems.Shooter;
 import org.frc5687.infiniterecharge.robot.subsystems.Turret;
 
-public class AutoShoot extends OutliersCommand {
-
-    private Shooter _shooter;
-    private Indexer _indexer;
-    private Turret _turret;
-
+public class AutoShoot extends Shoot {
 
     private long _delayMillis;
     private long _endMillis = 0;
 
-    public AutoShoot(Indexer indexer) {
-        _indexer = indexer;
-        addRequirements(indexer);
+    public AutoShoot(Shooter shooter, Indexer indexer, Turret turret, OI oi) {
+        super(shooter, indexer, turret, oi);
     }
 
     @Override
     public void initialize() {
-        super.initialize();
         _delayMillis = System.currentTimeMillis() + Constants.Auto.AUTO_SHOOT_DELAY;
     }
 
     @Override
     public void execute() {
         super.execute();
-
         if (System.currentTimeMillis() > _delayMillis) {
             if (_endMillis==0) {
-                _indexer.setIndexerSpeed(.75);
+                super.initialize();
                 _endMillis = System.currentTimeMillis() + Constants.Auto.AUTO_SHOOT_RUNON;
             }
+            super.execute();
         }
 
     }

@@ -75,7 +75,7 @@ public class Constants {
         public static final double SLOW_SPEED_COMP = 0.4;
         public static final double MEDIUM_SPEED_COMP = 0.6;
 
-        public static final double kP = 0.02;
+        public static final double kP = 0.03;
         public static final double kI = 0.00;
         public static final double kD = 0.001;
         public static final double ANGLE_TOLERANCE = 1.5;
@@ -85,6 +85,7 @@ public class Constants {
         public static final double TURNING_SENSITIVITY_LOW_GEAR = .8;
         public static final double SPEED_LIMIT = 0.85;
         public static final double DISTANCE_TOLERANCE = 2.0;
+        public static final double LIMELIGHT_ODOMETRY_ZONE = 48; //inches, we are saying if our distance isnt within this range dont update pose
     }
 
     public static class Turret {
@@ -133,11 +134,11 @@ public class Constants {
         public static final double TICKS_TO_DEGREES = 0.04215247;// 0.038332795242141;
         public static final int CRUISE_VELOCITY = 5000;
         public static final int ACCELERATION = 16000;
-        public static final double kP = 0.2;
+        public static final double kP = 2.7;
         public static final double kI = 0.01;
-        public static final double kD = 0.0001;
+        public static final double kD = 28;
         public static final double kF = 5;
-        public static final int I_ZONE =300;
+        public static final int I_ZONE =1000;
 
         public static final double SENSITIVITY = 0.2; //TODO
         public static final double NEAR_TARGET_HOOD_ANGLE_DEGREES = 58;

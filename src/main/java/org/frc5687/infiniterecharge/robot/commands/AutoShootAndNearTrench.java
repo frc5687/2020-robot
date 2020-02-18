@@ -12,7 +12,7 @@ public class AutoShootAndNearTrench extends SequentialCommandGroup {
     public AutoShootAndNearTrench(Turret turret, Shooter shooter, Hood hood, Limelight limelight, DriveTrain driveTrain, PoseTracker poseTracker, Indexer indexer, Intake intake, Lights lights) {
         addCommands(
             new ParallelDeadlineGroup(
-                    new AutoShoot(indexer),
+                    new AutoShoot(shooter, indexer, turret, null),
                     new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights, null, 5000, 60)
             ),
             new ParallelDeadlineGroup(
@@ -20,7 +20,7 @@ public class AutoShootAndNearTrench extends SequentialCommandGroup {
                 new AutoIntake(intake, lights)
             ),
             new ParallelDeadlineGroup(
-                    new AutoShoot(indexer),
+                    new AutoShoot(shooter, indexer, turret, null),
                     new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null,5000, 60)
             )
         );

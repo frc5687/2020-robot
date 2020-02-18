@@ -113,12 +113,12 @@ public class OI extends OutliersProxy {
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
 
-        _driverAButton.whenPressed(new AutoDrivePath(driveTrain, imu, "StartingToGenerator", 0, false));
+        _driverAButton.whenPressed(new ZeroHood(hood, turret));
 //        _driverAButton.whenPressed(new AutoAlign(driveTrain, 0));
 //        _driverAButton.whenPressed(new AutoAlign(driveTrain, 90));
 
-        _driverYButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -90));
-        _driverXButton.whenPressed(new AutoTurretSetpoint(turret, driveTrain,limelight,this, -180));
+        _driverYButton.whenPressed(new MoveHoodToAngle(hood, 40));
+        _driverXButton.whenPressed(new MoveHoodToAngle(hood, 60));
 //        _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this, poseTracker));
         _operatorLeftTrigger.whileHeld(new AutoIntake(intake, lights));
 
