@@ -9,6 +9,7 @@ package org.frc5687.infiniterecharge.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frc5687.infiniterecharge.robot.util.*;
@@ -48,6 +49,7 @@ public class Robot extends OutliersRobot implements ILoggingSource{
     public void robotInit() {
         loadConfigFromUSB();
         RioLogger.getInstance().init(_fileLogLevel, _dsLogLevel);
+        LiveWindow.disableAllTelemetry();
 
 
         metric("Branch", Version.BRANCH);
@@ -61,8 +63,6 @@ public class Robot extends OutliersRobot implements ILoggingSource{
 
         // Periodically flushes metrics (might be good to configure enable/disable via USB config file)
         new Notifier(MetricTracker::flushAll).startPeriodic(Constants.METRIC_FLUSH_PERIOD);
-
-
     }
 
     /**
@@ -92,9 +92,7 @@ public class Robot extends OutliersRobot implements ILoggingSource{
     @Override
     public void autonomousInit() {
         _fmsConnected = DriverStation.getInstance().isFMSAttached();
-
         _autoCommand = _robotContainer.getAutonomousCommand();
-
         if (_autoCommand != null) {
             _autoCommand.schedule();
         }

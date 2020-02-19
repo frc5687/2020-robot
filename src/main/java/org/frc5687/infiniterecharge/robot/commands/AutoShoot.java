@@ -12,8 +12,8 @@ public class AutoShoot extends Shoot {
     private long _delayMillis;
     private long _endMillis = 0;
 
-    public AutoShoot(Shooter shooter, Indexer indexer, Turret turret, OI oi, double speed) {
-        super(shooter, indexer, turret, oi, speed);
+    public AutoShoot(Shooter shooter, Indexer indexer, Turret turret, OI oi) {
+        super(shooter, indexer, turret, oi);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class AutoShoot extends Shoot {
 
     @Override
     public void execute() {
-
+        super.execute();
         if (System.currentTimeMillis() > _delayMillis) {
             if (_endMillis==0) {
                 super.initialize();

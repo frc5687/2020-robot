@@ -5,19 +5,25 @@ import com.revrobotics.AlternateEncoderType;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.util.Units;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.util.BasicPose;
+import org.frc5687.infiniterecharge.robot.util.Limelight;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
-import static org.frc5687.infiniterecharge.robot.Constants.DriveTrain.CREEP_FACTOR;
+import static org.frc5687.infiniterecharge.robot.Constants.DriveTrain.*;
 import static org.frc5687.infiniterecharge.robot.util.Helpers.applySensitivityFactor;
 import static org.frc5687.infiniterecharge.robot.util.Helpers.limit;
 
@@ -32,6 +38,8 @@ public class DriveTrain extends OutliersSubsystem {
 
     private DifferentialDriveOdometry _odometry;
     private DifferentialDriveKinematics _driveKinematics;
+    private SimpleMotorFeedforward _driveFeedForward;
+    private TrajectoryConfig _driveConfig;
 
 
     private OI _oi;
@@ -39,6 +47,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     private Pose2d _pose;
     private Shifter _shifter;
+    private Limelight _driveLimelight;
 
     private double _xLength;
     private double _yLength;
@@ -49,12 +58,12 @@ public class DriveTrain extends OutliersSubsystem {
     private double _oldRightSpeedBack;
     private boolean _isPaused = false;
 
-    public DriveTrain(OutliersContainer container, OI oi, AHRS imu, Shifter shifter)  {
+    public DriveTrain(OutliersContainer container, OI oi, AHRS imu, Shifter shifter, Limelight driveLimelight)  {
         super(container);
         _oi = oi;
         _imu = imu;
         _shifter = shifter;
-
+        _driveLimelight = driveLimelight;
         try {
             debug("Allocating motor controllers");
             _leftMaster = new CANSparkMax(RobotMap.CAN.SPARKMAX.LEFT_MASTER, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -101,17 +110,16 @@ public class DriveTrain extends OutliersSubsystem {
         } catch (Exception e) {
             error("Exception allocating drive motor controllers: " + e.getMessage());
         }
-
-
         _rightEncoder.setInverted(false);
         _leftEncoder.setInverted(true);
         _leftSlave.follow(_leftMaster);
         _rightSlave.follow(_rightMaster);
         resetDriveEncoders();
 
-        _driveKinematics = new DifferentialDriveKinematics(Constants.DriveTrain.WIDTH);
-        _odometry = new DifferentialDriveOdometry(getHeading());
-
+        _driveKinematics = new DifferentialDriveKinematics(Units.inchesToMeters(WIDTH));
+        _odometry = new DifferentialDriveOdometry(getHeading(), new Pose2d(0,0, new Rotation2d(0)));
+        _driveFeedForward = new SimpleMotorFeedforward(KS_VOLTS, KV_VOLTSPR, KA_VOLTSQPR);
+        _driveConfig = new TrajectoryConfig(MAX_ACCEL_MPS, MAX_ACCEL_MPS).setKinematics(_driveKinematics);
     }
 
     public void enableBrakeMode() {
@@ -209,7 +217,6 @@ public class DriveTrain extends OutliersSubsystem {
     public double getRightVelocity() {
         return _rightEncoder.getVelocity() * 2 * Math.PI * Units.inchesToMeters(2.0) / 60 ; //Meters Per Sec
     }
-
     public void pauseMotors() {
         _oldLeftSpeedFront = _leftMaster.get();
         _oldLeftSpeedBack = _leftSlave.get();
@@ -233,18 +240,24 @@ public class DriveTrain extends OutliersSubsystem {
     @Override
     public void periodic() {
         _pose = _odometry.update(getHeading(), Units.inchesToMeters(getLeftDistance()), Units.inchesToMeters(getRightDistance()));
+//        if (_driveLimelight.isTargetSighted() && _driveLimelight.getTargetDistance() < Constants.DriveTrain.LIMELIGHT_ODOMETRY_ZONE) {
+//            resetOdometry(updatePose());
+//        }
     }
 
     @Override
     public void updateDashboard() {
 
-        metric("Heading", getPose().getRotation().getDegrees());
-        metric("PoseX", getPose().getTranslation().getX());
-        metric("PoseY", getPose().getTranslation().getY());
-        metric("Distance/Right", getRightDistance());
+//        SmartDashboard.putBoolean("MetricTracker/Drive", true);
+//        metric("X", getPose().getTranslation().getX());
+//        metric("Y", getPose().getTranslation().getY());
         metric("Distance/Left", getLeftDistance());
-        metric("DistanceTarget", distanceToTarget());
-        metric("AngleTarget", getAngleToTarget());
+        metric("Distance/Right", getRightDistance());
+        metric("Distance/RawLeft", getRawLeftEncoder());
+        metric("Distance/RawRight", getRawRightEncoder());
+        metric("Heading", getPose().getRotation().getDegrees());
+        metric("angle to target", getAngleToTarget());
+        metric("distance to taget", distanceToTarget());
     }
 
     public DifferentialDriveKinematics getKinematics() {
@@ -255,13 +268,22 @@ public class DriveTrain extends OutliersSubsystem {
         return Rotation2d.fromDegrees(-_imu.getYaw());
     }
 
+    public double getYaw() {return _imu.getYaw();}
+
     public Pose2d getPose() {
         return _odometry.getPoseMeters();
     }
 
-    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(_leftEncoder.getVelocity(),_rightEncoder.getVelocity());
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() { return new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightVelocity()); }
+
+    public SimpleMotorFeedforward getDriveTrainFeedForward() {
+        return _driveFeedForward;
     }
+
+    public TrajectoryConfig getDriveConfig(boolean reversed) {
+        return _driveConfig.setReversed(reversed);
+    }
+
     public void resetOdometry(Pose2d pose) {
         resetDriveEncoders();
         _odometry.resetPosition(pose, getHeading());
@@ -269,10 +291,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
         _leftMaster.set(leftVolts/12);
-        _rightMaster.set(rightVolts/-12);
-        _rightSlave.set(rightVolts/-12);
-        _leftSlave.set(leftVolts/12);
-
+        _rightMaster.set(rightVolts/12);
     }
 
     public void resetDriveEncoders() {
@@ -289,22 +308,40 @@ public class DriveTrain extends OutliersSubsystem {
         metric("xTar", _xLength);
         metric("x",x);
         metric("y", y);
-        _xLength = targetX - x;
-        _yLength = targetY - y;
+        _xLength = targetX + x;
+        _yLength = targetY + y;
         return Math.sqrt((_xLength * _xLength) + (_yLength * _yLength));
     }
 
     public double getAngleToTarget() {
         double angle = 0;
         if (_yLength > 0) {
-            angle = (90 - Math.toDegrees(Math.asin(_xLength / distanceToTarget())) - getHeading().getDegrees());
+            angle = (90 - Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + getHeading().getDegrees());
         } else if (_yLength < 0){
-            angle =  (Math.toDegrees(Math.asin(_xLength / distanceToTarget())) - 90) - getHeading().getDegrees();
+            angle =  (Math.toDegrees(Math.asin(_xLength / distanceToTarget())) - 90) + getHeading().getDegrees();
         }
         return angle;
     }
 
     public BasicPose getDrivePose() {
         return new BasicPose(_imu.getAngle(), _leftEncoder.getPosition(), _rightEncoder.getPosition(), 0);
+    }
+    public Pose2d updatePose() {
+        Pose2d prevPose = getPose();
+        double distance = Units.inchesToMeters(_driveLimelight.getTargetDistance());
+        double alpha = 90 - Math.abs(_driveLimelight.getHorizontalAngle());
+        double x = Math.sin(Math.toRadians(alpha)) * distance;
+        double y = Math.cos(Math.toRadians(alpha)) * distance;
+        metric("Angle", alpha);
+        metric("X", x);
+        metric("Y", y);
+        double poseX = Constants.AutoPositions.LOADING_STATION_POSE.getTranslation().getX() - x;
+        double poseY = 0;
+        if (prevPose.getTranslation().getY() < Constants.AutoPositions.LOADING_STATION_POSE.getTranslation().getY()) {
+            poseY = Constants.AutoPositions.LOADING_STATION_POSE.getTranslation().getY() - y;
+        } else if (prevPose.getTranslation().getY() > Constants.AutoPositions.LOADING_STATION_POSE.getTranslation().getY()) {
+            poseY = Constants.AutoPositions.LOADING_STATION_POSE.getTranslation().getY() + y;
+        }
+        return new Pose2d(poseX, poseY, getHeading());
     }
 }

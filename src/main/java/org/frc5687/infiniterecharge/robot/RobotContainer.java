@@ -1,6 +1,7 @@
 package org.frc5687.infiniterecharge.robot;
 
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
@@ -11,18 +12,22 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.frc5687.infiniterecharge.robot.commands.*;
+import org.frc5687.infiniterecharge.robot.commands.drive.EightBallAuto;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.*;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
 import org.frc5687.infiniterecharge.robot.subsystems.Shifter;
 import org.frc5687.infiniterecharge.robot.subsystems.Shooter;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class RobotContainer extends OutliersContainer implements IPoseTrackable {
@@ -46,6 +51,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
     private Limelight _limelight;
     private Limelight _driveLimelight;
     private Intake _intake;
+    private Trajectory _trajectory;
     private PoseTracker _poseTracker;
 
     private Lights _lights;
@@ -68,12 +74,13 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
         _limelight.setPipeline(Limelight.Pipeline.Wide);
 
+
         // Then subsystems....
         if (Robot._identityMode != IdentityMode.programming) {
             _pdp = new PDP();
             _shifter = new Shifter(this);
             _intake = new Intake(this, _oi);
-            _driveTrain = new DriveTrain(this, _oi, _imu, _shifter);
+            _driveTrain = new DriveTrain(this, _oi, _imu, _shifter, _driveLimelight);
             _turret = new Turret(this, _driveTrain, _hood, _limelight, _oi);
             _spinner = new Spinner(this);
             _climber = new Climber(this, _oi);
@@ -83,17 +90,18 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             _hood = new Hood(this,_limelight, _oi);
 
 
-
             _poseTracker = new PoseTracker(this);
 
             _lights = new Lights(this, _oi);
 
             // Must initialize buttons AFTER subsystems are allocated...
-            _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker, _intake, _shooter, _indexer, _spinner, _climber, _hood, _skywalker, _lights);
+
+            _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker, _intake, _shooter, _indexer, _spinner, _climber, _hood, _skywalker, _lights, _imu);
 
             // Initialize the other stuff
+            // Initialize the other stuff
             _driveTrain.enableBrakeMode();
-            _driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
+            _driveTrain.resetOdometry(new Pose2d(0,0,new Rotation2d(0)));
 
 
             // Now setup the default commands:
@@ -140,46 +148,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
     }
 
     public Command getAutonomousCommand() {
-        var autoVoltageConstraint =
-                new DifferentialDriveVoltageConstraint(
-                        new SimpleMotorFeedforward(Constants.DriveTrain.KS_VOLTS,
-                                Constants.DriveTrain.KV_VOLTSPR,
-                                Constants.DriveTrain.KA_VOLTSQPR),
-                        _driveTrain.getKinematics(),
-                        10
-                );
-        TrajectoryConfig config =
-                new TrajectoryConfig(Constants.DriveTrain.MAX_SPEED_MPS,
-                        Constants.DriveTrain.MAX_ACCEL_MPS)
-                        // Add kinematics to ensure max speed is actually obeyed
-                        .setKinematics(_driveTrain.getKinematics())
-                        // Apply the voltage constraint
-                        .addConstraint(autoVoltageConstraint);
 
-        var interiorPoints = new ArrayList<Translation2d>();
-        interiorPoints.add(new Translation2d(1,1));
-        interiorPoints.add(new Translation2d(2, -1));
-        Trajectory test = TrajectoryGenerator.generateTrajectory(
-                new Pose2d(0, 0, new Rotation2d(0)),
-                interiorPoints,
-                new Pose2d(3, 0, new Rotation2d(0)),
-                config
-        );
-        RamseteCommand ramseteCommand = new RamseteCommand(
-                test,
-                _driveTrain::getPose,
-                new RamseteController(Constants.DriveTrain.RAMSETE_B, Constants.DriveTrain.RAMETE_ZETA),
-                new SimpleMotorFeedforward(Constants.DriveTrain.KS_VOLTS,
-                        Constants.DriveTrain.KV_VOLTSPR,
-                        Constants.DriveTrain.KA_VOLTSQPR),
-                _driveTrain.getKinematics(),
-                _driveTrain::getWheelSpeeds,
-                new PIDController(Constants.DriveTrain.KP_DRIVE_VELOCITY, 0, 0),
-                new PIDController(Constants.DriveTrain.KP_DRIVE_VELOCITY, 0, 0),
-                // RamseteCommand passes volts to the callback
-                _driveTrain::tankDriveVolts,
-                _driveTrain
-        );
 
         AutoChooser.Mode autoMode = _autoChooser.getSelectedMode();
 
@@ -191,7 +160,10 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             case ShootAndFarTrench:
                 return wrapCommand(new AutoShootAndFarTrench(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer, _intake, _lights));
             default:
-                return new ZeroHood(_hood, _turret);
+                return new SequentialCommandGroup(
+                        new ZeroHood(_hood, _turret),
+                        new EightBallAuto(_driveTrain, _turret, _shooter,_hood,_intake, _imu, _indexer,_lights, _limelight, _poseTracker)
+                );
         }
     }
 

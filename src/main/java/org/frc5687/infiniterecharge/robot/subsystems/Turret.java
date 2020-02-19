@@ -7,10 +7,12 @@ import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.commands.DriveTurret;
+import org.frc5687.infiniterecharge.robot.util.Helpers;
 import org.frc5687.infiniterecharge.robot.util.Limelight;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
@@ -64,6 +66,7 @@ public class Turret extends OutliersSubsystem {
         } catch (Exception e) {
             error("error allocating turret motors " + e.getMessage());
         }
+        zeroSensors();
     }
 
     public void setSpeed(double speed) {
@@ -94,7 +97,12 @@ public class Turret extends OutliersSubsystem {
     }
 
     public void setMotionMagicSetpoint(double angle) {
-
+        if (angle > Constants.Turret.MAX_DEGREES) {
+            angle =  angle - 360;
+        } else if (angle < Constants.Turret.MIN_DEGREES) {
+            angle = angle + 360;
+        }
+        angle = Helpers.limit(angle, Constants.Turret.MIN_DEGREES, Constants.Turret.MAX_DEGREES);
         _turretController.set(ControlMode.MotionMagic, (angle/Constants.Turret.TICKS_TO_DEGREES));
     }
 

@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.util.Units;
 
 public class Constants {
-    public static final int CYCLES_PER_SECOND = 50;
     public static final int  TICKS_PER_UPDATE = 10;
     public static final double METRIC_FLUSH_PERIOD = 1.0;
+    public static final double UPDATE_PERIOD = 0.01;
 
     public static class Intake {
         public static final boolean INTAKE_MOTOR_INVERTED = true;
@@ -36,8 +36,8 @@ public class Constants {
         public static final double DEADBAND = 0.25;
         public static final double SPEED_SENSITIVITY = 0.9;
         public static final double ROTATION_SENSITIVITY = 0.75;
-
         public static final double CREEP_FACTOR = 0.25;
+
         public static final int CPR = 8192;
         public static final double ENCODER_CONVERSION = 6.85714286;
 
@@ -48,9 +48,9 @@ public class Constants {
         public static final double KA_VOLTSQPR = 0.355;
 
         public static final double RAMSETE_B = 2;
-        public static final double RAMETE_ZETA = 0.7;
+        public static final double RAMSETE_ZETA = 0.7;
 
-        public static final double KP_DRIVE_VELOCITY = 13.2;
+        public static final double KP_DRIVE_VELOCITY = 3.25;
 
         public static final boolean LEFT_MOTORS_INVERTED = false;
         public static final boolean RIGHT_MOTORS_INVERTED = true;
@@ -58,8 +58,7 @@ public class Constants {
         public static final long LOCK_TIME = 80;
         public static final long DROPOUT_TIME = 100;
         public static final long SEEK_TIME = 500;
-
-        public static final double MAX_SPEED_IPS = 156.0;
+        public static final int MAX_SPEED_IPS = 156;
         public static final double MAX_SPEED_MPS = Units.inchesToMeters(MAX_SPEED_IPS);
         public static final double CAP_SPEED_IPS = .8 * MAX_SPEED_IPS;
         public static final double MAX_ACCELERATION_IPSS = CAP_SPEED_IPS / 2;
@@ -75,16 +74,18 @@ public class Constants {
 
         public static final double SLOW_SPEED_COMP = 0.4;
         public static final double MEDIUM_SPEED_COMP = 0.6;
-        public static final double kP = 0.01;
+
+        public static final double kP = 0.03;
         public static final double kI = 0.00;
-        public static final double kD = 0.00;
-        public static final double ANGLE_TOLERANCE = 0.25;
+        public static final double kD = 0.001;
+        public static final double ANGLE_TOLERANCE = 1.5;
         public static final double ROTATION_SENSITIVITY_HIGH_GEAR = .8;
         public static final double ROTATION_SENSITIVITY_LOW_GEAR = .8;
         public static final double TURNING_SENSITIVITY_HIGH_GEAR = .8;
         public static final double TURNING_SENSITIVITY_LOW_GEAR = .8;
         public static final double SPEED_LIMIT = 0.85;
         public static final double DISTANCE_TOLERANCE = 2.0;
+        public static final double LIMELIGHT_ODOMETRY_ZONE = 48; //inches, we are saying if our distance isnt within this range dont update pose
     }
 
     public static class Turret {
@@ -94,7 +95,7 @@ public class Constants {
         public static final boolean SENSOR_PHASE_INVERTED = true;
         public static final double TICKS_TO_DEGREES = 0.08695652173913;
         public static final double MIN_DEGREES = -200;
-        public static final double MAX_DEGREES = 95;
+        public static final double MAX_DEGREES = 125;
         public static final double MAX_VOLTAGE = 12.0;
         public static final int CRUISE_VELOCITY = 5000; // in ticks
         public static final int ACCELERATION = 16000; // in ticks
@@ -133,11 +134,11 @@ public class Constants {
         public static final double TICKS_TO_DEGREES = 0.04215247;// 0.038332795242141;
         public static final int CRUISE_VELOCITY = 5000;
         public static final int ACCELERATION = 16000;
-        public static final double kP = 0.2;
-        public static final double kI = 0.01;
-        public static final double kD = 0.0001;
+        public static final double kP = 2.8;
+        public static final double kI = 0.55;
+        public static final double kD = 28;
         public static final double kF = 5;
-        public static final int I_ZONE =300;
+        public static final int I_ZONE =1000;
 
         public static final double SENSITIVITY = 0.2; //TODO
         public static final double NEAR_TARGET_HOOD_ANGLE_DEGREES = 58;
@@ -165,7 +166,7 @@ public class Constants {
         public static final long STOP_MOTOR_TIME = 60;
         public static final long SHIFT_TIME = 60;
 
-        public static final double SHIFT_UP_THRESHOLD = 50; // in inches per second graTODO tune
+        public static final double SHIFT_UP_THRESHOLD = 50; // in]\[ inches per second graTODO tune
         public static final double SHIFT_DOWN_THRESHOLD = 40; // in inches per second TODO tune
 
         public static final long AUTO_WAIT_PERIOD = 500;
@@ -232,8 +233,8 @@ public class Constants {
     }
 
     public class Auto {
-        public static final long AUTO_SHOOT_DELAY = 2000;
-        public static final long AUTO_SHOOT_RUNON = 2000;
+        public static final long AUTO_SHOOT_DELAY = 1000;
+        public static final long AUTO_SHOOT_RUNON = 3000;
 
         public class Drive {
             public static final double SPEED = 1.0;
@@ -246,6 +247,9 @@ public class Constants {
         }
     }
 
+    public class AutoDrivePath {
+        public static final double K_TURN = 0.1;
+    }
     public class DriveStraight {
         public static final double kP = 0.1;
         public static final double kI = 0.0;

@@ -53,7 +53,6 @@ public class Hood extends OutliersSubsystem {
             _hoodController.config_kD(0, Constants.Hood.kD, 30);
             _hoodController.config_kF(0, Constants.Hood.kF, 30);
             _hoodController.config_IntegralZone(0, Constants.Hood.I_ZONE, 30);
-//            _hoodController.configAllowableClosedloopError(0, (int) (1/Constants.Hood.TICKS_TO_DEGREES), 30);
             _hoodController.selectProfileSlot(0, 0);
         } catch (Exception e) {
             error("Exception allocating hood motor" + e.getMessage());
@@ -130,10 +129,10 @@ public class Hood extends OutliersSubsystem {
     }
 
     public void setPipeline() {
-        if (getPositionDegrees() > 60 && _pipeline != Limelight.Pipeline.TwoTimes) {
+        if (getPositionDegrees() > 62 && _pipeline != Limelight.Pipeline.TwoTimes) {
             _pipeline = Limelight.Pipeline.TwoTimes;
             _limelight.setPipeline(_pipeline);
-        } else if (getPositionDegrees() < 60) {
+        } else if (getPositionDegrees() < 62) {
             _pipeline = Limelight.Pipeline.Wide;
             _limelight.setPipeline(_pipeline);
         }
@@ -142,7 +141,6 @@ public class Hood extends OutliersSubsystem {
     public double getLimelightHeight() {
         return Constants.Hood.HEIGHT_TO_DECK + ((-0.0014*Math.pow(getPositionDegrees(), 2)) + (0.284*getPositionDegrees()) + 4.1184); //constants taken from excel formula
     }
-
 
     public double getLimelightAngle() {
         return (getPositionDegrees() + Constants.Hood.LIMELIGHT_OFFSET_DEGREES) - 90.5;
