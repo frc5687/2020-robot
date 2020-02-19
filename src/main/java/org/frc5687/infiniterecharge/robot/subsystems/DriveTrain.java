@@ -256,6 +256,8 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Distance/RawLeft", getRawLeftEncoder());
         metric("Distance/RawRight", getRawRightEncoder());
         metric("Heading", getPose().getRotation().getDegrees());
+        metric("angle to target", getAngleToTarget());
+        metric("distance to taget", distanceToTarget());
     }
 
     public DifferentialDriveKinematics getKinematics() {
@@ -306,17 +308,17 @@ public class DriveTrain extends OutliersSubsystem {
         metric("xTar", _xLength);
         metric("x",x);
         metric("y", y);
-        _xLength = targetX - x;
-        _yLength = targetY - y;
+        _xLength = targetX + x;
+        _yLength = targetY + y;
         return Math.sqrt((_xLength * _xLength) + (_yLength * _yLength));
     }
 
     public double getAngleToTarget() {
         double angle = 0;
         if (_yLength > 0) {
-            angle = (90 - Math.toDegrees(Math.asin(_xLength / distanceToTarget())) - getHeading().getDegrees());
+            angle = (90 - Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + getHeading().getDegrees());
         } else if (_yLength < 0){
-            angle =  (Math.toDegrees(Math.asin(_xLength / distanceToTarget())) - 90) - getHeading().getDegrees();
+            angle =  (Math.toDegrees(Math.asin(_xLength / distanceToTarget())) - 90) + getHeading().getDegrees();
         }
         return angle;
     }

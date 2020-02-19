@@ -95,7 +95,7 @@ public class Constants {
         public static final boolean SENSOR_PHASE_INVERTED = true;
         public static final double TICKS_TO_DEGREES = 0.08695652173913;
         public static final double MIN_DEGREES = -200;
-        public static final double MAX_DEGREES = 95;
+        public static final double MAX_DEGREES = 125;
         public static final double MAX_VOLTAGE = 12.0;
         public static final int CRUISE_VELOCITY = 5000; // in ticks
         public static final int ACCELERATION = 16000; // in ticks
@@ -134,8 +134,8 @@ public class Constants {
         public static final double TICKS_TO_DEGREES = 0.04215247;// 0.038332795242141;
         public static final int CRUISE_VELOCITY = 5000;
         public static final int ACCELERATION = 16000;
-        public static final double kP = 2.7;
-        public static final double kI = 0.01;
+        public static final double kP = 2.8;
+        public static final double kI = 0.55;
         public static final double kD = 28;
         public static final double kF = 5;
         public static final int I_ZONE =1000;
