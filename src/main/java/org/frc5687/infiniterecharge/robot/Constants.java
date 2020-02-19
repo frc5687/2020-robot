@@ -89,7 +89,7 @@ public class Constants {
 
     public static class Turret {
         public static final double DEADBAND = 0.1;
-        public static final double TOLERANCE = 2;
+        public static final double TOLERANCE = 1.0;
         public static final boolean INVERTED = true;
         public static final boolean SENSOR_PHASE_INVERTED = true;
         public static final double TICKS_TO_DEGREES = 0.08695652173913;
@@ -130,20 +130,21 @@ public class Constants {
         public static final boolean INVERTED = false;
         public static final boolean SENSOR_PHASE_INVERTED = false;
         public static final double MAX_DEGREES = 67;
-        public static final double TICKS_TO_DEGREES = 0.04119194;// 0.038332795242141;
-        public static final double STOWED = 0;
-        public static final double DISTANCE_ANGLE_CONVERSION = 0.001;
-        public static final double ABS_OFFSET = -4.0;
+        public static final double TICKS_TO_DEGREES = 0.04215247;// 0.038332795242141;
         public static final int CRUISE_VELOCITY = 5000;
         public static final int ACCELERATION = 16000;
-        public static final double kP = 0.9;
-        public static final double kI = 0.005;
-        public static final double kD = 0.05;
+        public static final double kP = 0.2;
+        public static final double kI = 0.01;
+        public static final double kD = 0.0001;
         public static final double kF = 5;
+        public static final int I_ZONE =300;
 
-        public static final double SENSITIVITY = .1; //TODO
+        public static final double SENSITIVITY = 0.2; //TODO
         public static final double NEAR_TARGET_HOOD_ANGLE_DEGREES = 58;
         public static final double FAR_TARGET_HOOD_ANGLE_DEGREES = Hood.MAX_DEGREES;
+        public static final double HEIGHT_TO_DECK = 17.75;
+        public static final double LIMELIGHT_OFFSET_DEGREES = 23;
+        public static final double ZEROING_SPEED = -0.75;
     }
 
     public static class OI {
@@ -155,9 +156,9 @@ public class Constants {
         public static final int OVERRIDE = 8;
         public static final int PANIC = 6;
 
-        public static final int RED_CHANNEL = 0;
-        public static final int GREEN_CHANNEL = 0;
-        public static final int BLUE_CHANNEL = 0;
+        public static final int RED_CHANNEL = 2;
+        public static final int GREEN_CHANNEL = 3;
+        public static final int BLUE_CHANNEL = 1;
     }
 
     public static class Shifter {
@@ -210,22 +211,23 @@ public class Constants {
         public static final boolean LEFT_INVERTED = false;
         public static final boolean RIGHT_INVERTED = true;
         public static final double DEADBAND = 0.1;
-        public static final double RPM_TOLERANCE = 300; //RPM
-        public static final double kP = 0.0;
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
-        public static final double kF = 0.0;
-        public static final long TIMEOUT = 100;
+        public static final double RPM_TOLERANCE = 100; //RPM
+        public static final double kP = 0.6;
+        public static final double kI = 0.0015;
+        public static final double kD = 0.65;
+        public static final double kF = 0.05;
+        public static final int I_ZONE = 150;
+        public static final long TIMEOUT = 30;
 
         public static final double IDLE_SHOOTER_SPEED_PERCENT = 0.5;  /* TBD RPMs INSTEAD OF PERCENT */
-        public static final double NEAR_TARGET_SHOOTER_SPEED_PERCENT = 0.8;   /* TBD RPMs INSTEAD OF PERCENT */
-        public static final double FAR_TARGET_SHOOTER_SPEED_PERCENT = 1.0;   /* TBD RPMs INSTEAD OF PERCENT */
+        public static final double NEAR_TARGET_SHOOTER_SPEED_PERCENT = 4000;   /* TBD RPMs INSTEAD OF PERCENT */
+        public static final double FAR_TARGET_SHOOTER_SPEED_PERCENT = 5500;   /* TBD RPMs INSTEAD OF PERCENT */
         public static final double TICKS_TO_ROTATIONS = 2048;
     }
 
     public class Indexer {
         public static final boolean INVERTED = false;
-        public static final double ADVANCE_SPEED = 0.75; // TODO: Need a real value here!
+        public static final double ADVANCE_SPEED = .75; // TODO: Need a real value here!
         public static final double AGITATOR_SPEED = -1.0;
     }
 

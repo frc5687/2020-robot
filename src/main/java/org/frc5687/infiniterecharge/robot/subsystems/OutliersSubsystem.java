@@ -1,5 +1,6 @@
 package org.frc5687.infiniterecharge.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.frc5687.infiniterecharge.robot.util.ILoggingSource;
@@ -71,5 +72,13 @@ public abstract class OutliersSubsystem extends SubsystemBase implements ILoggin
     }
 
     public abstract void updateDashboard();
+
+    protected void enableMetrics() {
+        if (_metricTracker!=null) { _metricTracker.enable(); }
+    }
+
+    protected void disableMetrics() {
+        if (_metricTracker!=null) { _metricTracker.disable(); }
+    }
 
 }

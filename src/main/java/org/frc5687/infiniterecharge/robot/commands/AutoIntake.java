@@ -2,13 +2,16 @@ package org.frc5687.infiniterecharge.robot.commands;
 
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.subsystems.Intake;
+import org.frc5687.infiniterecharge.robot.subsystems.Lights;
 import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 
 public class AutoIntake extends OutliersCommand {
     private Intake _intake;
+    private Lights _lights;
 
-    public AutoIntake(Intake intake) {
+    public AutoIntake(Intake intake, Lights lights) {
         _intake = intake;
+        _lights = lights;
         addRequirements(_intake);
     }
 
@@ -16,6 +19,7 @@ public class AutoIntake extends OutliersCommand {
     public void initialize() {
         super.initialize();
         _intake.lowerIntake();
+        _lights.setAutoIntaking(true);
     }
 
     @Override
@@ -32,5 +36,6 @@ public class AutoIntake extends OutliersCommand {
     public void end(boolean interrupted) {
         super.end(interrupted);
         _intake.raiseIntake();
+        _lights.setAutoIntaking(false);
     }
 }
