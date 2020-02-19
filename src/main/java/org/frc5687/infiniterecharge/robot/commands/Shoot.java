@@ -36,7 +36,7 @@ public class Shoot extends OutliersCommand {
     public void execute() {
         super.execute();
 
-        if ((_turret.isTargetInTolerance() && _shooter.isAtTargetVelocity()) || _oi.isOverridePressed()) {
+        if ((_turret.isTargetInTolerance() && _shooter.isAtTargetVelocity()) && _indexer.anyBallsDetected() || _oi.isOverridePressed()) {
             error("SHOOTING AT VELOCITY " + _shooter.getRPM());
             error("INDEXING NOW");
             _endTime = System.currentTimeMillis() + Constants.Shooter.TIMEOUT;
