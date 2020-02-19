@@ -29,6 +29,8 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
     private OI _oi;
 
+    private AutoChooser _autoChooser;
+
     private AHRS _imu;
     private DriveTrain _driveTrain;
     private Turret _turret;
@@ -48,14 +50,14 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
     private Lights _lights;
 
-    public RobotContainer(Robot robot) {
-
+    public RobotContainer(Robot robot, IdentityMode identityMode) {
+        super(identityMode);
     }
-
     public void init() {
 
         // OI must be first...
         _oi = new OI();
+        _autoChooser = new AutoChooser(getIdentityMode());
         _imu = new AHRS(SPI.Port.kMXP, (byte) 100);
 
         _imu.zeroYaw();
@@ -67,7 +69,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
         _limelight.setPipeline(Limelight.Pipeline.Wide);
 
         // Then subsystems....
-        if (Robot.identityMode!= Robot.IdentityMode.programming) {
+        if (Robot._identityMode != IdentityMode.programming) {
             _pdp = new PDP();
             _shifter = new Shifter(this);
             _intake = new Intake(this, _oi);
@@ -178,12 +180,26 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
                 _driveTrain::tankDriveVolts,
                 _driveTrain
         );
-        // return ramseteCommand.andThen(() -> _driveTrain.tankDriveVolts(0, 0));
-//        return new SequentialCommandGroup(
-//                new ZeroHood(_hood),
-//                new AutoShootAndGo(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer)
-//        );
-         return new ZeroHood(_hood, _turret);
+
+        AutoChooser.Mode autoMode = _autoChooser.getSelectedMode();
+
+        switch (autoMode) {
+            case ShootAndGo:
+                return wrapCommand(new AutoShootAndGo(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer, _lights));
+            case ShootAndNearTrench:
+                return wrapCommand(new AutoShootAndNearTrench(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer, _intake, _lights));
+            case ShootAndFarTrench:
+                return wrapCommand(new AutoShootAndFarTrench(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer, _intake, _lights));
+            default:
+                return new ZeroHood(_hood, _turret);
+        }
+    }
+
+    private Command wrapCommand(Command command) {
+        return new SequentialCommandGroup(
+                new ZeroHood(_hood, _turret),
+                command
+        );
     }
 
     @Override

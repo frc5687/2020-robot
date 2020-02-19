@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import org.frc5687.infiniterecharge.robot.commands.Drive;
 import org.frc5687.infiniterecharge.robot.util.*;
 
 import java.io.BufferedReader;
@@ -27,7 +26,7 @@ import java.io.FileReader;
  */
 public class Robot extends OutliersRobot implements ILoggingSource{
 
-    public static IdentityMode identityMode = IdentityMode.competition;
+    public static OutliersContainer.IdentityMode _identityMode = OutliersContainer.IdentityMode.competition;
     private RioLogger.LogLevel _dsLogLevel = RioLogger.LogLevel.warn;
     private RioLogger.LogLevel _fileLogLevel = RioLogger.LogLevel.warn;
 
@@ -52,11 +51,11 @@ public class Robot extends OutliersRobot implements ILoggingSource{
 
 
         metric("Branch", Version.BRANCH);
-        metric("Identity", identityMode.toString());
+        metric("Identity", _identityMode.toString());
         info("Starting " + this.getClass().getCanonicalName() + " from branch " + Version.BRANCH);
-        info("Robot " + _name + " running in " + identityMode.toString() + " mode");
+        info("Robot " + _name + " running in " + _identityMode.toString() + " mode");
 
-        _robotContainer = new RobotContainer(this);
+        _robotContainer = new RobotContainer(this, _identityMode);
         _robotContainer.init();
         _robotContainer.zeroSensors();
 
@@ -180,7 +179,7 @@ public class Robot extends OutliersRobot implements ILoggingSource{
             bufferedReader.close();
             reader.close();
         } catch (Exception e) {
-            identityMode = IdentityMode.competition;
+            _identityMode = OutliersContainer.IdentityMode.competition;
         }
     }
 
@@ -198,7 +197,7 @@ public class Robot extends OutliersRobot implements ILoggingSource{
                         _name = value;
                         break;
                     case "mode":
-                        identityMode = IdentityMode.valueOf(value.toLowerCase());
+                        _identityMode = OutliersContainer.IdentityMode.valueOf(value.toLowerCase());
                         break;
                     case "fileloglevel":
                         _fileLogLevel = RioLogger.LogLevel.valueOf(value.toLowerCase());
@@ -217,25 +216,6 @@ public class Robot extends OutliersRobot implements ILoggingSource{
 
     }
 
-    public enum IdentityMode {
-        competition(0),
-        practice(1),
-        programming(2);
-
-        private int _value;
-
-        IdentityMode(int value) {
-            this._value = value;
-        }
-
-        public int getValue() {
-            return _value;
-        }
-    }
-
-    public IdentityMode getIdentityMode() {
-        return identityMode;
-    }
 
 
 }
