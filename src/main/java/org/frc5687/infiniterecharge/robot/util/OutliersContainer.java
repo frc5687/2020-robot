@@ -1,6 +1,7 @@
 package org.frc5687.infiniterecharge.robot.util;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.frc5687.infiniterecharge.robot.Robot;
 import org.frc5687.infiniterecharge.robot.subsystems.OutliersSubsystem;
 
 import java.util.LinkedList;
@@ -8,6 +9,11 @@ import java.util.List;
 
 public abstract class OutliersContainer implements ILoggingSource, IPoseTrackable {
     private List<OutliersSubsystem> _subsystems = new LinkedList<OutliersSubsystem>();
+    private IdentityMode _identityMode;
+
+    public OutliersContainer(IdentityMode identityMode) {
+        _identityMode = identityMode;
+    }
 
     public void metric(String name, boolean value) {
         SmartDashboard.putBoolean(getClass().getSimpleName() + "/" + name, value);
@@ -63,6 +69,26 @@ public abstract class OutliersContainer implements ILoggingSource, IPoseTrackabl
 
     public void updateDashboard() {
         _subsystems.forEach((ss) -> ss.updateDashboard());
+    }
+
+    public enum IdentityMode {
+        competition(0),
+        practice(1),
+        programming(2);
+
+        private int _value;
+
+        IdentityMode(int value) {
+            this._value = value;
+        }
+
+        public int getValue() {
+            return _value;
+        }
+    }
+
+    public IdentityMode getIdentityMode() {
+        return _identityMode;
     }
 
 }
