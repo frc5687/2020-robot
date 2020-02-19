@@ -44,10 +44,11 @@ public class RobotMap {
          */
         public static class PWM {
             /*  Example:
-            public static final int ARM_VICTORSP = 0;
-            */
-            public static int SHORT_LED_STRIP = 0;
-            public static int LONG_LED_STRIP = 1;
+                        public static final int ARM_VICTORSP = 0;
+                        */
+            public static final int SHORT_LED_STRIP = 0;
+            public static final int LONG_LED_STRIP = 1;
+            public static final int AGITATOR = 2;
         }
 
         /**

@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
@@ -15,7 +16,8 @@ public class Indexer extends OutliersSubsystem {
 
     private CANSparkMax _indexerNeo;
 
-    private VictorSPX _agitatorVictor;
+    private Servo _agitatorServo;
+    private double _servoSpeed;
 
     private OI _oi;
 
@@ -30,7 +32,7 @@ public class Indexer extends OutliersSubsystem {
         _indexerNeo.setInverted(Constants.Indexer.INVERTED);
         _indexerNeo.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-        _agitatorVictor = new VictorSPX(RobotMap.CAN.VICTORSPX.AGITATOR);
+        _agitatorServo = new Servo(RobotMap.PWM.AGITATOR);
 
         _bottomIR = new DigitalIR(RobotMap.DIO.BOTTOM_IR);
         _midIR = new DigitalIR(RobotMap.DIO.MID_IR);
@@ -54,7 +56,21 @@ public class Indexer extends OutliersSubsystem {
         _indexerNeo.set(speed);
     }
 
-    public void setAgitatorSpeed(double speed) { _agitatorVictor.set(ControlMode.PercentOutput, speed); }
+    public void setAgitatorSpeed(double speed) {
+        if (speed < 0) {
+            _servoSpeed = Constants.Indexer.SERVO_FORWARD;
+        } else if (speed > 0) {
+            _servoSpeed = Constants.Indexer.SERVO_BACKWARDS;
+        } else {
+            _servoSpeed = Constants.Indexer.SERVO_STOPPED;
+        }
+        _agitatorServo.set(_servoSpeed);
+    }
+
+    @Override
+    public void periodic() {
+        _agitatorServo.set(_servoSpeed);
+    }
 
     @Override
     public void updateDashboard() {
