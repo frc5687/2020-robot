@@ -215,7 +215,7 @@ public class Spinner extends OutliersSubsystem {
      * Stops the spinner motor.
      */
     public void stop() {
-        error(">>>>> STOPPING");
+        info("Stopping the spinner.");
         _motorController.set(ControlMode.PercentOutput, 0);
     }
 
