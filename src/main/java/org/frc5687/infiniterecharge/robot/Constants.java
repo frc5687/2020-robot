@@ -184,9 +184,9 @@ public class Constants {
     }
 
     public class Spinner {
-        public static final double MOTOR_PERCENT_SPEED = 1.0;
+        public static final double MOTOR_PERCENT_SPEED = -1.0;
         public static final double COLOR_TOLERANCE = 0.09;
-        public static final double MOTOR_SLOW_PERCENT_SPEED = 0.75;
+        public static final double MOTOR_SLOW_PERCENT_SPEED = -0.75;
         public static final int AUTOSPIN_SLOW_AT_WEDGES = 28;
         public static final int AUTOSPIN_STOP_AT_WEDGES = 30;
         public static final double SENSOR_SAMPLE_PERIOD_SECONDS = 0.01;

@@ -36,7 +36,7 @@ public class Spinner extends OutliersSubsystem {
     private Notifier _sampleTask;
     private int _wedgeCount = 0;
 
-    public MatchedColor getSoughtColor() {
+    public MatchedColor getTargetColorFromField() {
         String gameData;
         gameData = DriverStation.getInstance().getGameSpecificMessage();
         if(gameData.length() > 0) {
@@ -96,6 +96,7 @@ public class Spinner extends OutliersSubsystem {
                 _previouslyMatchedColor = newMatchedColor;
             }
         });
+        _sampleTask.startPeriodic(Constants.Spinner.SENSOR_SAMPLE_PERIOD_SECONDS);
 
         _fieldToRobotColorMap.put(MatchedColor.yellow, MatchedColor.green);
         _fieldToRobotColorMap.put(MatchedColor.red, MatchedColor.blue);
@@ -140,7 +141,7 @@ public class Spinner extends OutliersSubsystem {
      * @return The color the robot should see when the field sees _seenByField_
      */
     public MatchedColor getColorTheRobotSeesForColorTheFieldSees(MatchedColor seenByField) {
-        return _fieldToRobotColorMap.get(seenByField);
+        return _fieldToRobotColorMap.getOrDefault(seenByField, MatchedColor.unknown);
     }
 
     /**
@@ -185,13 +186,15 @@ public class Spinner extends OutliersSubsystem {
      * Spins the spinner motor at regular speed.
      */
     public void spin() {
+        info("Spinning forward at full speed.");
         setSpeed(Constants.Spinner.MOTOR_PERCENT_SPEED);
     }
 
     /**
      * Spins the spinner motor at low speed.
      */
-    public void slow() {
+    public void spinSlowly() {
+        info("Spinning forward at low speed.");
         setSpeed(Constants.Spinner.MOTOR_SLOW_PERCENT_SPEED);
     }
 
@@ -199,13 +202,20 @@ public class Spinner extends OutliersSubsystem {
      * Spins the spinner motor backwards at full speed.
      */
     public void spinBackwards() {
+        info("Spinning backwards at full speed.");
         _motorController.set(ControlMode.PercentOutput, -1 * Constants.Spinner.MOTOR_PERCENT_SPEED);
+    }
+
+    public void spinBackwardsSlowly() {
+        info("Spinning backwards at low speed.");
+        _motorController.set(ControlMode.PercentOutput, -1 * Constants.Spinner.MOTOR_SLOW_PERCENT_SPEED);
     }
 
     /**
      * Stops the spinner motor.
      */
     public void stop() {
+        error(">>>>> STOPPING");
         _motorController.set(ControlMode.PercentOutput, 0);
     }
 
