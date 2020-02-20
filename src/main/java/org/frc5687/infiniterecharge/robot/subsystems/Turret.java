@@ -7,10 +7,12 @@ import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.commands.DriveTurret;
+import org.frc5687.infiniterecharge.robot.util.Helpers;
 import org.frc5687.infiniterecharge.robot.util.Limelight;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
@@ -25,6 +27,7 @@ public class Turret extends OutliersSubsystem {
     private TalonSRX _turretController;
     private Limelight _limelight;
     private DriveTrain _driveTrain;
+    private Hood _hood;
     private OI _oi;
 
     private int _positionPIDSlot = 0;
@@ -35,9 +38,10 @@ public class Turret extends OutliersSubsystem {
 
     private double _manualOffset = 0;
 
-    public Turret(OutliersContainer container, DriveTrain driveTrain, Limelight limelight, OI oi) {
+    public Turret(OutliersContainer container, DriveTrain driveTrain, Hood hood, Limelight limelight, OI oi) {
         super(container);
         _driveTrain = driveTrain;
+        _hood = hood;
         _limelight = limelight;
         _oi = oi;
 
@@ -93,7 +97,12 @@ public class Turret extends OutliersSubsystem {
     }
 
     public void setMotionMagicSetpoint(double angle) {
-
+        if (angle > Constants.Turret.MAX_DEGREES) {
+            angle =  angle - 360;
+        } else if (angle < Constants.Turret.MIN_DEGREES) {
+            angle = angle + 360;
+        }
+        angle = Helpers.limit(angle, Constants.Turret.MIN_DEGREES, Constants.Turret.MAX_DEGREES);
         _turretController.set(ControlMode.MotionMagic, (angle/Constants.Turret.TICKS_TO_DEGREES));
     }
 
@@ -111,7 +120,7 @@ public class Turret extends OutliersSubsystem {
 
     public Pose2d updatePose() {
         Pose2d prevPose = _driveTrain.getPose();
-        double distance = Units.inchesToMeters(_limelight.getTargetDistance());
+        double distance = Units.inchesToMeters(20);
         // big dumb turret angle doesn't effect pose.
 //        double alpha = (90 -(getPositionDegrees() + _limelight.getHorizontalAngle())) - _driveTrain.getHeading().getDegrees();
         double alpha = 90 - Math.abs(_limelight.getHorizontalAngle());

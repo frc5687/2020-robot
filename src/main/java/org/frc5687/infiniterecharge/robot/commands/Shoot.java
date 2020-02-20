@@ -15,14 +15,12 @@ public class Shoot extends OutliersCommand {
 
     private double _speed;
 
-    private double _setpoint;
     private Long _endTime;
-    public Shoot(Shooter shooter, Indexer indexer, Turret turret, OI oi, double speed) {
+    public Shoot(Shooter shooter, Indexer indexer, Turret turret, OI oi) {
         _shooter = shooter;
         _indexer = indexer;
         _turret = turret;
         _oi = oi;
-        _speed = speed;
         addRequirements(_indexer);
         logMetrics("Velocity");
     }
@@ -38,13 +36,12 @@ public class Shoot extends OutliersCommand {
     public void execute() {
         super.execute();
 
-//        _setpoint = _shooter.getDistanceSetpoint();
-//        _shooter.setShooterSpeed(_speed);
-        metric("Velocity", _shooter.getVelocity());
-//        if ((_turret.isTargetInTolerance() && _shooter.isAtVelocity(_setpoint)) || _oi.isOverridePressed()) {
+        if ((_turret.isTargetInTolerance() && _shooter.isAtTargetVelocity()) && _indexer.anyBallsDetected() || _oi.isOverridePressed()) {
+            error("SHOOTING AT VELOCITY " + _shooter.getRPM());
+            error("INDEXING NOW");
             _endTime = System.currentTimeMillis() + Constants.Shooter.TIMEOUT;
             _indexer.setIndexerSpeed(Constants.Indexer.ADVANCE_SPEED);
-//        }
+        }
     }
 
 
@@ -53,8 +50,7 @@ public class Shoot extends OutliersCommand {
         if (_endTime == null) {
             return false;
         }
-        return false;
-//        return System.currentTimeMillis() >= _endTime;
+        return System.currentTimeMillis() >= _endTime;
     }
 
     @Override

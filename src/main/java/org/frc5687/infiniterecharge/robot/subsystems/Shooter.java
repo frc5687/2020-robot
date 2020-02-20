@@ -17,6 +17,8 @@ public class Shooter extends OutliersSubsystem {
     private TalonFX _shooterLeft;
     private OI _oi;
     private boolean _shooting = false;
+    private double _targetRPM;
+
 
 
     public Shooter(OutliersContainer container, OI oi, DriveTrain driveTrain) {
@@ -32,12 +34,17 @@ public class Shooter extends OutliersSubsystem {
         _shooterRight.config_kI(0,Constants.Shooter.kI, 50);
         _shooterRight.config_kD(0,Constants.Shooter.kD, 50);
         _shooterRight.config_kF(0,Constants.Shooter.kF, 50);
+        _shooterRight.config_IntegralZone(0, Constants.Shooter.I_ZONE, 50);
 
         _shooterLeft.setInverted(Constants.Shooter.LEFT_INVERTED);
         _shooterRight.setInverted(Constants.Shooter.RIGHT_INVERTED);
         _shooterRight.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         _shooterRight.getStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10);
+        _shooterRight.configClosedloopRamp(0.25);
         _shooterRight.selectProfileSlot(0,0);
+
+        logMetrics("Velocity/Ticks", "Position", "Velocity/RPM", "Speed", "Shooting");
+        enableMetrics();
     }
 
     @Override
@@ -45,6 +52,7 @@ public class Shooter extends OutliersSubsystem {
         metric("Velocity/Ticks", getVelocity());
         metric("Position", getPosition());
         metric("Velocity/RPM", getRPM());
+        metric("Shooting", _shooting);
     }
 
 
@@ -53,7 +61,10 @@ public class Shooter extends OutliersSubsystem {
         _shooterRight.set(TalonFXControlMode.PercentOutput, speed);
     }
 
-    public void setVelocitySpeed(double RPM) {_shooterRight.set(TalonFXControlMode.Velocity, RPM);}
+    public void setVelocitySpeed(double RPM) {
+        _targetRPM = RPM;
+        _shooterRight.set(TalonFXControlMode.Velocity, (_targetRPM * Constants.Shooter.TICKS_TO_ROTATIONS / 600));
+    }
 
     public double getPosition() {
         return _shooterRight.getSelectedSensorPosition();
@@ -67,13 +78,16 @@ public class Shooter extends OutliersSubsystem {
         return getVelocity() / Constants.Shooter.TICKS_TO_ROTATIONS * 600;
     }
 
-
     public boolean isAtVelocity(double RPM) {
-        return Math.abs(getVelocity() - RPM) < Constants.Shooter.RPM_TOLERANCE;
+        return Math.abs(getRPM() - RPM) < Constants.Shooter.RPM_TOLERANCE;
     }
 
-    public double getDistanceSetpoint() {
-        return _driveTrain.distanceToTarget() * 50;
+    public boolean isAtTargetVelocity() {
+        return Math.abs(getRPM() - _targetRPM) < Constants.Shooter.RPM_TOLERANCE;
+    }
+
+    public double getDistanceSetpoint(double distance) {
+        return (7.2272 * distance) + 2200.9;
     }
 
     public boolean isShooting() {
