@@ -63,7 +63,7 @@ public class Shooter extends OutliersSubsystem {
 
     public void setVelocitySpeed(double RPM) {
         _targetRPM = RPM;
-        _shooterRight.set(TalonFXControlMode.Velocity, (_targetRPM * Constants.Shooter.TICKS_TO_ROTATIONS / 600));
+        _shooterRight.set(TalonFXControlMode.Velocity, (_targetRPM * Constants.Shooter.TICKS_TO_ROTATIONS / 600 / 1.25));
     }
 
     public double getPosition() {
@@ -75,7 +75,7 @@ public class Shooter extends OutliersSubsystem {
     }
 
     public double getRPM() {
-        return getVelocity() / Constants.Shooter.TICKS_TO_ROTATIONS * 600;
+        return getVelocity() / Constants.Shooter.TICKS_TO_ROTATIONS * 600 * Constants.Shooter.GEAR_RATIO;
     }
 
     public boolean isAtVelocity(double RPM) {

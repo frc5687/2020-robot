@@ -62,11 +62,10 @@ public class Turret extends OutliersSubsystem {
             _turretController.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10,20);
             _turretController.configClosedloopRamp(0,50);
             _turretController.setNeutralMode(NeutralMode.Brake);
-
+            zeroSensors();
         } catch (Exception e) {
             error("error allocating turret motors " + e.getMessage());
         }
-        zeroSensors();
     }
 
     public void setSpeed(double speed) {

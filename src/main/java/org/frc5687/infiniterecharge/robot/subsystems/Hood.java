@@ -143,7 +143,7 @@ public class Hood extends OutliersSubsystem {
     }
 
     public double getLimelightAngle() {
-        return (getPositionDegrees() + Constants.Hood.LIMELIGHT_OFFSET_DEGREES) - 90.5;
+        return 90 - (getPositionDegrees() + Constants.Hood.LIMELIGHT_OFFSET_DEGREES);
     }
 
     public boolean isHallTriggered() {

@@ -39,7 +39,7 @@ public class AutoTarget extends OutliersCommand {
         _limelight = limelight;
         _lights = lights;
         _poseTracker = poseTracker;
-        _filter = new MedianFilter(5);
+        _filter = new MedianFilter(10);
         _oi = oi;
         _speed = speed;
         _angle = angle;
@@ -88,7 +88,7 @@ public class AutoTarget extends OutliersCommand {
     }
 
     protected double getTargetAngle() {
-        double limelightAngle = _limelight.getHorizontalAngle();
+        double limelightAngle = _filter.calculate(_limelight.getHorizontalAngle());
         double turretAngle = _turret.getPositionDegrees();
 
         long timekey = System.currentTimeMillis() - (long)_limelight.getLatency();
@@ -97,7 +97,7 @@ public class AutoTarget extends OutliersCommand {
         double poseAngle = pose == null ? turretAngle : pose.getTurretPose().getAngle();
         double angleCompensation = turretAngle - poseAngle;
         double targetAngle = limelightAngle + (turretAngle + angleCompensation);
-        return _filter.calculate(targetAngle);
+        return targetAngle;
     }
 
     @Override

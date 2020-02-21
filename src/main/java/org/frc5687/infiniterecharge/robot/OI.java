@@ -102,27 +102,33 @@ public class OI extends OutliersProxy {
         _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this));
 
         _operatorStartButton.whileHeld(new ExtendElevator(climber));
-        // _operatorXButton.whileHeld(new RetractElevator(climber));
+//         _operatorXButton.whileHeld(new RetractElevator(climber));
         _operatorEndButton.whileHeld(new RetractWinch(climber));
 
 //        _operatorXButton.whenPressed(new AdjustTurret(turret, -1));
-        _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 2200));
-        _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 2100));
+        _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 2000));
+        _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 2000));
 
-        _operatorXButton.whileHeld(new AutoBalance(skywalker, spinner, this));
+//        _operatorXButton.whileHeld(new AutoBalance(skywalker, spinner, this));
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
+
+
 
         _driverAButton.whenPressed(new ZeroHood(hood, turret));
 //        _driverAButton.whenPressed(new AutoAlign(driveTrain, 0));
 //        _driverAButton.whenPressed(new AutoAlign(driveTrain, 90));
 
         _driverYButton.whenPressed(new AutoTurretTracking(turret, driveTrain, limelight, this, poseTracker));
-        _driverXButton.whenPressed(new MoveHoodToAngle(hood, 60));
+
+
+        _operatorYButton.whenPressed(new MoveHoodToAngle(hood, 68));
 //        _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this, poseTracker));
         _operatorLeftTrigger.whileHeld(new AutoIntake(intake, lights));
 
-        _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
+
+
+//        _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
         //_operatorYButton.whenPressed(new AutoSpinRotations(spinner, this, skywalker));  // <~ When we're ready, this works!
     }
 

@@ -140,9 +140,9 @@ public class Limelight extends OutliersProxy {
 
     }
     public double getTargetDistance() {
-        double heightOffset = (LIMELIGHT_HEIGHT - LOW_TARGET_HEIGHT);
+        double heightOffset = (LOW_TARGET_HEIGHT - LIMELIGHT_HEIGHT);
         double limeLightYAngle = getVerticalAngle();
-        double angleY = (LIMELIGHT_ANGLE - limeLightYAngle);
+        double angleY = (LIMELIGHT_ANGLE + limeLightYAngle);
         double tanY = Math.tan(angleY * (Math.PI / 180));
         double distance = (heightOffset)/tanY;
         return distance;

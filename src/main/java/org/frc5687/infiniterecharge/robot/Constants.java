@@ -83,7 +83,7 @@ public class Constants {
         public static final double ROTATION_SENSITIVITY_LOW_GEAR = .8;
         public static final double TURNING_SENSITIVITY_HIGH_GEAR = .8;
         public static final double TURNING_SENSITIVITY_LOW_GEAR = .8;
-        public static final double SPEED_LIMIT = 0.85;
+        public static final double SPEED_LIMIT = 1;
         public static final double DISTANCE_TOLERANCE = 2.0;
         public static final double LIMELIGHT_ODOMETRY_ZONE = 48; //inches, we are saying if our distance isnt within this range dont update pose
     }
@@ -131,12 +131,12 @@ public class Constants {
         public static final boolean INVERTED = false;
         public static final boolean SENSOR_PHASE_INVERTED = false;
         public static final double MAX_DEGREES = 67;
-        public static final double TICKS_TO_DEGREES = 0.04215247;// 0.038332795242141;
+        public static final double TICKS_TO_DEGREES = 0.0413080895008606;// 0.038332795242141;
         public static final int CRUISE_VELOCITY = 5000;
         public static final int ACCELERATION = 16000;
         public static final double kP = 2.8;
-        public static final double kI = 0.55;
-        public static final double kD = 28;
+        public static final double kI = 0.0;
+        public static final double kD = 30;
         public static final double kF = 5;
         public static final int I_ZONE =1000;
 
@@ -186,9 +186,14 @@ public class Constants {
         public static double MID_WIDTH_FIELD = WIDTH_FIELD / 2;
         public static double LENGTH_FIELD = Units.inchesToMeters(629.25);
         public static double MID_LENGTH_FIELD = LENGTH_FIELD / 2;
-        public static Pose2d TARGET_POSE = new Pose2d(MID_LENGTH_FIELD,MID_LENGTH_FIELD - Units.inchesToMeters(94.66), new Rotation2d(0));
-        public static Pose2d LOADING_STATION_POSE = new Pose2d(-MID_LENGTH_FIELD, 1.700911, new Rotation2d(0));
+        public static double TARGET_LINE = MID_LENGTH_FIELD - Units.inchesToMeters(94.66);
+        public static double MID_TRENCH = TARGET_LINE + Units.inchesToMeters(66.91);
+        public static double AUTO_LINE = Units.inchesToMeters(194.63);
+        public static Pose2d TARGET_POSE = new Pose2d(-MID_LENGTH_FIELD, TARGET_LINE, new Rotation2d(0));
+        public static Pose2d LOADING_STATION_POSE = new Pose2d(MID_LENGTH_FIELD, TARGET_LINE, new Rotation2d(0));
         public static Pose2d STARTING_POSITION_ONE = new Pose2d(0,0, new Rotation2d(0));
+        public static Pose2d BACK_WHEEL_OF_FORTUNE = new Pose2d(0, MID_TRENCH, new Rotation2d(0));
+        public static Pose2d EIGHT_BALL_STARING = new Pose2d(-AUTO_LINE, TARGET_LINE, new Rotation2d(0));
 
     }
 
@@ -224,6 +229,7 @@ public class Constants {
         public static final double NEAR_TARGET_SHOOTER_SPEED_PERCENT = 4000;   /* TBD RPMs INSTEAD OF PERCENT */
         public static final double FAR_TARGET_SHOOTER_SPEED_PERCENT = 5500;   /* TBD RPMs INSTEAD OF PERCENT */
         public static final double TICKS_TO_ROTATIONS = 2048;
+        public static final double GEAR_RATIO = 1.25;
     }
 
     public class Indexer {
@@ -239,7 +245,7 @@ public class Constants {
         public class Drive {
             public static final double SPEED = 1.0;
             public static final double MIN_SPEED = 0.25;
-            public static final double MIN_TRACK_DISTANCE = 18;
+            public static final double MIN_TRACK_DISTANCE = 2.0;
             public static final int MAX_GARBAGE = 5;
             public static final double STEER_K = 0.019;
             public static final double MAX_IMU_ANGLE = 180.0;

@@ -240,9 +240,9 @@ public class DriveTrain extends OutliersSubsystem {
     @Override
     public void periodic() {
         _pose = _odometry.update(getHeading(), Units.inchesToMeters(getLeftDistance()), Units.inchesToMeters(getRightDistance()));
-//        if (_driveLimelight.isTargetSighted() && _driveLimelight.getTargetDistance() < Constants.DriveTrain.LIMELIGHT_ODOMETRY_ZONE) {
-//            resetOdometry(updatePose());
-//        }
+        if (_driveLimelight.isTargetSighted() && _oi.isAutoTargetDrivePressed() && _driveLimelight.getTargetDistance() < Constants.DriveTrain.LIMELIGHT_ODOMETRY_ZONE) {
+            resetOdometry(updatePose());
+        }
     }
 
     @Override
@@ -308,17 +308,17 @@ public class DriveTrain extends OutliersSubsystem {
         metric("xTar", _xLength);
         metric("x",x);
         metric("y", y);
-        _xLength = targetX + x;
-        _yLength = targetY + y;
+        _xLength = targetX - x;
+        _yLength = targetY - y;
         return Math.sqrt((_xLength * _xLength) + (_yLength * _yLength));
     }
 
     public double getAngleToTarget() {
         double angle = 0;
         if (_yLength > 0) {
-            angle = (90 - Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + getHeading().getDegrees());
+            angle = (90 + Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + getHeading().getDegrees());
         } else if (_yLength < 0){
-            angle =  (Math.toDegrees(Math.asin(_xLength / distanceToTarget())) - 90) + getHeading().getDegrees();
+            angle =  (Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + 90) + getHeading().getDegrees();
         }
         return angle;
     }

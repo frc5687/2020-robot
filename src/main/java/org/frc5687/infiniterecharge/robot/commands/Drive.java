@@ -150,11 +150,11 @@ public class Drive extends OutliersCommand {
             }
         }
         stickSpeed = limitSpeed(stickSpeed);
-//        if (_driveState == DriveState.normal) {
+        if (_driveState == DriveState.normal) {
             _driveTrain.cheesyDrive(stickSpeed, wheelRotation, _oi.isCreepPressed(), false);
-//        } else {
-//            _driveTrain.cheesyDrive(stickSpeed, _turnSpeed, false, true);
-//        }
+        } else {
+            _driveTrain.cheesyDrive(stickSpeed, _turnSpeed, false, true);
+        }
     }
     @Override
     public boolean isFinished() {
@@ -192,6 +192,10 @@ public class Drive extends OutliersCommand {
         // Now adjust the limelight angle based on the change in yaw from when the picture was taken to now
         double offsetCompensation = -yaw - poseAngle;
         double targetAngle = limelightAngle - offsetCompensation;
+
+        if (distance > 0 && distance < Constants.Auto.Drive.MIN_TRACK_DISTANCE) {
+            targetAngle *= (distance / 48);
+        }
 
         metric("Pose", pose==null?0:pose.getMillis());
         metric("Yaw", yaw);
