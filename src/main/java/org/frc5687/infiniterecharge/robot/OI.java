@@ -107,17 +107,17 @@ public class OI extends OutliersProxy {
 
 //        _operatorXButton.whenPressed(new AdjustTurret(turret, -1));
         _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 4600));
-        _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 4800));
+//        _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 4800));
 //        _operatorXButton.whileHeld(new AutoBalance(skywalker, spinner, this));
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
 
 
-//        _operatorXButton.whenPressed(new ZeroHood(hood, turret));
+        _operatorAButton.whenPressed(new ZeroHood(hood, turret));
 //        _driverAButton.whenPressed(new AutoAlign(driveTrain, 0));
 //        _driverAButton.whenPressed(new AutoAlign(driveTrain, 90));
 
-//        _driverYButton.whenPressed(new AutoTurretTracking(turret, driveTrain, limelight, this, poseTracker));
+        _driverYButton.whenPressed(new AutoTurretTracking(turret, driveTrain, limelight, this, poseTracker));
 
 
 
@@ -171,7 +171,7 @@ public class OI extends OutliersProxy {
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.Turret.DEADBAND);
 
-        return speed;
+        return 0;
     }
 
     public double getIntakeSpeed() {
@@ -266,7 +266,7 @@ public class OI extends OutliersProxy {
     }
 
     public double getSpinnerSpeed() {
-        return 0;//getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
+        return getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
     }
 
     private enum SubSystem {

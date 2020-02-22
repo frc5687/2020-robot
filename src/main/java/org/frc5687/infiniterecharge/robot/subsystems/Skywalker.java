@@ -18,7 +18,6 @@ public class Skywalker extends OutliersSubsystem {
 
     public Skywalker(OutliersContainer container) {
         super(container);
-
         _upIR = new DigitalIR(RobotMap.DIO.UP_IR);
         _downIR = new DigitalIR(RobotMap.DIO.DOWN_IR);
     }

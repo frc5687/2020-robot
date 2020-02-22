@@ -259,7 +259,7 @@ public class DriveTrain extends OutliersSubsystem {
 //        metric("Distance/RawRight", getRawRightEncoder());
 //        metric("Heading", getPose().getRotation().getDegrees());
         metric("angle to target", getAngleToTarget());
-//        metric("distance to taget", distanceToTarget());
+        metric("distance to taget", distanceToTarget());
     }
 
     public DifferentialDriveKinematics getKinematics() {
