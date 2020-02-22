@@ -1,22 +1,12 @@
 package org.frc5687.infiniterecharge.robot;
 
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.frc5687.infiniterecharge.robot.commands.*;
 import org.frc5687.infiniterecharge.robot.commands.drive.EightBallAuto;
@@ -25,10 +15,6 @@ import org.frc5687.infiniterecharge.robot.util.*;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
 import org.frc5687.infiniterecharge.robot.subsystems.Shifter;
 import org.frc5687.infiniterecharge.robot.subsystems.Shooter;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
 
 public class RobotContainer extends OutliersContainer implements IPoseTrackable {
 
@@ -139,8 +125,30 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
         _oi.poll();
         if (_oi.isKillAllPressed()) {
             new KillAll(_driveTrain, _shooter, _indexer, _intake, _turret, _hood).schedule();
+            _indexer.stopAgitator();
         }
     }
+
+    public void disabledPeriodic() {
+        if (_indexer!=null) {
+            // _indexer.abortAgitator();
+        }
+    };
+
+    @Override
+    public void disabledInit() {
+        _indexer.stopAgitator();
+    };
+
+    @Override
+    public void teleopInit() {
+        _indexer.startAgitator();
+    };
+
+    @Override
+    public void autonomousInit() {
+        _indexer.startAgitator();
+    };
 
     @Override
     public Pose getPose() {
