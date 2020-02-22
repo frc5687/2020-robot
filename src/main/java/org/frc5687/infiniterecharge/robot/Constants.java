@@ -95,7 +95,7 @@ public class Constants {
         public static final boolean SENSOR_PHASE_INVERTED = true;
         public static final double TICKS_TO_DEGREES = 0.08695652173913;
         public static final double MIN_DEGREES = -200;
-        public static final double MAX_DEGREES = 125;
+        public static final double MAX_DEGREES = 120;
         public static final double MAX_VOLTAGE = 12.0;
         public static final int CRUISE_VELOCITY = 5000; // in ticks
         public static final int ACCELERATION = 16000; // in ticks
@@ -130,7 +130,7 @@ public class Constants {
         public static final double MIN_DEGREES = 20;
         public static final boolean INVERTED = false;
         public static final boolean SENSOR_PHASE_INVERTED = false;
-        public static final double MAX_DEGREES = 67;
+        public static final double MAX_DEGREES = 69;
         public static final double TICKS_TO_DEGREES = 0.0413080895008606;// 0.038332795242141;
         public static final int CRUISE_VELOCITY = 5000;
         public static final int ACCELERATION = 16000;
@@ -174,9 +174,8 @@ public class Constants {
     }
     public class Limelight {
         public static final double TARGET_HEIGHT = 92;
-        public static final double LOW_TARGET_HEIGHT = 16.5;
+        public static final double LOW_TARGET_HEIGHT = 17;
         public static final double LIMELIGHT_HEIGHT = 8.125;
-
         public static final double LIMELIGHT_ANGLE = 0;
         public static final double OVERALL_LATENCY_MILLIS = 11;
     }
@@ -218,9 +217,9 @@ public class Constants {
         public static final boolean RIGHT_INVERTED = true;
         public static final double DEADBAND = 0.1;
         public static final double RPM_TOLERANCE = 100; //RPM
-        public static final double kP = 0.6;
-        public static final double kI = 0.0015;
-        public static final double kD = 0.65;
+        public static final double kP = 0.3;
+        public static final double kI = 0.002;
+        public static final double kD = 0.5;
         public static final double kF = 0.05;
         public static final int I_ZONE = 150;
         public static final long TIMEOUT = 30;
@@ -247,7 +246,7 @@ public class Constants {
             public static final double MIN_SPEED = 0.25;
             public static final double MIN_TRACK_DISTANCE = 2.0;
             public static final int MAX_GARBAGE = 5;
-            public static final double STEER_K = 0.019;
+            public static final double STEER_K = 0.013;
             public static final double MAX_IMU_ANGLE = 180.0;
             public static final double MIN_IMU_ANGLE = -MAX_IMU_ANGLE;
         }

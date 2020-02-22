@@ -96,8 +96,8 @@ public class OI extends OutliersProxy {
     }
 
     public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber, Hood hood, Skywalker skywalker, Lights lights, AHRS imu){
-        _operatorRightBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,this,5700, 67));
-        _operatorLeftBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,this,3150, 51));
+        _operatorRightBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,this,3200, 52.5));
+        _operatorLeftBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,this,5400, 68.5));
 
         _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this));
 
@@ -106,30 +106,28 @@ public class OI extends OutliersProxy {
         _operatorEndButton.whileHeld(new RetractWinch(climber));
 
 //        _operatorXButton.whenPressed(new AdjustTurret(turret, -1));
-        _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 2000));
-        _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 2000));
-
+        _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 4600));
+        _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 4800));
 //        _operatorXButton.whileHeld(new AutoBalance(skywalker, spinner, this));
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
 
 
-
-        _driverAButton.whenPressed(new ZeroHood(hood, turret));
+        _operatorXButton.whenPressed(new ZeroHood(hood, turret));
 //        _driverAButton.whenPressed(new AutoAlign(driveTrain, 0));
 //        _driverAButton.whenPressed(new AutoAlign(driveTrain, 90));
 
-        _driverYButton.whenPressed(new AutoTurretTracking(turret, driveTrain, limelight, this, poseTracker));
+//        _driverYButton.whenPressed(new AutoTurretTracking(turret, driveTrain, limelight, this, poseTracker));
 
 
-        _operatorYButton.whenPressed(new MoveHoodToAngle(hood, 68));
+
+//        _operatorYButton.whenPressed(new MoveHoodToAngle(hood, 67));
 //        _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this, poseTracker));
         _operatorLeftTrigger.whileHeld(new AutoIntake(intake, lights));
 
-
-
 //        _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
-        //_operatorYButton.whenPressed(new AutoSpinRotations(spinner, this, skywalker));  // <~ When we're ready, this works!
+        //_operatorYButton.whenPressed(new AutoSpinRotations(spinner, this, skywalker));  // <~ When we're ready, this w
+        // orks!
     }
 
     public boolean isAutoTargetPressed() {

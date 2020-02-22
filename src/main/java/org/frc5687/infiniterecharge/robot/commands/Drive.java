@@ -194,7 +194,7 @@ public class Drive extends OutliersCommand {
         double targetAngle = limelightAngle - offsetCompensation;
 
         if (distance > 0 && distance < Constants.Auto.Drive.MIN_TRACK_DISTANCE) {
-            targetAngle *= (distance / 48);
+            targetAngle *= (distance / 90.0);
         }
 
         metric("Pose", pose==null?0:pose.getMillis());

@@ -162,7 +162,8 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             default:
                 return new SequentialCommandGroup(
                         new ZeroHood(_hood, _turret),
-                        new EightBallAuto(_driveTrain, _turret, _shooter,_hood,_intake, _imu, _indexer,_lights, _limelight, _poseTracker)
+                        new AutoShootAndGo(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer, _lights)
+//                        new EightBallAuto(_driveTrain, _turret, _shooter,_hood,_intake, _imu, _indexer,_lights, _limelight, _poseTracker)
                 );
         }
     }

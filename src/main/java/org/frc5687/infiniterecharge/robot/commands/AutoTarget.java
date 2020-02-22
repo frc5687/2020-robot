@@ -67,14 +67,14 @@ public class AutoTarget extends OutliersCommand {
 //        if (_oi!=null) {
 //            _hood.setSpeed(_oi.getHoodSpeed());
 //        }
-        metric("Filter ANgle", getTargetAngle());
+//        metric("Filter ANgle", getTargetAngle());
         if (!_shooter.isShooting()) {
-            _turret.setMotionMagicSetpoint(getTargetAngle());
+            _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees());
         }
-        error("Setpoint is " + (getTargetAngle()));
+//        error("Setpoint is " + (getTargetAngle()));
         if (!_shooter.isShooting()) {
-            _turret.setMotionMagicSetpoint(getTargetAngle() + _turret.getManualOffset());
-            error("Setpoint is " + getTargetAngle());
+            _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees() + _turret.getManualOffset());
+//            error("Setpoint is " + getTargetAngle());
         }
 
         _lights.setReadyToshoot(_shooter.isAtTargetVelocity() && _turret.isTargetInTolerance());

@@ -239,10 +239,11 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void periodic() {
+//        updatePose();
         _pose = _odometry.update(getHeading(), Units.inchesToMeters(getLeftDistance()), Units.inchesToMeters(getRightDistance()));
-        if (_driveLimelight.isTargetSighted() && _oi.isAutoTargetDrivePressed() && _driveLimelight.getTargetDistance() < Constants.DriveTrain.LIMELIGHT_ODOMETRY_ZONE) {
-            resetOdometry(updatePose());
-        }
+//        if (_driveLimelight.isTargetSighted() && _oi.isAutoTargetDrivePressed() && _driveLimelight.getTargetDistance() < Constants.DriveTrain.LIMELIGHT_ODOMETRY_ZONE) {
+////            resetOdometry(updatePose());
+//        }
     }
 
     @Override
@@ -251,13 +252,13 @@ public class DriveTrain extends OutliersSubsystem {
 //        SmartDashboard.putBoolean("MetricTracker/Drive", true);
 //        metric("X", getPose().getTranslation().getX());
 //        metric("Y", getPose().getTranslation().getY());
-        metric("Distance/Left", getLeftDistance());
-        metric("Distance/Right", getRightDistance());
-        metric("Distance/RawLeft", getRawLeftEncoder());
-        metric("Distance/RawRight", getRawRightEncoder());
-        metric("Heading", getPose().getRotation().getDegrees());
+//        metric("Distance/Left", getLeftDistance());
+//        metric("Distance/Right", getRightDistance());
+//        metric("Distance/RawLeft", getRawLeftEncoder());
+//        metric("Distance/RawRight", getRawRightEncoder());
+//        metric("Heading", getPose().getRotation().getDegrees());
         metric("angle to target", getAngleToTarget());
-        metric("distance to taget", distanceToTarget());
+//        metric("distance to taget", distanceToTarget());
     }
 
     public DifferentialDriveKinematics getKinematics() {
@@ -333,6 +334,7 @@ public class DriveTrain extends OutliersSubsystem {
         double x = Math.sin(Math.toRadians(alpha)) * distance;
         double y = Math.cos(Math.toRadians(alpha)) * distance;
         metric("Angle", alpha);
+        metric("distance", distance);
         metric("X", x);
         metric("Y", y);
         double poseX = Constants.AutoPositions.LOADING_STATION_POSE.getTranslation().getX() - x;
@@ -342,6 +344,8 @@ public class DriveTrain extends OutliersSubsystem {
         } else if (prevPose.getTranslation().getY() > Constants.AutoPositions.LOADING_STATION_POSE.getTranslation().getY()) {
             poseY = Constants.AutoPositions.LOADING_STATION_POSE.getTranslation().getY() + y;
         }
+        metric("New Pose X", poseX);
+        metric("New Pose Y", poseY);
         return new Pose2d(poseX, poseY, getHeading());
     }
 }
