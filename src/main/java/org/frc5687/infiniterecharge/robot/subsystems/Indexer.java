@@ -19,6 +19,8 @@ public class Indexer extends OutliersSubsystem {
     private Servo _agitatorServo;
     private double _servoSpeed;
 
+    private boolean _abort;
+
     private OI _oi;
 
     private DigitalIR _bottomIR;
@@ -56,20 +58,34 @@ public class Indexer extends OutliersSubsystem {
         _indexerNeo.set(speed);
     }
 
+    public void stopAgitator() {
+        _abort = true;
+    }
+
+    public void startAgitator() {
+        _abort =false;
+    }
+
     public void setAgitatorSpeed(double speed) {
         if (speed < 0) {
             _servoSpeed = Constants.Indexer.SERVO_FORWARD;
+            error("Starting agitator.");
         } else if (speed > 0) {
             _servoSpeed = Constants.Indexer.SERVO_BACKWARDS;
+            error("Reversing agitator.");
         } else {
             _servoSpeed = Constants.Indexer.SERVO_STOPPED;
+            error("Stopping agitator.");
         }
-        _agitatorServo.set(_servoSpeed);
     }
 
     @Override
     public void periodic() {
-        _agitatorServo.set(_servoSpeed);
+        if (_abort) {
+            _agitatorServo.set(Constants.Indexer.SERVO_STOPPED);
+        } else {
+            _agitatorServo.set(_servoSpeed);
+        }
     }
 
     @Override
