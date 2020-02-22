@@ -1,9 +1,6 @@
 package org.frc5687.infiniterecharge.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatusFrame;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.util.Units;
@@ -61,6 +58,8 @@ public class Turret extends OutliersSubsystem {
             _turretController.enableVoltageCompensation(true);
             _turretController.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10,20);
             _turretController.configClosedloopRamp(0,50);
+            _turretController.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 30);
+            _turretController.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 30);
             _turretController.setNeutralMode(NeutralMode.Brake);
         } catch (Exception e) {
             error("error allocating turret motors " + e.getMessage());
@@ -153,6 +152,8 @@ public class Turret extends OutliersSubsystem {
         metric("Absolute Pos", getAbsoluteEncoderPosition());
         metric("LL distance inches", _limelight.getTargetDistance());
         metric("LLDistance", Units.inchesToMeters(_limelight.getTargetDistance()));
+        metric("forward", _turretController.isFwdLimitSwitchClosed());
+        metric("rev", _turretController.isRevLimitSwitchClosed());
 //        metric("Velocity", getVelocityTicksPer100ms());
 //        metric("Speed", _turretController.getMotorOutputVoltage());
 //        metric("Limelight distance", _limelight.getTargetDistance());

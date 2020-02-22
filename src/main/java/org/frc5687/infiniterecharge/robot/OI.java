@@ -102,7 +102,7 @@ public class OI extends OutliersProxy {
         _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this));
 
         _operatorStartButton.whileHeld(new ExtendElevator(climber));
-//         _operatorXButton.whileHeld(new RetractElevator(climber));
+         _operatorXButton.whileHeld(new RetractElevator(climber));
         _operatorEndButton.whileHeld(new RetractWinch(climber));
 
 //        _operatorXButton.whenPressed(new AdjustTurret(turret, -1));
@@ -113,7 +113,7 @@ public class OI extends OutliersProxy {
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
 
 
-        _operatorXButton.whenPressed(new ZeroHood(hood, turret));
+//        _operatorXButton.whenPressed(new ZeroHood(hood, turret));
 //        _driverAButton.whenPressed(new AutoAlign(driveTrain, 0));
 //        _driverAButton.whenPressed(new AutoAlign(driveTrain, 90));
 
@@ -157,7 +157,7 @@ public class OI extends OutliersProxy {
     public double getIndexerSpeed() {
         double speed = getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.Shooter.DEADBAND);
-        return speed;
+        return 0;
     }
 
     public double getSkywalkerSpeed() {
@@ -266,7 +266,7 @@ public class OI extends OutliersProxy {
     }
 
     public double getSpinnerSpeed() {
-        return getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
+        return 0;//getSpeedFromAxis(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber());
     }
 
     private enum SubSystem {

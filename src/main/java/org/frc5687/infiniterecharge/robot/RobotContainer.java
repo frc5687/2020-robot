@@ -108,11 +108,11 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             setDefaultCommand(_hood, new DriveHood(_hood, _oi));
             setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi, _intake, _driveLimelight, _poseTracker, _imu));
             setDefaultCommand(_climber, new IdleClimber(_climber));
-            // setDefaultCommand(_skywalker, new DriveSkywalker(_skywalker, _spinner, _oi));
+             setDefaultCommand(_skywalker, new DriveSkywalker(_skywalker, _spinner, _oi));
             setDefaultCommand(_intake, new IntakeSpin(_intake, _oi));
             setDefaultCommand(_indexer, new IdleIndexer(_indexer, _intake, _lights));
             setDefaultCommand(_shooter, new DriveShooter(_shooter, _oi));
-//            setDefaultCommand(_turret, new DriveTurret(_turret, _driveTrain, _limelight, _oi));
+            setDefaultCommand(_turret, new DriveTurret(_turret, _driveTrain, _limelight, _oi));
             _limelight.enableLEDs();
         }
     }
