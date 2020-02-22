@@ -98,7 +98,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             setDefaultCommand(_intake, new IntakeSpin(_intake, _oi));
             setDefaultCommand(_indexer, new IdleIndexer(_indexer, _intake, _lights));
             setDefaultCommand(_shooter, new DriveShooter(_shooter, _oi));
-            setDefaultCommand(_turret, new DriveTurret(_turret, _driveTrain, _limelight, _oi));
+//            setDefaultCommand(_turret, new DriveTurret(_turret, _driveTrain, _limelight, _oi));
             _limelight.enableLEDs();
         }
     }
@@ -187,6 +187,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
     public void updateDashboard() {
         super.updateDashboard();
         _oi.updateDashboard();
+        _autoChooser.updateDashboard();
     }
 
 
