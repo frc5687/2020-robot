@@ -59,7 +59,7 @@ public abstract class OutliersCommand extends CommandBase implements ILoggingSou
 
     protected void logMetrics(String... metrics) {
         _metricTracker = MetricTracker.createMetricTracker(getClass().getSimpleName(), metrics);
-//        _metricTracker.pause();
+        _metricTracker.pause();
     }
 
     @Override
@@ -88,6 +88,15 @@ public abstract class OutliersCommand extends CommandBase implements ILoggingSou
         }
 
     }
+
+    protected void enableMetrics() {
+        if (_metricTracker!=null) { _metricTracker.enable(); }
+    }
+
+    protected void disableMetrics() {
+        if (_metricTracker!=null) { _metricTracker.disable(); }
+    }
+
 
     protected void innerExecute() {
 

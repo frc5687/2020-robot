@@ -44,12 +44,11 @@ public class RobotMap {
          */
         public static class PWM {
             /*  Example:
-            public static final int ARM_VICTORSP = 0;
-            */
-            public static final int LEFT_FRONT_DRIVE_MOTOR = 0;
-            public static final int LEFT_BACK_DRIVE_MOTOR = 1;
-            public static final int RIGHT_FRONT_DRIVE_MOTOR = 2;
-            public static final int RIGHT_BACK_DRIVE_MOTOR = 3;
+                        public static final int ARM_VICTORSP = 0;
+                        */
+            public static final int SHORT_LED_STRIP = 0;
+            public static final int LONG_LED_STRIP = 1;
+            public static final int AGITATOR = 2;
         }
 
         /**
@@ -88,10 +87,6 @@ public class RobotMap {
          */
         public static class Analog {
             public static final int MODE_SWITCH = 0;
-            public static final int SUBSYSTEM_SELECTOR = 1;
-        /*
-        public static final int ARM_POTENTIOMETER = 7;
-         */
         }
 
         /**
@@ -102,11 +97,9 @@ public class RobotMap {
             public static final int TOP_IR = 0;
             public static final int MID_IR = 1;
             public static final int BOTTOM_IR = 2;
-            public static final int HOOD_ENCODER = 3;
-            public static final int DRIVE_LEFT_B = 4;
-            public static final int DRIVE_LEFT_A = 5;
-            public static final int DRIVE_RIGHT_B = 6;
-            public static final int DRIVE_RIGHT_A = 7;
+            public static final int HOOD_HALL = 6;
+            public static final int UP_IR = 3;
+            public static final int DOWN_IR = 4;
 
         /* Example:
         public static final int ARM_FRONT_LIMIT = 0;
