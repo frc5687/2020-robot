@@ -30,7 +30,7 @@ public class AutoSpinToColor extends OutliersCommand {
         super.initialize();
         Spinner.MatchedColor colorTheFieldWantsToSee = _spinner.getTargetColorFromField();
         _colorWeWantToSee = _spinner.getColorTheRobotSeesForColorTheFieldSees(colorTheFieldWantsToSee);
-        //_spinner.deploy(); // deploys spinner arm
+        _spinner.deploy(); // deploys spinner arm
         if (shouldGoLeft()) {
             _spinner.spinBackwardsSlowly();
         } else {
@@ -60,7 +60,8 @@ public class AutoSpinToColor extends OutliersCommand {
 
     @Override
     public void end(boolean interrupted) {
-        //_spinner.stow(); // stows spinner
+        _spinner.stow(); // stows spinner
+        _spinner.setSpeed(0);
         super.end(interrupted);
     }
 

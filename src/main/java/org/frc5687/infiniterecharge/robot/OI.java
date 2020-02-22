@@ -119,7 +119,7 @@ public class OI extends OutliersProxy {
 //        _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this, poseTracker));
         _operatorLeftTrigger.whileHeld(new AutoIntake(intake, lights));
 
-        _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
+        _operatorYButton.whileHeld(new AutoSpinToColor(spinner, this, skywalker));
         //_operatorYButton.whenPressed(new AutoSpinRotations(spinner, this, skywalker));  // <~ When we're ready, this works!
         //_operatorYButton.whenPressed(new AutoSpinToColor(spinner, this, skywalker));  // <~ When we're ready, this *should* work!
     }

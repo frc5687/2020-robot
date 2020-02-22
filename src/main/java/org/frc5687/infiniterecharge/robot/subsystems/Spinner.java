@@ -90,6 +90,7 @@ public class Spinner extends OutliersSubsystem {
         // color that we expected to see next. We start this task when we start spinning, and stop it when we
         // stop spinning, so we don't steal too many CPU cycles when thw robot is busy doing other stuff.
         _sampleTask = new Notifier(() -> {
+            info("Sampling color");
             MatchedColor newMatchedColor = senseColor();
             if (!newMatchedColor.equals(_previouslyMatchedColor) && !newMatchedColor.equals(MatchedColor.unknown)) {
                 _wedgeCount++;
