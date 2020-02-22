@@ -35,7 +35,7 @@ public class Constants {
     public static class DriveTrain {
         public static final double DEADBAND = 0.25;
         public static final double SPEED_SENSITIVITY = 0.9;
-        public static final double ROTATION_SENSITIVITY = 0.75;
+        public static final double ROTATION_SENSITIVITY = 0.5;
         public static final double CREEP_FACTOR = 0.25;
 
         public static final int CPR = 8192;
@@ -64,7 +64,7 @@ public class Constants {
         public static final double MAX_ACCELERATION_IPSS = CAP_SPEED_IPS / 2;
         public static final double MAX_ACCEL_MPS = Units.inchesToMeters(MAX_ACCELERATION_IPSS);
         public static final double MAX_JERK_IPSSS = CAP_SPEED_IPS;
-        public static final double RAMP_RATE = 0.125;
+        public static final double RAMP_RATE = 0.1;
         public static final int STALL_CURRENT_LIMIT = 50;
         public static final int FREE_CURRENT_LIMIT = 60;
         public static final double SECONDARY_LIMIT = 90;
@@ -81,9 +81,9 @@ public class Constants {
         public static final double ANGLE_TOLERANCE = 1.5;
         public static final double ROTATION_SENSITIVITY_HIGH_GEAR = .8;
         public static final double ROTATION_SENSITIVITY_LOW_GEAR = .8;
-        public static final double TURNING_SENSITIVITY_HIGH_GEAR = .8;
-        public static final double TURNING_SENSITIVITY_LOW_GEAR = .8;
-        public static final double SPEED_LIMIT = 1;
+        public static final double TURNING_SENSITIVITY_HIGH_GEAR = .5;
+        public static final double TURNING_SENSITIVITY_LOW_GEAR = .5;
+        public static final double SPEED_LIMIT = 0.85;
         public static final double DISTANCE_TOLERANCE = 2.0;
         public static final double LIMELIGHT_ODOMETRY_ZONE = 48; //inches, we are saying if our distance isnt within this range dont update pose
     }
