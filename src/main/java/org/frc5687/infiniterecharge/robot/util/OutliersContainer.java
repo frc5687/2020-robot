@@ -71,6 +71,15 @@ public abstract class OutliersContainer implements ILoggingSource, IPoseTrackabl
         _subsystems.forEach((ss) -> ss.updateDashboard());
     }
 
+    public void disabledPeriodic() { };
+
+    public void disabledInit() { };
+
+    public void teleopInit() { };
+
+    public void autonomousInit() {};
+
+
     public enum IdentityMode {
         competition(0),
         practice(1),

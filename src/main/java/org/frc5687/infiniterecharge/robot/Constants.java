@@ -235,6 +235,9 @@ public class Constants {
         public static final boolean INVERTED = false;
         public static final double ADVANCE_SPEED = .75; // TODO: Need a real value here!
         public static final double AGITATOR_SPEED = -1.0;
+        public static final double SERVO_FORWARD = 1.0;
+        public static final double SERVO_STOPPED = 0.51;
+        public static final double SERVO_BACKWARDS = 0.00;
     }
 
     public class Auto {

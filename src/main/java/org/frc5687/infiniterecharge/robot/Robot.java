@@ -93,6 +93,7 @@ public class Robot extends OutliersRobot implements ILoggingSource{
     public void autonomousInit() {
         _fmsConnected = DriverStation.getInstance().isFMSAttached();
         _autoCommand = _robotContainer.getAutonomousCommand();
+        _robotContainer.autonomousInit();
         if (_autoCommand != null) {
             _autoCommand.schedule();
         }
@@ -103,6 +104,7 @@ public class Robot extends OutliersRobot implements ILoggingSource{
 
     public void teleopInit() {
         _fmsConnected = DriverStation.getInstance().isFMSAttached();
+        _robotContainer.teleopInit();
 
         //_limelight.disableLEDs();
     }
@@ -148,9 +150,15 @@ public class Robot extends OutliersRobot implements ILoggingSource{
         //_limelight.disableLEDs();
         RioLogger.getInstance().forceSync();
         RioLogger.getInstance().close();
+        _robotContainer.disabledInit();
 //        MetricTracker.flushAll();
     }
 
+    @Override
+    public void disabledPeriodic() {
+        super.disabledPeriodic();
+        _robotContainer.disabledPeriodic();
+    }
 
     public void updateDashboard() {
         _updateTick++;
