@@ -24,6 +24,7 @@ public class AutoTarget extends OutliersCommand {
     private double _speed;
     private double _angle;
     private OI _oi;
+    private boolean _override;
 
     private Mode _mode;
 
@@ -36,7 +37,8 @@ public class AutoTarget extends OutliersCommand {
                       Lights lights,
                       OI oi,
                       double speed,
-                      double angle) {
+                      double angle,
+                      boolean override) {
         _turret = turret;
         _shooter = shooter;
         _hood = hood;
@@ -48,6 +50,7 @@ public class AutoTarget extends OutliersCommand {
         _oi = oi;
         _speed = speed;
         _angle = angle;
+        _override = override;
         addRequirements(_turret, _shooter, _hood);
     }
 
@@ -57,20 +60,20 @@ public class AutoTarget extends OutliersCommand {
         _turret.setControlMode(Turret.Control.MotionMagic);
         _limelight.enableLEDs();
         _filter.reset();
-//        error("Optimal hood angle : " + _hood.getHoodDesiredAngle(Units.metersToInches(_driveTrain.distanceToTarget())));
-//        _hood.setPosition(_hood.getHoodDesiredAngle(Units.metersToInches(_driveTrain.distanceToTarget())));
-//        _hood.setPosition(_angle);
-//        error("Optimal RPM : " + _shooter.getDistanceSetpoint(Units.metersToInches(_driveTrain.distanceToTarget())));
-//        _shooter.setVelocitySpeed(_shooter.getDistanceSetpoint(Units.metersToInches(_driveTrain.distanceToTarget())));
-//        _shooter.setVelocitySpeed(_speed);
+        if (_override) {
+            _hood.setPosition(_angle);
+            _shooter.setVelocitySpeed(_speed);
+        }
         _lights.setTargeting(true);
         _mode = Mode.Rough;
     }
 
     @Override
     public void execute() {
-        _hood.setPosition(_hood.getHoodDesiredAngle(Units.metersToInches(_driveTrain.distanceToTarget())));
-        _shooter.setVelocitySpeed(_shooter.getDistanceSetpoint(Units.metersToInches(_driveTrain.distanceToTarget())));
+        if (!_override) {
+            _hood.setPosition(_hood.getHoodDesiredAngle(Units.metersToInches(_driveTrain.distanceToTarget())));
+            _shooter.setVelocitySpeed(_shooter.getDistanceSetpoint(Units.metersToInches(_driveTrain.distanceToTarget())));
+        }
         switch (_mode) {
             case Rough:
                 error("Targeting to rough");

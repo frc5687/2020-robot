@@ -41,7 +41,7 @@ public class Constants {
         public static final int CPR = 8192;
         public static final double ENCODER_CONVERSION = 6.85714286;
 
-        public static final double WIDTH = Units.inchesToMeters(30);
+        public static final double WIDTH = Units.inchesToMeters(29);
 
         public static final double KS_VOLTS = 0.172;
         public static final double KV_VOLTSPR = 2.46;
@@ -83,7 +83,8 @@ public class Constants {
         public static final double ROTATION_SENSITIVITY_LOW_GEAR = .8;
         public static final double TURNING_SENSITIVITY_HIGH_GEAR = .5;
         public static final double TURNING_SENSITIVITY_LOW_GEAR = .5;
-        public static final double SPEED_LIMIT = 0.85;
+        public static final double SPEED_LIMIT = 0.9
+                ;
         public static final double DISTANCE_TOLERANCE = 2.0;
         public static final double LIMELIGHT_ODOMETRY_ZONE = 150; //inches, we are saying if our distance isnt within this range dont update pose
     }

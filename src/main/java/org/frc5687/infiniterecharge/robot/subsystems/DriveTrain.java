@@ -252,6 +252,8 @@ public class DriveTrain extends OutliersSubsystem {
     public void updateDashboard() {
         metric("X", getPose().getTranslation().getX());
         metric("Y", getPose().getTranslation().getY());
+        metric("leftDistane", getLeftDistance());
+        metric("rightDistance", getRightDistance());
         metric("angle to target", getAngleToTarget());
         metric("distance to taget", distanceToTarget());
     }
@@ -307,13 +309,15 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getAngleToTarget() {
         double angle = 0;
+        metric("xLength", _xLength);
+        metric("ylength", _yLength);
         if (_yLength > 0) {
             angle = (90 + Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + getHeading().getDegrees());
             if (!Double.isNaN(angle)) {
                 _prevAngle = angle;
             }
         } else if (_yLength < 0){
-            angle =  (Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + 90) + getHeading().getDegrees();
+            angle = -(Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + 90) + getHeading().getDegrees();
             if (!Double.isNaN(angle)) {
                 _prevAngle = angle;
             }
