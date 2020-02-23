@@ -65,8 +65,8 @@ public class RobotMap {
             public static final int SHIFTER_LOW = 3;
             public static final int INTAKE_HIGH = 0;
             public static final int INTAKE_LOW = 1;
-            public static final int SPINNER_DEPLOY = 4;
-            public static final int SPINNER_STOW = 5;
+            public static final int SPINNER_DEPLOY = 5;
+            public static final int SPINNER_STOW = 4;
         }
 
 
