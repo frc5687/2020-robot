@@ -69,13 +69,13 @@ public class Indexer extends OutliersSubsystem {
     public void setAgitatorSpeed(double speed) {
         if (speed < 0) {
             _servoSpeed = Constants.Indexer.SERVO_FORWARD;
-            error("Starting agitator.");
+//            error("Starting agitator.");
         } else if (speed > 0) {
             _servoSpeed = Constants.Indexer.SERVO_BACKWARDS;
-            error("Reversing agitator.");
+//            error("Reversing agitator.");
         } else {
             _servoSpeed = Constants.Indexer.SERVO_STOPPED;
-            error("Stopping agitator.");
+//            error("Stopping agitator.");
         }
     }
 

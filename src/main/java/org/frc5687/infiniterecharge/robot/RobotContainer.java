@@ -85,9 +85,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker, _intake, _shooter, _indexer, _spinner, _climber, _hood, _skywalker, _lights, _imu);
 
             // Initialize the other stuff
-            // Initialize the other stuff
             _driveTrain.enableBrakeMode();
-//            _driveTrain.resetOdometry(new Pose2d(0,0,new Rotation2d(0)));
             _driveTrain.resetOdometry(Constants.AutoPositions.EIGHT_BALL_STARING);
 
             // Now setup the default commands:
@@ -98,7 +96,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             setDefaultCommand(_intake, new IntakeSpin(_intake, _oi));
             setDefaultCommand(_indexer, new IdleIndexer(_indexer, _intake, _lights));
             setDefaultCommand(_shooter, new DriveShooter(_shooter, _oi));
-//            setDefaultCommand(_turret, new DriveTurret(_turret, _driveTrain, _limelight, _oi));
+//            setDefaultCommand(_turret, new AutoTurretTracking(_turret, _driveTrain, _limelight, _oi,  _poseTracker));
             _limelight.enableLEDs();
         }
     }

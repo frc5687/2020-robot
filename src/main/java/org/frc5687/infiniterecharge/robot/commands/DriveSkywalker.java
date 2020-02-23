@@ -23,7 +23,6 @@ public class DriveSkywalker extends OutliersCommand{
 
     @Override
     public void execute() {
-        error("Speed is:" + _oi.getSkywalkerSpeed());
         _spinner.setSpeed(_oi.getSkywalkerSpeed());
     }
 

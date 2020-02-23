@@ -65,8 +65,6 @@ public class Hood extends OutliersSubsystem {
 
     public void setPosition(double angle) {
         _setPoint = Helpers.limit(angle, Constants.Hood.MIN_DEGREES, Constants.Hood.MAX_DEGREES);
-        metric("Setpoint", _setPoint);
-        metric("Setpoint Ticks", _setPoint / Constants.Hood.TICKS_TO_DEGREES);
         _hoodController.set(ControlMode.MotionMagic, _setPoint / Constants.Hood.TICKS_TO_DEGREES);
     }
 
@@ -92,8 +90,6 @@ public class Hood extends OutliersSubsystem {
         metric("Position", getPosition());
         metric("Raw Ticks", getPositionTicks());
         metric("Output Percent", getMotorOutput());
-        metric("Limelight Lens Height", getLimelightHeight());
-        metric("Limelight Lens Angle", getLimelightAngle());
     }
 
 

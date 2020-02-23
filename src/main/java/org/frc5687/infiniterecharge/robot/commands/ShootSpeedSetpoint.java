@@ -15,19 +15,16 @@ public class ShootSpeedSetpoint extends OutliersCommand {
         _oi = oi;
         _speed = speed; // in RPM
         addRequirements(_shooter);
-        logMetrics("VelocityRPM");
-        enableMetrics();
     }
     @Override
     public void initialize() {
-
         super.initialize();
         _shooter.setVelocitySpeed(_speed);
     }
 
     @Override
     public void execute() {
-         metric("VelocityRPM", _shooter.getRPM());
+
     }
 
     @Override
