@@ -1,6 +1,7 @@
 package org.frc5687.infiniterecharge.robot.commands;
 
 import edu.wpi.first.wpilibj.MedianFilter;
+import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import org.frc5687.infiniterecharge.robot.Constants;
@@ -56,19 +57,26 @@ public class AutoTarget extends OutliersCommand {
         _turret.setControlMode(Turret.Control.MotionMagic);
         _limelight.enableLEDs();
         _filter.reset();
-        _hood.setPosition(_angle);
-        _shooter.setVelocitySpeed(_speed);
-
+//        error("Optimal hood angle : " + _hood.getHoodDesiredAngle(Units.metersToInches(_driveTrain.distanceToTarget())));
+//        _hood.setPosition(_hood.getHoodDesiredAngle(Units.metersToInches(_driveTrain.distanceToTarget())));
+//        _hood.setPosition(_angle);
+//        error("Optimal RPM : " + _shooter.getDistanceSetpoint(Units.metersToInches(_driveTrain.distanceToTarget())));
+//        _shooter.setVelocitySpeed(_shooter.getDistanceSetpoint(Units.metersToInches(_driveTrain.distanceToTarget())));
+//        _shooter.setVelocitySpeed(_speed);
         _lights.setTargeting(true);
         _mode = Mode.Rough;
     }
 
     @Override
     public void execute() {
+        _hood.setPosition(_hood.getHoodDesiredAngle(Units.metersToInches(_driveTrain.distanceToTarget())));
+        _shooter.setVelocitySpeed(_shooter.getDistanceSetpoint(Units.metersToInches(_driveTrain.distanceToTarget())));
         switch (_mode) {
             case Rough:
+                error("Targeting to rough");
                 _turret.setMotionMagicSetpoint(_driveTrain.getAngleToTarget());
                 if (_turret.isAtSetpoint()) {
+                    error("Going To Limelight");
                     _mode = Mode.Limelighting;
                 }
                 break;

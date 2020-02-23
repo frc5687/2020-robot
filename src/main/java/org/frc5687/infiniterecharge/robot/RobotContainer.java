@@ -2,14 +2,11 @@ package org.frc5687.infiniterecharge.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.frc5687.infiniterecharge.robot.commands.*;
-import org.frc5687.infiniterecharge.robot.commands.drive.EightBallAuto;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.*;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
@@ -167,7 +164,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
                 return wrapCommand(new AutoShootAndFarTrench(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer, _intake, _lights));
             default:
                 return new SequentialCommandGroup(
-                        new ZeroHood(_hood, _turret),
+                        new ZeroSensors(_hood, _turret),
                         new AutoShootAndGo(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer, _lights)
 //                        new EightBallAuto(_driveTrain, _turret, _shooter,_hood,_intake, _imu, _indexer,_lights, _limelight, _poseTracker)
                 );
@@ -176,7 +173,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
     private Command wrapCommand(Command command) {
         return new SequentialCommandGroup(
-                new ZeroHood(_hood, _turret),
+                new ZeroSensors(_hood, _turret),
                 command
         );
     }

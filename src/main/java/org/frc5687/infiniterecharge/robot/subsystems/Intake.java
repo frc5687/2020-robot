@@ -12,7 +12,6 @@ import org.frc5687.infiniterecharge.robot.subsystems.OutliersSubsystem;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 public class Intake extends OutliersSubsystem {
-    //private Robot _robot;
 
     private CANSparkMax _intakeSpark;
     private DoubleSolenoid _intakeSolenoid;

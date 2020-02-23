@@ -13,33 +13,24 @@ public class AutoTurretSetpoint extends OutliersCommand {
     private OI _oi;
     private double _angle;
 
-    public AutoTurretSetpoint(Turret turret, DriveTrain driveTrain, Limelight limelight, OI oi, double angle) {
+    public AutoTurretSetpoint(Turret turret, double angle) {
         _turret = turret;
-        _driveTrain = driveTrain;
-        _limelight = limelight;
-        _oi = oi;
         _angle = angle;
         addRequirements(_turret);
     }
 
     @Override
     public void initialize() {
-//        _limelight.enableLEDs();
         _turret.setControlMode(Turret.Control.MotionMagic);
+        _turret.setMotionMagicSetpoint(_angle);
     }
 
     @Override
     public void execute() {
-        double position = _angle;
-        _turret.setMotionMagicSetpoint(position);
     }
 
     @Override
     public boolean isFinished() {
-        if (_oi.isKillAllPressed()) {
-            error("Ending KillAll");
-            return true;
-        }
         error("At setpoint");
         return _turret.isAtSetpoint();
     }

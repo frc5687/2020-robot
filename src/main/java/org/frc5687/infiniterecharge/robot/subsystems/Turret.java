@@ -108,7 +108,8 @@ public class Turret extends OutliersSubsystem {
     }
 
     public boolean isAtSetpoint() {
-        return Math.abs(getPositionDegrees() - _setpoint) > Constants.Turret.TOLERANCE;
+        return Math.abs(getPositionDegrees() - _setpoint) < Constants.Turret.TOLERANCE;
+
     }
 
     public void enableBreakMode() {
