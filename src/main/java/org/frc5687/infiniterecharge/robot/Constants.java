@@ -41,7 +41,7 @@ public class Constants {
         public static final int CPR = 8192;
         public static final double ENCODER_CONVERSION = 6.85714286;
 
-        public static final double WIDTH = Units.inchesToMeters(27.0);
+        public static final double WIDTH = Units.inchesToMeters(30);
 
         public static final double KS_VOLTS = 0.172;
         public static final double KV_VOLTSPR = 2.46;
@@ -85,7 +85,7 @@ public class Constants {
         public static final double TURNING_SENSITIVITY_LOW_GEAR = .5;
         public static final double SPEED_LIMIT = 0.85;
         public static final double DISTANCE_TOLERANCE = 2.0;
-        public static final double LIMELIGHT_ODOMETRY_ZONE = 48; //inches, we are saying if our distance isnt within this range dont update pose
+        public static final double LIMELIGHT_ODOMETRY_ZONE = 150; //inches, we are saying if our distance isnt within this range dont update pose
     }
 
     public static class Turret {
@@ -94,7 +94,7 @@ public class Constants {
         public static final boolean INVERTED = true;
         public static final boolean SENSOR_PHASE_INVERTED = true;
         public static final double TICKS_TO_DEGREES = 0.08695652173913;
-        public static final double MIN_DEGREES = -200;
+        public static final double MIN_DEGREES = -190;
         public static final double MAX_DEGREES = 131;
         public static final double MAX_VOLTAGE = 12.0;
         public static final int CRUISE_VELOCITY = 5000; // in ticks
@@ -192,6 +192,7 @@ public class Constants {
         public static Pose2d LOADING_STATION_POSE = new Pose2d(MID_LENGTH_FIELD, TARGET_LINE, new Rotation2d(0));
         public static Pose2d STARTING_POSITION_ONE = new Pose2d(0,0, new Rotation2d(0));
         public static Pose2d BACK_WHEEL_OF_FORTUNE = new Pose2d(0, MID_TRENCH, new Rotation2d(0));
+        public static Pose2d FRONT_WHEEL_OF_FORTUNE = new Pose2d(AUTO_LINE, MID_TRENCH, new Rotation2d(0));
         public static Pose2d EIGHT_BALL_STARING = new Pose2d(-AUTO_LINE, TARGET_LINE, new Rotation2d(0));
 
     }
@@ -249,7 +250,7 @@ public class Constants {
             public static final double MIN_SPEED = 0.25;
             public static final double MIN_TRACK_DISTANCE = 2.0;
             public static final int MAX_GARBAGE = 5;
-            public static final double STEER_K = 0.013;
+            public static final double STEER_K = 0.01;
             public static final double MAX_IMU_ANGLE = 180.0;
             public static final double MIN_IMU_ANGLE = -MAX_IMU_ANGLE;
         }

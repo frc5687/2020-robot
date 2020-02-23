@@ -16,7 +16,6 @@ public class EightBallAuto extends SequentialCommandGroup {
                         new AutoDrivePath(driveTrain, imu, "StartingToGenerator", 0,false),
                         new AutoIntake(intake, lights)
                 )
-//                , new AutoAlign(driveTrain, 35)
                 ,  new AutoDrivePath(driveTrain, imu, "HalfTrench", 0, true)
                 ,new ParallelDeadlineGroup(
                         new AutoShoot(shooter, indexer, turret, null)

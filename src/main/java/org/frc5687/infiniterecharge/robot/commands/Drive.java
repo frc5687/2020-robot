@@ -97,22 +97,19 @@ public class Drive extends OutliersCommand {
             switch (_driveState) {
                 case normal:
                     // Start seeking
-                    if (_intake.isLowered()) {
-                        if (_intake.isIntaking()) {
-                            error("Cargo intaking");
-                            _driveLimelight.setPipeline(Limelight.Pipeline.PowerCell);
-                            metric("Pipeline", Limelight.Pipeline.PowerCell.name());
-                            _driveLimelight.disableLEDs();
-                            _driveState = DriveState.seekingcells;
-                        }
-                    } else {
-                        error("Using Limelight");
-                        _driveLimelight.setPipeline(Limelight.Pipeline.Wide);
-                        metric("Pipeline", Limelight.Pipeline.Wide.name());
-                        _driveLimelight.enableLEDs();
-                        _driveState = DriveState.seeking;
-                        _seekMax = System.currentTimeMillis() + Constants.DriveTrain.SEEK_TIME;
-                    }
+//                    if (_intake.isLowered()) {
+//                        if (_intake.isIntaking()) {
+//                            error("Cargo intaking");
+//                            _driveLimelight.setPipeline(Limelight.Pipeline.PowerCell);
+//                            metric("Pipeline", Limelight.Pipeline.PowerCell.name());
+//                            _driveLimelight.disableLEDs();
+//                            _driveState = DriveState.seekingcells;
+//                        }
+//                    } else {
+                    _driveLimelight.setPipeline(Limelight.Pipeline.Wide);
+                    _driveLimelight.enableLEDs();
+                    _driveState = DriveState.seeking;
+                    _seekMax = System.currentTimeMillis() + Constants.DriveTrain.SEEK_TIME;
                     break;
                 case seeking:
                     if (_driveLimelight.isTargetSighted()) {
@@ -122,21 +119,20 @@ public class Drive extends OutliersCommand {
                     }
                     break;
                 case seekingcells:
-                    if (_driveLimelight.isTargetSighted()) {
-                        _turnSpeed = getTurnSpeed();
-                        if (_driveLimelight.isTargetCentered()) {
-                            _driveLimelight.setPipeline(Limelight.Pipeline.PowerCell);
-                            metric("Pipeline", Limelight.Pipeline.PowerCell.name());
-                            _driveState = DriveState.trackingcells;
-                        }
-                    }
+//                    if (_driveLimelight.isTargetSighted()) {
+//                        _turnSpeed = getTurnSpeed();
+//                        if (_driveLimelight.isTargetCentered()) {
+//                            _driveLimelight.setPipeline(Limelight.Pipeline.PowerCell);
+//                            metric("Pipeline", Limelight.Pipeline.PowerCell.name());
+//                            _driveState = DriveState.trackingcells;
+//                        }
+//                    }
                     break;
                 case locking:
                     if (System.currentTimeMillis() > _lockEnd || _driveLimelight.isTargetSighted()) {
                         // Note that we could also wait until the target is centered to lock...which might make more sense.
                         // Just add  && _limelight.isTargetCentered() to the condition above
                         _driveLimelight.setPipeline(Limelight.Pipeline.Wide);
-                        metric("Pipeline", Limelight.Pipeline.Wide.name());
                         _driveState = DriveState.tracking;
                     }
                     _turnSpeed = getTurnSpeed();
@@ -193,16 +189,6 @@ public class Drive extends OutliersCommand {
         double offsetCompensation = -yaw - poseAngle;
         double targetAngle = limelightAngle - offsetCompensation;
 
-        if (distance > 0 && distance < Constants.Auto.Drive.MIN_TRACK_DISTANCE) {
-            targetAngle *= (distance / 90.0);
-        }
-
-        metric("Pose", pose==null?0:pose.getMillis());
-        metric("Yaw", yaw);
-        metric("PoseAngle", poseAngle);
-        metric("LimelightAngle", limelightAngle);
-        metric("TargetAngle", targetAngle);
-
         return targetAngle * Constants.Auto.Drive.STEER_K;
     }
     private double limitSpeed(double speed) {
@@ -211,7 +197,6 @@ public class Drive extends OutliersCommand {
             if(_driveLimelight.isTargetSighted()) {
                 _seekMax = System.currentTimeMillis() + Constants.DriveTrain.DROPOUT_TIME;
                 double distance = _driveLimelight.getTargetDistance();
-                metric("TargetDistance", distance);
                 if (distance  > 0) {
                     if (distance < _mediumZone) {
                         limit = _mediumSpeed;
@@ -229,10 +214,6 @@ public class Drive extends OutliersCommand {
             }
         }
         limit = Math.min(limit, _stickyLimit);
-        if (_driveLimelight.isTargetSighted()) {
-            error("Limiting speed for middle hatch");
-            // TODO: Ben says this limit is bad with limelight obstructions limit = Math.min(0.5, limit);
-        }
         double limited = Helpers.limit(speed, -limit, limit);
         metric("limit", limit);
         metric("limited", limited);

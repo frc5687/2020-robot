@@ -49,7 +49,6 @@ public class AutoTarget extends OutliersCommand {
     @Override
     public void initialize() {
         super.initialize();
-        error("Starting AutoTarget");
         _turret.setControlMode(Turret.Control.MotionMagic);
         _limelight.enableLEDs();
         _filter.reset();
@@ -61,22 +60,12 @@ public class AutoTarget extends OutliersCommand {
 
     @Override
     public void execute() {
-//        metric("Hood Setpoint", _hood.getHoodDesiredAngle(400));
-//        metric("Shooter Setpoint", _shooter.getDistanceSetpoint(400));
-        _hood.setPipeline();
-//        if (_oi!=null) {
-//            _hood.setSpeed(_oi.getHoodSpeed());
-//        }
-//        metric("Filter ANgle", getTargetAngle());
         if (!_shooter.isShooting()) {
             _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees());
         }
-//        error("Setpoint is " + (getTargetAngle()));
         if (!_shooter.isShooting()) {
             _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees() + _turret.getManualOffset());
-//            error("Setpoint is " + getTargetAngle());
         }
-
         _lights.setReadyToshoot(_shooter.isAtTargetVelocity() && _turret.isTargetInTolerance());
 
     }
@@ -105,9 +94,7 @@ public class AutoTarget extends OutliersCommand {
         super.end(interrupted);
         _lights.setTargeting(false);
         _lights.setReadyToshoot(false);
-        error("Ending AutoTarget");
         _hood.setPosition(Constants.Hood.MIN_DEGREES);
-//        _shooter.setShooterSpeed(Constants.Shooter.IDLE_SHOOTER_SPEED_PERCENT);
         _limelight.disableLEDs();
     }
 }
