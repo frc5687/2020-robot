@@ -22,13 +22,11 @@ public class Shoot extends OutliersCommand {
         _turret = turret;
         _oi = oi;
         addRequirements(_indexer);
-        logMetrics("Velocity");
     }
 
     @Override
     public void initialize() {
         _endTime = null;
-        SmartDashboard.putBoolean("MetricTracker/Shoot", true);
         _shooter.setShooting(true);
     }
 
@@ -36,9 +34,11 @@ public class Shoot extends OutliersCommand {
     public void execute() {
         super.execute();
 
-        if ((_turret.isTargetInTolerance() && _shooter.isAtTargetVelocity()) && _indexer.anyBallsDetected() || _oi.isOverridePressed()) {
-            error("SHOOTING AT VELOCITY " + _shooter.getRPM());
-            error("INDEXING NOW");
+        boolean isOverridePressed = false;
+        if (_oi!=null) {
+            isOverridePressed = _oi.isOverridePressed();
+        }
+        if ((_turret.isTargetInTolerance() && _shooter.isAtTargetVelocity()) && _indexer.anyBallsDetected() || isOverridePressed) {
             _endTime = System.currentTimeMillis() + Constants.Shooter.TIMEOUT;
             _indexer.setIndexerSpeed(Constants.Indexer.ADVANCE_SPEED);
         }

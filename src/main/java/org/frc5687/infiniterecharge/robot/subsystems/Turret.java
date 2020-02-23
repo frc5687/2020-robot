@@ -1,9 +1,6 @@
 package org.frc5687.infiniterecharge.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatusFrame;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.util.Units;
@@ -61,8 +58,9 @@ public class Turret extends OutliersSubsystem {
             _turretController.enableVoltageCompensation(true);
             _turretController.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10,20);
             _turretController.configClosedloopRamp(0,50);
+            _turretController.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 30);
+            _turretController.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 30);
             _turretController.setNeutralMode(NeutralMode.Brake);
-
         } catch (Exception e) {
             error("error allocating turret motors " + e.getMessage());
         }
@@ -126,10 +124,6 @@ public class Turret extends OutliersSubsystem {
         double alpha = 90 - Math.abs(_limelight.getHorizontalAngle());
         double x = Math.sin(Math.toRadians(alpha)) * distance;
         double y = Math.cos(Math.toRadians(alpha)) * distance;
-        metric("Angle", alpha);
-        metric("X", x);
-        metric("Y", y);
-        metric("Skew", _limelight.getSkew());
         double poseX = Constants.AutoPositions.TARGET_POSE.getTranslation().getX() - x;
         double poseY = 0;
         if (prevPose.getTranslation().getY() < Constants.AutoPositions.TARGET_POSE.getTranslation().getY()) {
@@ -142,21 +136,21 @@ public class Turret extends OutliersSubsystem {
 
     @Override
     public void periodic() {
-        if (_oi.isAutoTargetPressed()) {
-            _driveTrain.resetOdometry(updatePose());
+//        if (_oi.isAutoTargetPressed()) {
+//            _driveTrain.resetOdometry(updatePose());
+//        }
+        if (_driveTrain.getPose().getTranslation().getX() > 0) {
+           _limelight.setPipeline(Limelight.Pipeline.TwoTimes);
+        } else if (_driveTrain.getPose().getTranslation().getX() < 0) {
+            _limelight.setPipeline(Limelight.Pipeline.Wide);
         }
     }
 
     public void updateDashboard() {
-        metric("Position Ticks", getPositionTicks());
         metric("Position Degrees", getPositionDegrees());
-        metric("Absolute Position raw" , getAbsoluteEncoderRawPosition());
         metric("Absolute Pos", getAbsoluteEncoderPosition());
-        metric("LL distance inches", _limelight.getTargetDistance());
-        metric("LLDistance", Units.inchesToMeters(_limelight.getTargetDistance()));
-//        metric("Velocity", getVelocityTicksPer100ms());
-//        metric("Speed", _turretController.getMotorOutputVoltage());
-//        metric("Limelight distance", _limelight.getTargetDistance());
+        metric("forward", _turretController.isFwdLimitSwitchClosed());
+        metric("rev", _turretController.isRevLimitSwitchClosed());
     }
 
     public void zeroSensors() {

@@ -57,6 +57,7 @@ public class DriveTrain extends OutliersSubsystem {
     private double _oldRightSpeedFront;
     private double _oldRightSpeedBack;
     private boolean _isPaused = false;
+    private double _prevAngle;
 
     public DriveTrain(OutliersContainer container, OI oi, AHRS imu, Shifter shifter, Limelight driveLimelight)  {
         super(container);
@@ -136,8 +137,8 @@ public class DriveTrain extends OutliersSubsystem {
         _rightSlave.setIdleMode(CANSparkMax.IdleMode.kCoast);
     }
     public void cheesyDrive(double speed, double rotation, boolean creep, boolean override) {
-        metric("Speed", speed);
-        metric("Rotation", rotation);
+//        metric("Speed", speed);
+//        metric("Rotation", rotation);
 
         speed = limit(speed, Constants.DriveTrain.SPEED_LIMIT);
         Shifter.Gear gear = _shifter.getGear();
@@ -150,6 +151,7 @@ public class DriveTrain extends OutliersSubsystem {
         double maxInput = Math.copySign(Math.max(Math.abs(speed), Math.abs(rotation)), speed);
 
         if (speed < Constants.DriveTrain.DEADBAND && speed > -Constants.DriveTrain.DEADBAND) {
+            // Turning in place
             if (!override) {
                 rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.ROTATION_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.ROTATION_SENSITIVITY_LOW_GEAR);
             }
@@ -167,7 +169,7 @@ public class DriveTrain extends OutliersSubsystem {
             if (!override) {
                 rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.TURNING_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.TURNING_SENSITIVITY_LOW_GEAR);
             }
-            rotation = applySensitivityFactor(rotation, Constants.DriveTrain.ROTATION_SENSITIVITY);
+            // rotation = applySensitivityFactor(rotation, Constants.DriveTrain.ROTATION_SENSITIVITY);
             double delta = override ? rotation : rotation * Math.abs(speed);
             if (override) {
                 // speed = Math.copySign(limit(Math.abs(speed), 1-Math.abs(delta)), speed);
@@ -182,8 +184,8 @@ public class DriveTrain extends OutliersSubsystem {
             }
             leftMotorOutput = speed + delta;
             rightMotorOutput = speed - delta;
-            metric("Str/LeftMotor", leftMotorOutput);
-            metric("Str/RightMotor", rightMotorOutput);
+//            metric("Str/LeftMotor", leftMotorOutput);
+//            metric("Str/RightMotor", rightMotorOutput);
         }
 
         setPower(limit(leftMotorOutput), limit(rightMotorOutput), true);
@@ -193,8 +195,8 @@ public class DriveTrain extends OutliersSubsystem {
         _rightMaster.set(rightSpeed);
         _leftSlave.set(leftSpeed);
         _rightSlave.set(rightSpeed);
-        metric("Power/Right", rightSpeed);
-        metric("Power/Left", leftSpeed);
+//        metric("Power/Right", rightSpeed);
+//        metric("Power/Left", leftSpeed);
     }
     public double getRawLeftEncoder() {
         return _leftEncoder.getPosition();
@@ -239,23 +241,17 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void periodic() {
+//        updatePose();
         _pose = _odometry.update(getHeading(), Units.inchesToMeters(getLeftDistance()), Units.inchesToMeters(getRightDistance()));
-//        if (_driveLimelight.isTargetSighted() && _driveLimelight.getTargetDistance() < Constants.DriveTrain.LIMELIGHT_ODOMETRY_ZONE) {
-//            resetOdometry(updatePose());
-//        }
+        if (_driveLimelight.isTargetSighted() && _oi.isAutoTargetDrivePressed() && _driveLimelight.getTargetDistance() < Constants.DriveTrain.LIMELIGHT_ODOMETRY_ZONE) {
+            resetOdometry(updatePose());
+        }
     }
 
     @Override
     public void updateDashboard() {
-
-//        SmartDashboard.putBoolean("MetricTracker/Drive", true);
-//        metric("X", getPose().getTranslation().getX());
-//        metric("Y", getPose().getTranslation().getY());
-        metric("Distance/Left", getLeftDistance());
-        metric("Distance/Right", getRightDistance());
-        metric("Distance/RawLeft", getRawLeftEncoder());
-        metric("Distance/RawRight", getRawRightEncoder());
-        metric("Heading", getPose().getRotation().getDegrees());
+        metric("X", getPose().getTranslation().getX());
+        metric("Y", getPose().getTranslation().getY());
         metric("angle to target", getAngleToTarget());
         metric("distance to taget", distanceToTarget());
     }
@@ -304,23 +300,29 @@ public class DriveTrain extends OutliersSubsystem {
         double y = _pose.getTranslation().getY();
         double targetX = Constants.AutoPositions.TARGET_POSE.getTranslation().getX();
         double targetY = Constants.AutoPositions.TARGET_POSE.getTranslation().getY();
-        metric("yTar", _yLength);
-        metric("xTar", _xLength);
-        metric("x",x);
-        metric("y", y);
-        _xLength = targetX + x;
-        _yLength = targetY + y;
+        _xLength = targetX - x;
+        _yLength = targetY - y;
         return Math.sqrt((_xLength * _xLength) + (_yLength * _yLength));
     }
 
     public double getAngleToTarget() {
         double angle = 0;
         if (_yLength > 0) {
-            angle = (90 - Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + getHeading().getDegrees());
+            angle = (90 + Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + getHeading().getDegrees());
+            if (!Double.isNaN(angle)) {
+                _prevAngle = angle;
+            }
         } else if (_yLength < 0){
-            angle =  (Math.toDegrees(Math.asin(_xLength / distanceToTarget())) - 90) + getHeading().getDegrees();
+            angle =  (Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + 90) + getHeading().getDegrees();
+            if (!Double.isNaN(angle)) {
+                _prevAngle = angle;
+            }
         }
-        return angle;
+        if (Double.isNaN(angle)) {
+            return _prevAngle;
+        } else {
+            return angle;
+        }
     }
 
     public BasicPose getDrivePose() {
@@ -332,9 +334,6 @@ public class DriveTrain extends OutliersSubsystem {
         double alpha = 90 - Math.abs(_driveLimelight.getHorizontalAngle());
         double x = Math.sin(Math.toRadians(alpha)) * distance;
         double y = Math.cos(Math.toRadians(alpha)) * distance;
-        metric("Angle", alpha);
-        metric("X", x);
-        metric("Y", y);
         double poseX = Constants.AutoPositions.LOADING_STATION_POSE.getTranslation().getX() - x;
         double poseY = 0;
         if (prevPose.getTranslation().getY() < Constants.AutoPositions.LOADING_STATION_POSE.getTranslation().getY()) {

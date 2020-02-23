@@ -35,13 +35,13 @@ public class Constants {
     public static class DriveTrain {
         public static final double DEADBAND = 0.25;
         public static final double SPEED_SENSITIVITY = 0.9;
-        public static final double ROTATION_SENSITIVITY = 0.75;
+        public static final double ROTATION_SENSITIVITY = 0.5;
         public static final double CREEP_FACTOR = 0.25;
 
         public static final int CPR = 8192;
         public static final double ENCODER_CONVERSION = 6.85714286;
 
-        public static final double WIDTH = Units.inchesToMeters(27.0);
+        public static final double WIDTH = Units.inchesToMeters(30);
 
         public static final double KS_VOLTS = 0.172;
         public static final double KV_VOLTSPR = 2.46;
@@ -64,7 +64,7 @@ public class Constants {
         public static final double MAX_ACCELERATION_IPSS = CAP_SPEED_IPS / 2;
         public static final double MAX_ACCEL_MPS = Units.inchesToMeters(MAX_ACCELERATION_IPSS);
         public static final double MAX_JERK_IPSSS = CAP_SPEED_IPS;
-        public static final double RAMP_RATE = 0.125;
+        public static final double RAMP_RATE = 0.1;
         public static final int STALL_CURRENT_LIMIT = 50;
         public static final int FREE_CURRENT_LIMIT = 60;
         public static final double SECONDARY_LIMIT = 90;
@@ -81,11 +81,11 @@ public class Constants {
         public static final double ANGLE_TOLERANCE = 1.5;
         public static final double ROTATION_SENSITIVITY_HIGH_GEAR = .8;
         public static final double ROTATION_SENSITIVITY_LOW_GEAR = .8;
-        public static final double TURNING_SENSITIVITY_HIGH_GEAR = .8;
-        public static final double TURNING_SENSITIVITY_LOW_GEAR = .8;
+        public static final double TURNING_SENSITIVITY_HIGH_GEAR = .5;
+        public static final double TURNING_SENSITIVITY_LOW_GEAR = .5;
         public static final double SPEED_LIMIT = 0.85;
         public static final double DISTANCE_TOLERANCE = 2.0;
-        public static final double LIMELIGHT_ODOMETRY_ZONE = 48; //inches, we are saying if our distance isnt within this range dont update pose
+        public static final double LIMELIGHT_ODOMETRY_ZONE = 150; //inches, we are saying if our distance isnt within this range dont update pose
     }
 
     public static class Turret {
@@ -94,12 +94,12 @@ public class Constants {
         public static final boolean INVERTED = true;
         public static final boolean SENSOR_PHASE_INVERTED = true;
         public static final double TICKS_TO_DEGREES = 0.08695652173913;
-        public static final double MIN_DEGREES = -200;
-        public static final double MAX_DEGREES = 125;
+        public static final double MIN_DEGREES = -190;
+        public static final double MAX_DEGREES = 131;
         public static final double MAX_VOLTAGE = 12.0;
         public static final int CRUISE_VELOCITY = 5000; // in ticks
         public static final int ACCELERATION = 16000; // in ticks
-        public static final double ABS_OFFSET = 258;// if the turret coasts this value changes, need to find a way to set this position.
+        public static final double ABS_OFFSET = 239;// if the turret coasts this value changes, need to find a way to set this position.
         public static final double MANUAL_OFFSET = -1.0;
 
 
@@ -130,13 +130,13 @@ public class Constants {
         public static final double MIN_DEGREES = 20;
         public static final boolean INVERTED = false;
         public static final boolean SENSOR_PHASE_INVERTED = false;
-        public static final double MAX_DEGREES = 67;
-        public static final double TICKS_TO_DEGREES = 0.04215247;// 0.038332795242141;
+        public static final double MAX_DEGREES = 69;
+        public static final double TICKS_TO_DEGREES = 0.0413080895008606;// 0.038332795242141;
         public static final int CRUISE_VELOCITY = 5000;
         public static final int ACCELERATION = 16000;
         public static final double kP = 2.8;
-        public static final double kI = 0.55;
-        public static final double kD = 28;
+        public static final double kI = 0.0;
+        public static final double kD = 30;
         public static final double kF = 5;
         public static final int I_ZONE =1000;
 
@@ -174,9 +174,8 @@ public class Constants {
     }
     public class Limelight {
         public static final double TARGET_HEIGHT = 92;
-        public static final double LOW_TARGET_HEIGHT = 16.5;
+        public static final double LOW_TARGET_HEIGHT = 17;
         public static final double LIMELIGHT_HEIGHT = 8.125;
-
         public static final double LIMELIGHT_ANGLE = 0;
         public static final double OVERALL_LATENCY_MILLIS = 11;
     }
@@ -186,9 +185,15 @@ public class Constants {
         public static double MID_WIDTH_FIELD = WIDTH_FIELD / 2;
         public static double LENGTH_FIELD = Units.inchesToMeters(629.25);
         public static double MID_LENGTH_FIELD = LENGTH_FIELD / 2;
-        public static Pose2d TARGET_POSE = new Pose2d(MID_LENGTH_FIELD,MID_LENGTH_FIELD - Units.inchesToMeters(94.66), new Rotation2d(0));
-        public static Pose2d LOADING_STATION_POSE = new Pose2d(-MID_LENGTH_FIELD, 1.700911, new Rotation2d(0));
+        public static double TARGET_LINE = MID_LENGTH_FIELD - Units.inchesToMeters(94.66);
+        public static double MID_TRENCH = TARGET_LINE + Units.inchesToMeters(66.91);
+        public static double AUTO_LINE = Units.inchesToMeters(194.63);
+        public static Pose2d TARGET_POSE = new Pose2d(-MID_LENGTH_FIELD, TARGET_LINE, new Rotation2d(0));
+        public static Pose2d LOADING_STATION_POSE = new Pose2d(MID_LENGTH_FIELD, TARGET_LINE, new Rotation2d(0));
         public static Pose2d STARTING_POSITION_ONE = new Pose2d(0,0, new Rotation2d(0));
+        public static Pose2d BACK_WHEEL_OF_FORTUNE = new Pose2d(0, MID_TRENCH, new Rotation2d(0));
+        public static Pose2d FRONT_WHEEL_OF_FORTUNE = new Pose2d(AUTO_LINE, MID_TRENCH, new Rotation2d(0));
+        public static Pose2d EIGHT_BALL_STARING = new Pose2d(-AUTO_LINE, TARGET_LINE, new Rotation2d(0));
 
     }
 
@@ -213,9 +218,9 @@ public class Constants {
         public static final boolean RIGHT_INVERTED = true;
         public static final double DEADBAND = 0.1;
         public static final double RPM_TOLERANCE = 100; //RPM
-        public static final double kP = 0.6;
-        public static final double kI = 0.0015;
-        public static final double kD = 0.65;
+        public static final double kP = 0.3;
+        public static final double kI = 0.002;
+        public static final double kD = 0.5;
         public static final double kF = 0.05;
         public static final int I_ZONE = 150;
         public static final long TIMEOUT = 30;
@@ -224,6 +229,7 @@ public class Constants {
         public static final double NEAR_TARGET_SHOOTER_SPEED_PERCENT = 4000;   /* TBD RPMs INSTEAD OF PERCENT */
         public static final double FAR_TARGET_SHOOTER_SPEED_PERCENT = 5500;   /* TBD RPMs INSTEAD OF PERCENT */
         public static final double TICKS_TO_ROTATIONS = 2048;
+        public static final double GEAR_RATIO = 1.25;
     }
 
     public class Indexer {
@@ -242,9 +248,9 @@ public class Constants {
         public class Drive {
             public static final double SPEED = 1.0;
             public static final double MIN_SPEED = 0.25;
-            public static final double MIN_TRACK_DISTANCE = 18;
+            public static final double MIN_TRACK_DISTANCE = 2.0;
             public static final int MAX_GARBAGE = 5;
-            public static final double STEER_K = 0.019;
+            public static final double STEER_K = 0.01;
             public static final double MAX_IMU_ANGLE = 180.0;
             public static final double MIN_IMU_ANGLE = -MAX_IMU_ANGLE;
         }
