@@ -28,7 +28,7 @@ public class AutoSpinRotations extends OutliersCommand {
     @Override
     public void execute() {
         if (_spinner.getWedgeCount() > Constants.Spinner.AUTOSPIN_SLOW_AT_WEDGES) {
-            _spinner.slow();
+            _spinner.spinSlowly();
         }
     }
 

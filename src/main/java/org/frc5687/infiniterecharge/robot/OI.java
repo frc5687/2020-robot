@@ -6,9 +6,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.frc5687.infiniterecharge.robot.commands.*;
-import org.frc5687.infiniterecharge.robot.commands.drive.EightBallAuto;
-import org.frc5687.infiniterecharge.robot.commands.drive.TenBallAuto;
-import org.frc5687.infiniterecharge.robot.util.*;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.*;
 
@@ -125,9 +122,9 @@ public class OI extends OutliersProxy {
 //        _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this, poseTracker));
         _operatorLeftTrigger.whileHeld(new AutoIntake(intake, lights));
 
-//        _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
-        //_operatorYButton.whenPressed(new AutoSpinRotations(spinner, this, skywalker));  // <~ When we're ready, this w
-        // orks!
+        _operatorYButton.whileHeld(new AutoSpinToColor(spinner, this, skywalker));
+        //_operatorYButton.whenPressed(new AutoSpinRotations(spinner, this, skywalker));  // <~ When we're ready, this works!
+        //_operatorYButton.whenPressed(new AutoSpinToColor(spinner, this, skywalker));  // <~ When we're ready, this *should* work!
     }
 
     public boolean isAutoTargetPressed() {
