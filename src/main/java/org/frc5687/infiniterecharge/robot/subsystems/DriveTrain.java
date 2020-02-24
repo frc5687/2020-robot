@@ -287,11 +287,6 @@ public class DriveTrain extends OutliersSubsystem {
         _odometry.resetPosition(pose, getHeading());
     }
 
-    public void tankDriveVolts(double leftVolts, double rightVolts) {
-        _leftMaster.set(leftVolts/12);
-        _rightMaster.set(rightVolts/12);
-    }
-
     public void resetDriveEncoders() {
         _leftEncoder.setPosition(0);
         _rightEncoder.setPosition(0);

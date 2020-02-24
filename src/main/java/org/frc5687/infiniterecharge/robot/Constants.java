@@ -8,12 +8,11 @@ public class Constants {
     public static final int  TICKS_PER_UPDATE = 10;
     public static final double METRIC_FLUSH_PERIOD = 1.0;
     public static final double UPDATE_PERIOD = 0.01;
-
     public static class Intake {
         public static final boolean INTAKE_MOTOR_INVERTED = true;
         public static final double INTAKE_SPEED = 1.0;
-    }
 
+    }
     public static class Climber {
         public static final boolean ELEVATOR_MOTOR_INVERTED = false;
         public static final boolean WINCH_MOTOR_INVERTED = true;
