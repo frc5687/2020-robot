@@ -15,7 +15,7 @@ public class TenBallAuto extends SequentialCommandGroup {
         addCommands(
                 new ParallelDeadlineGroup(
                         new AutoDrivePath(driveTrain, imu, "Snipe", 0,false),
-                        new AutoIntake(intake, lights)
+                        new AutoIntake(intake, lights, false)
                 )
               ,  new AutoDrivePath(driveTrain, imu, "SnipeToShoot", 0, true)
                 ,new ParallelDeadlineGroup(
@@ -24,13 +24,13 @@ public class TenBallAuto extends SequentialCommandGroup {
                 )
               ,  new ParallelDeadlineGroup(
                         new AutoDrivePath(driveTrain, imu, "ShootToGenerator", 0, false),
-                        new AutoIntake(intake, lights)
+                        new AutoIntake(intake, lights, false)
                 )
                 ,new AutoDrivePath(driveTrain, imu, "HalfTrench", 0, false)
 
                 ,  new ParallelDeadlineGroup(
                         new AutoDrivePath(driveTrain, imu, "TrenchBalls", 0, false),
-                        new AutoIntake(intake, lights)
+                        new AutoIntake(intake, lights, true)
                 )
                 ,new ParallelDeadlineGroup(
                         new AutoShoot(shooter, indexer, turret, null),

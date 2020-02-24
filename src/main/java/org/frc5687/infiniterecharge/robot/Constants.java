@@ -78,7 +78,7 @@ public class Constants {
         public static final double kP = 0.03;
         public static final double kI = 0.00;
         public static final double kD = 0.001;
-        public static final double ANGLE_TOLERANCE = 1.5;
+        public static final double ANGLE_TOLERANCE = 2;
         public static final double ROTATION_SENSITIVITY_HIGH_GEAR = .8;
         public static final double ROTATION_SENSITIVITY_LOW_GEAR = .8;
         public static final double TURNING_SENSITIVITY_HIGH_GEAR = .5;
@@ -195,6 +195,7 @@ public class Constants {
         public static Pose2d BACK_WHEEL_OF_FORTUNE = new Pose2d(0, MID_TRENCH, new Rotation2d(0));
         public static Pose2d FRONT_WHEEL_OF_FORTUNE = new Pose2d(AUTO_LINE, MID_TRENCH, new Rotation2d(0));
         public static Pose2d EIGHT_BALL_STARING = new Pose2d(-AUTO_LINE, TARGET_LINE, new Rotation2d(0));
+        public static Pose2d TRENCH_EDGE = new Pose2d(-AUTO_LINE + 1.5, TARGET_LINE + 1.5, new Rotation2d(0));
 
     }
 
@@ -244,7 +245,7 @@ public class Constants {
 
     public class Auto {
         public static final long AUTO_SHOOT_DELAY = 1000;
-        public static final long AUTO_SHOOT_RUNON = 3000;
+        public static final long AUTO_SHOOT_RUNON = 4000;
 
         public class Drive {
             public static final double SPEED = 1.0;

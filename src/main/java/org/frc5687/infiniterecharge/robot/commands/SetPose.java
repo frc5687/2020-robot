@@ -6,6 +6,7 @@ import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
 public class SetPose extends OutliersCommand{
     private Pose2d _pose;
     private DriveTrain _driveTrain;
+    private boolean _finished = false;
 
     public SetPose(DriveTrain driveTrain, Pose2d pose) {
         _driveTrain = driveTrain;
@@ -15,6 +16,12 @@ public class SetPose extends OutliersCommand{
     @Override
     public void initialize() {
         _driveTrain.resetOdometry(_pose);
+        _finished = true;
+    }
+
+    @Override
+    public boolean isFinished() {
+        return _finished;
     }
 
     @Override

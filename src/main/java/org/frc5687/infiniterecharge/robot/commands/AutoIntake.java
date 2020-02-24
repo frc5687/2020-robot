@@ -8,10 +8,12 @@ import org.frc5687.infiniterecharge.robot.subsystems.Spinner;
 public class AutoIntake extends OutliersCommand {
     private Intake _intake;
     private Lights _lights;
+    private boolean _keepDown;
 
-    public AutoIntake(Intake intake, Lights lights) {
+    public AutoIntake(Intake intake, Lights lights, boolean keepDown) {
         _intake = intake;
         _lights = lights;
+        _keepDown = keepDown;
         addRequirements(_intake);
     }
 
@@ -36,7 +38,9 @@ public class AutoIntake extends OutliersCommand {
     public void end(boolean interrupted) {
         super.end(interrupted);
         _intake.setSpeed(0);
-        _intake.raiseIntake();
+        if (!_keepDown) {
+            _intake.raiseIntake();
+        }
         _lights.setAutoIntaking(false);
     }
 }
