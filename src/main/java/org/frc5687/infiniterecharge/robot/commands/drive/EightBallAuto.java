@@ -14,7 +14,9 @@ public class EightBallAuto extends SequentialCommandGroup {
     public EightBallAuto(DriveTrain driveTrain, Turret turret, Shooter shooter, Hood hood, Intake intake, AHRS imu, Indexer indexer, Lights lights, Limelight limelight, PoseTracker poseTracker) {
         addCommands(
                 new ParallelDeadlineGroup(
-                        new AutoDrivePath(driveTrain, imu, "StartingToGenerator", 0,false),
+                        new SequentialCommandGroup(
+                            new AutoDrivePath(driveTrain, imu, "StartingToGenerator", 0,false),
+                            new AutoPause(250, driveTrain)),
                         new AutoIntake(intake, lights, false)
                 )
                 , new AutoDrivePath(driveTrain, imu, "HalfTrench", 0, true)
@@ -23,7 +25,7 @@ public class EightBallAuto extends SequentialCommandGroup {
                 ,new AutoTurretSetpoint(turret, -10)
                 ,new ParallelDeadlineGroup(
                         new AutoShoot(shooter, indexer, turret, null)
-                        ,new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null,4700, 62.5, true) //TODO: Tune
+                        ,new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,null,4700, 62.5, true) //TODO: Tune
                 )
                 ,  new ParallelDeadlineGroup(
                         new AutoDrivePath(driveTrain, imu, "TrenchBalls", 0, false),
@@ -32,7 +34,7 @@ public class EightBallAuto extends SequentialCommandGroup {
                 ,new ParallelDeadlineGroup(
                     new AutoShoot(shooter, indexer, turret, null),
                         new AutoAlign(driveTrain, 0),
-                        new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null,5000, 67.5, true) //TODO: Tune
+                        new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,null,5000, 67.5, true) //TODO: Tune
                 )
         );
     }

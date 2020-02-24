@@ -20,7 +20,7 @@ public class TenBallAuto extends SequentialCommandGroup {
               ,  new AutoDrivePath(driveTrain, imu, "SnipeToShoot", 0, true)
                 ,new ParallelDeadlineGroup(
                         new AutoShoot(shooter, indexer, turret, null)
-                        ,new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null,4300, 61, true) //TODO: Tune
+                        ,new AutoTarget(turret, shooter, hood, limelight, driveTrain, intake, poseTracker, lights,null,4300, 61, true) //TODO: Tune
                 )
               ,  new ParallelDeadlineGroup(
                         new AutoDrivePath(driveTrain, imu, "ShootToGenerator", 0, false),
@@ -35,7 +35,7 @@ public class TenBallAuto extends SequentialCommandGroup {
                 ,new ParallelDeadlineGroup(
                         new AutoShoot(shooter, indexer, turret, null),
                         new AutoAlign(driveTrain, 0),
-                        new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null,4500, 63, true) //TODO: Tune
+                        new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,null,4500, 63, true) //TODO: Tune
                 )
         );
     }

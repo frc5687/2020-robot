@@ -38,7 +38,7 @@ public class Shoot extends OutliersCommand {
         if (_oi!=null) {
             isOverridePressed = _oi.isOverridePressed();
         }
-        if ((_turret.isTargetInTolerance() && _shooter.isAtTargetVelocity()) && _indexer.anyBallsDetected() || isOverridePressed) {
+        if ((_turret.isTargetInTolerance() && _shooter.isAtTargetVelocity()) || isOverridePressed) {
             _endTime = System.currentTimeMillis() + Constants.Shooter.TIMEOUT;
             _indexer.setIndexerSpeed(Constants.Indexer.ADVANCE_SPEED);
         }

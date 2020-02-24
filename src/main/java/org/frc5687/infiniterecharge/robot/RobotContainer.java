@@ -158,10 +158,9 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
         switch (autoMode) {
             case ShootAndGo:
-                return wrapCommand(new AutoShootAndGo(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer, _lights));
+                return wrapCommand(new AutoShootAndGo(_turret, _shooter, _hood, _limelight, _driveTrain, _intake, _poseTracker, _indexer, _lights));
             case ShootAndNearTrench:
-                return wrapCommand(new EightBallAuto(_driveTrain, _turret, _shooter,_hood,_intake, _imu, _indexer,_lights, _limelight, _poseTracker));
-//                return wrapCommand(new AutoShootAndNearTrench(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer, _intake, _lights));
+                return wrapCommand(new AutoShootAndNearTrench(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer, _intake, _lights));
             case ShootAndFarTrench:
                 return wrapCommand(new AutoShootAndFarTrench(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer, _intake, _lights));
             case Generator2NearTrench:
@@ -169,7 +168,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             default:
                 return new SequentialCommandGroup(
                         new ZeroSensors(_hood, _turret),
-                        new AutoShootAndGo(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer, _lights)
+                        new AutoShootAndGo(_turret, _shooter, _hood, _limelight, _driveTrain, _intake, _poseTracker, _indexer, _lights)
 //                        new EightBallAuto(_driveTrain, _turret, _shooter,_hood,_intake, _imu, _indexer,_lights, _limelight, _poseTracker)
                 );
         }

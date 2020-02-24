@@ -29,6 +29,7 @@ public class ZeroSensors extends OutliersCommand {
 
     @Override
     public boolean isFinished() {
+        error("is Finishing");
         return _hood.isHallTriggered(); }
 
 }
