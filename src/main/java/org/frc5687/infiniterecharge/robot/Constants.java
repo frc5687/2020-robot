@@ -74,10 +74,10 @@ public class Constants {
         public static final double SLOW_SPEED_COMP = 0.4;
         public static final double MEDIUM_SPEED_COMP = 0.6;
 
-        public static final double kP = 0.03;
+        public static final double kP = 0.05;
         public static final double kI = 0.00;
-        public static final double kD = 0.001;
-        public static final double ANGLE_TOLERANCE = 2;
+        public static final double kD = 0.0015;
+        public static final double ANGLE_TOLERANCE = 1.5;
         public static final double ROTATION_SENSITIVITY_HIGH_GEAR = .8;
         public static final double ROTATION_SENSITIVITY_LOW_GEAR = .8;
         public static final double TURNING_SENSITIVITY_HIGH_GEAR = .5;
@@ -146,6 +146,7 @@ public class Constants {
         public static final double HEIGHT_TO_DECK = 17.75;
         public static final double LIMELIGHT_OFFSET_DEGREES = 23;
         public static final double ZEROING_SPEED = -0.75;
+        public static final double STOW_DISTANCE = 48;
     }
 
     public static class OI {
@@ -195,6 +196,7 @@ public class Constants {
         public static Pose2d FRONT_WHEEL_OF_FORTUNE = new Pose2d(AUTO_LINE, MID_TRENCH, new Rotation2d(0));
         public static Pose2d EIGHT_BALL_STARING = new Pose2d(-AUTO_LINE, TARGET_LINE, new Rotation2d(0));
         public static Pose2d TRENCH_EDGE = new Pose2d(-AUTO_LINE + 1.5, TARGET_LINE + 1.5, new Rotation2d(0));
+        public static Pose2d TRENCH_STARTING = new Pose2d(-AUTO_LINE, TARGET_LINE + 1.8288, new Rotation2d(0));
 
     }
 
@@ -263,7 +265,7 @@ public class Constants {
     public class DriveStraight {
         public static final double kP = 0.1;
         public static final double kI = 0.0;
-        public static final double kD = 0.0;
+        public static final double kD = 0.001;
 
 
 

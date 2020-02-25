@@ -17,6 +17,11 @@ public class Indexer extends OutliersSubsystem {
     private CANSparkMax _indexerNeo;
 
     private Servo _agitatorServo;
+    private Servo _agitatorServo1;
+    private Servo _agitatorServo2;
+    private Servo _agitatorServo3;
+    private Servo _agitatorServo4;
+    private Servo _agitatorServo5;
     private double _servoSpeed;
 
     private boolean _abort;
@@ -35,7 +40,11 @@ public class Indexer extends OutliersSubsystem {
         _indexerNeo.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
         _agitatorServo = new Servo(RobotMap.PWM.AGITATOR);
-
+        _agitatorServo1 = new Servo(RobotMap.PWM.AGITATOR1);
+        _agitatorServo2 = new Servo(RobotMap.PWM.AGITATOR2);
+        _agitatorServo3 = new Servo(RobotMap.PWM.AGITATOR3);
+        _agitatorServo4 = new Servo(RobotMap.PWM.AGITATOR4);
+        _agitatorServo5 = new Servo(RobotMap.PWM.AGITATOR5);
         _bottomIR = new DigitalIR(RobotMap.DIO.BOTTOM_IR);
         _midIR = new DigitalIR(RobotMap.DIO.MID_IR);
         _topIR = new DigitalIR(RobotMap.DIO.TOP_IR);
@@ -83,8 +92,18 @@ public class Indexer extends OutliersSubsystem {
     public void periodic() {
         if (_abort) {
             _agitatorServo.set(Constants.Indexer.SERVO_STOPPED);
+            _agitatorServo1.set(Constants.Indexer.SERVO_STOPPED);
+            _agitatorServo2.set(Constants.Indexer.SERVO_STOPPED);
+            _agitatorServo3.set(Constants.Indexer.SERVO_STOPPED);
+            _agitatorServo4.set(Constants.Indexer.SERVO_STOPPED);
+            _agitatorServo5.set(Constants.Indexer.SERVO_STOPPED);
         } else {
-            _agitatorServo.set(_servoSpeed);
+            _agitatorServo.set(1.0);
+            _agitatorServo1.set(0.00);
+            _agitatorServo2.set(0.00);
+            _agitatorServo3.set(0.00);
+            _agitatorServo4.set(0.00);
+            _agitatorServo5.set(0.00);
         }
     }
 

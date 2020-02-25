@@ -84,7 +84,8 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
             // Initialize the other stuff
             _driveTrain.enableBrakeMode();
-            _driveTrain.resetOdometry(Constants.AutoPositions.EIGHT_BALL_STARING);
+//            _driveTrain.resetOdometry(Constants.AutoPositions.EIGHT_BALL_STARING);
+            _driveTrain.resetOdometry(Constants.AutoPositions.TRENCH_STARTING);
 
             // Now setup the default commands:
             setDefaultCommand(_hood, new DriveHood(_hood, _oi));

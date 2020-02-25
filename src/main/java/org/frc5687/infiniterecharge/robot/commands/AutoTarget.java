@@ -60,7 +60,7 @@ public class AutoTarget extends OutliersCommand {
     @Override
     public void initialize() {
         super.initialize();
-        _intake.lowerIntake();
+//        _intake.lowerIntake();
         _turret.setControlMode(Turret.Control.MotionMagic);
         _limelight.enableLEDs();
         _filter.reset();
@@ -74,6 +74,7 @@ public class AutoTarget extends OutliersCommand {
 
     @Override
     public void execute() {
+        _intake.setSpeed(0.6);
         if (!_override) {
             _hood.setPosition(_hood.getHoodDesiredAngle(Units.metersToInches(_driveTrain.distanceToTarget())));
             _shooter.setVelocitySpeed(_shooter.getDistanceSetpoint(Units.metersToInches(_driveTrain.distanceToTarget())));
@@ -89,10 +90,10 @@ public class AutoTarget extends OutliersCommand {
                 break;
             case Limelighting:
                 if (!_shooter.isShooting()) {
-                    _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees());
+                    _turret.setMotionMagicSetpoint(_filter.calculate(_limelight.getHorizontalAngle()) + _turret.getPositionDegrees());
                 }
                 if (!_shooter.isShooting()) {
-                    _turret.setMotionMagicSetpoint(_limelight.getHorizontalAngle() + _turret.getPositionDegrees() + _turret.getManualOffset());
+                    _turret.setMotionMagicSetpoint(_filter.calculate(_limelight.getHorizontalAngle()) + _turret.getPositionDegrees() + _turret.getManualOffset());
                 }
                 _lights.setReadyToshoot(_shooter.isAtTargetVelocity() && _turret.isTargetInTolerance());
                 break;
@@ -121,7 +122,7 @@ public class AutoTarget extends OutliersCommand {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        _intake.raiseIntake();
+//        _intake.raiseIntake();
         _lights.setTargeting(false);
         _lights.setReadyToshoot(false);
         _hood.setPosition(Constants.Hood.MIN_DEGREES);

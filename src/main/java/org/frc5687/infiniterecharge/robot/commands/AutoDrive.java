@@ -6,6 +6,7 @@ import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
 import org.frc5687.infiniterecharge.robot.util.Helpers;
 
 public class AutoDrive extends PIDCommand {
+    private DriveTrain _driveTrain;
     public AutoDrive(DriveTrain driveTrain, double distance, double speed) {
         super(
                 new PIDController(Constants.DriveStraight.kP, Constants.DriveStraight.kI, Constants.DriveStraight.kD),
@@ -18,9 +19,15 @@ public class AutoDrive extends PIDCommand {
                 // Require the drive
                 driveTrain);
         getController().setTolerance(Constants.DriveTrain.DISTANCE_TOLERANCE);
+        _driveTrain = driveTrain;
     }
     @Override
     public boolean isFinished() {
         return getController().atSetpoint();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        _driveTrain.resetDriveEncoders();
     }
 }

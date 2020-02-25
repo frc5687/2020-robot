@@ -40,6 +40,7 @@ public class Shoot extends OutliersCommand {
         }
         if ((_turret.isTargetInTolerance() && _shooter.isAtTargetVelocity()) || isOverridePressed) {
             _endTime = System.currentTimeMillis() + Constants.Shooter.TIMEOUT;
+            error("running indexer");
             _indexer.setIndexerSpeed(Constants.Indexer.ADVANCE_SPEED);
         }
     }

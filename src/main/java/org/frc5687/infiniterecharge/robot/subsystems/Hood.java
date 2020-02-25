@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import edu.wpi.first.wpilibj.MedianFilter;
+import com.cuforge.libcu.Lasershark;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
@@ -21,6 +21,8 @@ public class Hood extends OutliersSubsystem {
     private HallEffect _hoodHall;
     private OI _oi;
 
+    private Lasershark _laserShark;
+
     private double _position;
     private double _setPoint;
 
@@ -31,6 +33,7 @@ public class Hood extends OutliersSubsystem {
         _limelight = limelight;
         _oi = oi;
         _hoodHall = new HallEffect(RobotMap.DIO.HOOD_HALL);
+        _laserShark = new Lasershark(RobotMap.DIO.FRONT_SHARK);
         try {
             debug("Allocating hood motor");
             _hoodController = new TalonSRX(RobotMap.CAN.TALONSRX.HOOD);
@@ -122,6 +125,9 @@ public class Hood extends OutliersSubsystem {
             _hoodController.setSelectedSensorPosition((int) _position);
             _position = Constants.Hood.MIN_DEGREES / Constants.Hood.TICKS_TO_DEGREES;
         }
+//        if (needsToStow()) {
+//            setSpeed(Constants.Hood.ZEROING_SPEED);
+//        }
     }
 
     public void setPipeline() {
@@ -145,5 +151,10 @@ public class Hood extends OutliersSubsystem {
     public boolean isHallTriggered() {
         return _hoodHall.get();
     }
+
+    public boolean needsToStow() {
+        return _laserShark.getDistanceInches() < Constants.Hood.STOW_DISTANCE;
+    }
+
 
 }
