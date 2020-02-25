@@ -29,7 +29,6 @@ public class Climber extends OutliersSubsystem {
         _winchSpark = new CANSparkMax(RobotMap.CAN.SPARKMAX.WINCH_NEO, CANSparkMaxLowLevel.MotorType.kBrushless);
         _winchSpark.setInverted(Constants.Climber.WINCH_MOTOR_INVERTED);
         _winchEncoder = _winchSpark.getEncoder();
-
     }
 
 
@@ -52,6 +51,15 @@ public class Climber extends OutliersSubsystem {
     }
 
     public double getClimberPower() {return _elevatorSpark.get(); }
+
     public double getPosition() {return _elevatorEncoder.getPosition();}
+
+    public boolean nearTop() {
+        return getPosition() > Constants.Climber.NEAR_TOP;
+    }
+
+    public boolean nearBottom() {
+        return getPosition() < Constants.Climber.NEAR_BOTTOM;
+    }
 
 }

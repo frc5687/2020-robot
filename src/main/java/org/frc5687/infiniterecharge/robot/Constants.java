@@ -22,6 +22,8 @@ public class Constants {
         public static final double WINCH_RETRACT_SPEED = 1;
         public static final double WINCH_TENSION_SPEED = 0.0;
         public static final double ELEVATOR_RETRACT_SPEED = -0.50;
+        public static final double NEAR_BOTTOM = 2.0;
+        public static final double NEAR_TOP = 48.0;
     }
 
     public static class Skywalker {
