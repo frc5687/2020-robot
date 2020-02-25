@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
 public class AutoDrive extends PIDCommand {
+
     public AutoDrive(DriveTrain driveTrain, double distance) {
         super(
                 new PIDController(Constants.DriveStraight.kP, Constants.DriveStraight.kI, Constants.DriveStraight.kD),
@@ -21,6 +22,7 @@ public class AutoDrive extends PIDCommand {
         // setpoint before it is considered as having reached the reference
         getController().setTolerance(Constants.DriveTrain.DISTANCE_TOLERANCE);
     }
+
     @Override
     public boolean isFinished() {
         return getController().atSetpoint();
