@@ -127,10 +127,9 @@ public class DriveTrain extends OutliersSubsystem {
         _driveFeedForward = new SimpleMotorFeedforward(KS_VOLTS, KV_VOLTSPR, KA_VOLTSQPR);
         _driveConfig = new TrajectoryConfig(MAX_ACCEL_MPS, MAX_ACCEL_MPS).setKinematics(_driveKinematics);
 
-        _angleController = new PIDController(Constants.DriveStraight.kP, Constants.DriveStraight.kI, Constants.DriveStraight.kD);
+        _angleController = new PIDController(Constants.DriveStraight.kP, Constants.DriveStraight.kI, Constants.DriveStraight.kD, Constants.UPDATE_PERIOD);
         _angleController.enableContinuousInput(-180, 180);
         _angleController.setTolerance(Constants.DriveStraight.ANGLE_TOLERANCE);
-
     }
 
     public void enableBrakeMode() {
@@ -161,7 +160,7 @@ public class DriveTrain extends OutliersSubsystem {
             _anglePIDEnabled = false;
         } else if (_anglePIDEnabled) {
             // Get rotation from the angle controller
-            rotation = _angleController.calculate(_imu.getYaw());
+            rotation = limit(_angleController.calculate(_imu.getYaw()), -.1, 0.1);
         }
 
         speed = limit(speed, Constants.DriveTrain.SPEED_LIMIT);
