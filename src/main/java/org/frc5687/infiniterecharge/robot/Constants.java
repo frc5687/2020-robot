@@ -145,8 +145,8 @@ public class Constants {
         public static final double FAR_TARGET_HOOD_ANGLE_DEGREES = Hood.MAX_DEGREES;
         public static final double HEIGHT_TO_DECK = 17.75;
         public static final double LIMELIGHT_OFFSET_DEGREES = 23;
-        public static final double ZEROING_SPEED = -0.75;
-        public static final double STOW_DISTANCE = 48;
+        public static final double ZEROING_SPEED = -0.85;
+        public static final double STOW_DISTANCE = 24;
     }
 
     public static class OI {

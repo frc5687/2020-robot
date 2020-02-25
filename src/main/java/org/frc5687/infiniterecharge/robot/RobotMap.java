@@ -103,10 +103,10 @@ public class RobotMap {
             public static final int MID_IR = 1;
             public static final int BOTTOM_IR = 2;
             public static final int HOOD_HALL = 6;
-            public static final int UP_IR = 3;
+            public static final int UP_IR = 5;
             public static final int DOWN_IR = 4;
 
-            public static final int FRONT_SHARK = 8;
+            public static final int FRONT_SHARK = 3;
             public static final int REAR_SHARK = 9;
         /* Example:
         public static final int ARM_FRONT_LIMIT = 0;

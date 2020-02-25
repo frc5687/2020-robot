@@ -93,6 +93,8 @@ public class Hood extends OutliersSubsystem {
         metric("Position", getPosition());
         metric("Raw Ticks", getPositionTicks());
         metric("Output Percent", getMotorOutput());
+        metric("laser distance", _laserShark.getDistanceInches());
+        metric("stow?", needsToStow());
     }
 
 
@@ -125,9 +127,14 @@ public class Hood extends OutliersSubsystem {
             _hoodController.setSelectedSensorPosition((int) _position);
             _position = Constants.Hood.MIN_DEGREES / Constants.Hood.TICKS_TO_DEGREES;
         }
-//        if (needsToStow()) {
-//            setSpeed(Constants.Hood.ZEROING_SPEED);
-//        }
+        if (needsToStow()) {
+            setSpeed(Constants.Hood.ZEROING_SPEED);
+            zeroSensors();
+            _setPoint = Constants.Hood.MIN_DEGREES;
+            if (isHallTriggered()) {
+                setSpeed(0);
+            }
+        }
     }
 
     public void setPipeline() {
