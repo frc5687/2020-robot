@@ -140,7 +140,9 @@ public class DriveTrain extends OutliersSubsystem {
 //        metric("Speed", speed);
 //        metric("Rotation", rotation);
 
-        speed = limit(speed, Constants.DriveTrain.SPEED_LIMIT);
+        if (_shifter.getGear() == Shifter.Gear.HIGH) {
+            speed = limit(speed, Constants.DriveTrain.SPEED_LIMIT);
+        }
         Shifter.Gear gear = _shifter.getGear();
 
         rotation = limit(rotation, 1);
