@@ -163,9 +163,10 @@ public class DriveTrain extends OutliersSubsystem {
             rotation = limit(_angleController.calculate(_imu.getYaw()), -.1, 0.1);
         }
 
-        speed = limit(speed, Constants.DriveTrain.SPEED_LIMIT);
         Shifter.Gear gear = _shifter.getGear();
-
+        if (_shifter.getGear() == Shifter.Gear.HIGH) {
+            speed = limit(speed, Constants.DriveTrain.SPEED_LIMIT);
+        }
         rotation = limit(rotation, 1);
 
         double leftMotorOutput;
