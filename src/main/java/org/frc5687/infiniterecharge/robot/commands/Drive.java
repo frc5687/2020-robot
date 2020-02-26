@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotPose;
+import org.frc5687.infiniterecharge.robot.subsystems.Climber;
 import org.frc5687.infiniterecharge.robot.subsystems.DriveTrain;
 import org.frc5687.infiniterecharge.robot.subsystems.Intake;
 import org.frc5687.infiniterecharge.robot.util.BasicPose;
@@ -16,6 +17,7 @@ public class Drive extends OutliersCommand {
 
     private OI _oi;
     private DriveTrain _driveTrain;
+    private Climber _climber;
     private AHRS _imu;
     private PIDController _angleController;
     private Intake _intake;
@@ -38,11 +40,12 @@ public class Drive extends OutliersCommand {
     private boolean _useAnglePID;
 
 
-    public Drive(DriveTrain driveTrain, OI oi, Intake intake, Limelight driveLimelight, PoseTracker poseTracker, AHRS imu) {
+    public Drive(DriveTrain driveTrain, OI oi, Intake intake, Climber climber, Limelight driveLimelight, PoseTracker poseTracker, AHRS imu) {
         _driveTrain = driveTrain;
         _oi = oi;
         _imu = imu;
         _intake = intake;
+        _climber = climber;
         _driveLimelight = driveLimelight;
         _poseTracker = poseTracker;
         addRequirements(_driveTrain);
@@ -211,6 +214,10 @@ public class Drive extends OutliersCommand {
                 metric("TargetDistance", -999);
                 // We've been seeking for more than the max allowed...slow the robot down!
                 _oi.pulseDriver(1);
+            }
+
+            if (_climber.isElevatorExtended()) {
+                limit = Constants.DriveTrain.ELEVATOR_LIMIT;
             }
         }
         limit = Math.min(limit, _stickyLimit);
