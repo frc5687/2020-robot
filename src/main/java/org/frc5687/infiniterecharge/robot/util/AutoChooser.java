@@ -11,7 +11,7 @@ public class AutoChooser extends OutliersProxy {
     private RotarySwitch _modeSwitch;
 
     public AutoChooser(OutliersContainer.IdentityMode identityMode) {
-        _modeSwitch = new RotarySwitch(RobotMap.Analog.MODE_SWITCH,  Constants.RotarySwitch.TOLERANCE, 0.07692, 0.15384, 0.23076, 0.30768, 0.3846, 0.46152, 0.53844, 0.61536, 0.69228, 0.7692, 0.84612, 0.92304);
+        _modeSwitch = new RotarySwitch(RobotMap.Analog.MODE_SWITCH,  Constants.RotarySwitch.TOLERANCE, 0.077, 0.154, 0.231, 0.308, 0.385, 0.462, 0.538, 0.615, 0.693, 0.770, 0.847, 0.925);
         // _modeSwitch = new RotarySwitch(RobotMap.Analog.MODE_SWITCH, Constants.RotarySwitch.TOLERANCE, .09, .17, .23, .31, .5, .59, .68, .75, .82, .91, .96);
     }
 

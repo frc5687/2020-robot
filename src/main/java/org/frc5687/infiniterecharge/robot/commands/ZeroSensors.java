@@ -4,11 +4,11 @@ import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.subsystems.Hood;
 import org.frc5687.infiniterecharge.robot.subsystems.Turret;
 
-public class ZeroHood extends OutliersCommand {
+public class ZeroSensors extends OutliersCommand {
     private Hood _hood;
     private Turret _turret;
 
-    public ZeroHood(Hood hood, Turret turret) {
+    public ZeroSensors(Hood hood, Turret turret) {
         _hood = hood;
         _turret = turret;
         addRequirements(_hood);
@@ -29,6 +29,7 @@ public class ZeroHood extends OutliersCommand {
 
     @Override
     public boolean isFinished() {
+        error("is Finishing");
         return _hood.isHallTriggered(); }
 
 }

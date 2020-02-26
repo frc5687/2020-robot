@@ -128,9 +128,7 @@ public class Robot extends OutliersRobot implements ILoggingSource{
         // Example of starting a new row of metrics for all instrumented objects.
         // MetricTracker.newMetricRowAll();
         MetricTracker.newMetricRowAll();
-
         _robotContainer.periodic();
-
         CommandScheduler.getInstance().run();
         update();
         updateDashboard();

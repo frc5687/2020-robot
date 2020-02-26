@@ -148,18 +148,19 @@ public class DriveTrain extends OutliersSubsystem {
     public void cheesyDrive(double speed, double rotation, boolean creep, boolean override) {
 //        metric("Speed", speed);
 //        metric("Rotation", rotation);
-
         if (rotation==0 && !_anglePIDEnabled) {
                 // We've just started "driving straight"
                 // Initialize and enable the angle controller
                 _anglePIDEnabled = true;
                 _targetAngle = _imu.getYaw();
                 _angleController.setSetpoint(_targetAngle);
+                error("Hold angle : " + _targetAngle);
                 _angleController.reset();
         } else if (rotation!=0 &&  _anglePIDEnabled) {
             _anglePIDEnabled = false;
         } else if (_anglePIDEnabled) {
             // Get rotation from the angle controller
+            error("Using PID");
             rotation = limit(_angleController.calculate(_imu.getYaw()), -.1, 0.1);
         }
 
@@ -278,6 +279,8 @@ public class DriveTrain extends OutliersSubsystem {
     public void updateDashboard() {
         metric("X", getPose().getTranslation().getX());
         metric("Y", getPose().getTranslation().getY());
+        metric("leftDistane", getLeftDistance());
+        metric("rightDistance", getRightDistance());
         metric("angle to target", getAngleToTarget());
         metric("distance to taget", distanceToTarget());
     }
@@ -311,11 +314,6 @@ public class DriveTrain extends OutliersSubsystem {
         _odometry.resetPosition(pose, getHeading());
     }
 
-    public void tankDriveVolts(double leftVolts, double rightVolts) {
-        _leftMaster.set(leftVolts/12);
-        _rightMaster.set(rightVolts/12);
-    }
-
     public void resetDriveEncoders() {
         _leftEncoder.setPosition(0);
         _rightEncoder.setPosition(0);
@@ -333,13 +331,15 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getAngleToTarget() {
         double angle = 0;
+        metric("xLength", _xLength);
+        metric("ylength", _yLength);
         if (_yLength > 0) {
             angle = (90 + Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + getHeading().getDegrees());
             if (!Double.isNaN(angle)) {
                 _prevAngle = angle;
             }
         } else if (_yLength < 0){
-            angle =  (Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + 90) + getHeading().getDegrees();
+            angle = -(Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + 90) + getHeading().getDegrees();
             if (!Double.isNaN(angle)) {
                 _prevAngle = angle;
             }

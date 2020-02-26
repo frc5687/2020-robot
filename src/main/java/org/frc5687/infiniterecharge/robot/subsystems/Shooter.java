@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
+import org.frc5687.infiniterecharge.robot.util.Helpers;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 public class Shooter extends OutliersSubsystem {
@@ -60,6 +61,7 @@ public class Shooter extends OutliersSubsystem {
 
     public void setVelocitySpeed(double RPM) {
         _targetRPM = RPM;
+        _targetRPM = Helpers.limit(_targetRPM, 0, 7200);
         _shooterRight.set(TalonFXControlMode.Velocity, (_targetRPM * Constants.Shooter.TICKS_TO_ROTATIONS / 600 / 1.25));
     }
 
@@ -84,7 +86,7 @@ public class Shooter extends OutliersSubsystem {
     }
 
     public double getDistanceSetpoint(double distance) {
-        return (7.2272 * distance) + 2200.9;
+        return (-0.0029*(distance*distance)) + (7.5713*distance) + 2209.6;
     }
 
     public boolean isShooting() {

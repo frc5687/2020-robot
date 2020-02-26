@@ -12,7 +12,6 @@ import org.frc5687.infiniterecharge.robot.subsystems.OutliersSubsystem;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 public class Intake extends OutliersSubsystem {
-    //private Robot _robot;
 
     private CANSparkMax _intakeSpark;
     private DoubleSolenoid _intakeSolenoid;
@@ -25,6 +24,7 @@ public class Intake extends OutliersSubsystem {
 
         _intakeSpark = new CANSparkMax(RobotMap.CAN.SPARKMAX.INTAKE_NEO, CANSparkMaxLowLevel.MotorType.kBrushless);
         _intakeSpark.setInverted(Constants.Intake.INTAKE_MOTOR_INVERTED);
+        _intakeSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
     }
 
     public boolean isRunning() {
