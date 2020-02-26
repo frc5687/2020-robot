@@ -34,6 +34,7 @@ public class Constants {
     public static class DriveTrain {
         public static final double DEADBAND = 0.25;
         public static final double SPEED_SENSITIVITY = 0.9;
+        public static final double SPEED_SENSITIVITY_LOW = 1;
         public static final double ROTATION_SENSITIVITY = 0.5;
         public static final double CREEP_FACTOR = 0.25;
 
@@ -79,9 +80,9 @@ public class Constants {
         public static final double kD = 0.0015;
         public static final double ANGLE_TOLERANCE = 1.5;
         public static final double ROTATION_SENSITIVITY_HIGH_GEAR = .8;
-        public static final double ROTATION_SENSITIVITY_LOW_GEAR = .8;
+        public static final double ROTATION_SENSITIVITY_LOW_GEAR = .6;
         public static final double TURNING_SENSITIVITY_HIGH_GEAR = .5;
-        public static final double TURNING_SENSITIVITY_LOW_GEAR = .5;
+        public static final double TURNING_SENSITIVITY_LOW_GEAR = .3;
         public static final double SPEED_LIMIT = 0.9
                 ;
         public static final double DISTANCE_TOLERANCE = 2.0;
@@ -221,12 +222,12 @@ public class Constants {
         public static final boolean RIGHT_INVERTED = true;
         public static final double DEADBAND = 0.1;
         public static final double RPM_TOLERANCE = 100; //RPM
-        public static final double kP = 0.3;
+        public static final double kP = 0.5;
         public static final double kI = 0.002;
-        public static final double kD = 0.5;
+        public static final double kD = 0.7;
         public static final double kF = 0.05;
         public static final int I_ZONE = 150;
-        public static final long TIMEOUT = 30;
+        public static final long TIMEOUT = 15;
 
         public static final double IDLE_SHOOTER_SPEED_PERCENT = 0.5;  /* TBD RPMs INSTEAD OF PERCENT */
         public static final double NEAR_TARGET_SHOOTER_SPEED_PERCENT = 4000;   /* TBD RPMs INSTEAD OF PERCENT */

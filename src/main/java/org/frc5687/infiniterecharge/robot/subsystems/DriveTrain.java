@@ -145,6 +145,7 @@ public class DriveTrain extends OutliersSubsystem {
         }
         Shifter.Gear gear = _shifter.getGear();
 
+
         rotation = limit(rotation, 1);
 
         double leftMotorOutput;

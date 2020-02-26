@@ -13,8 +13,6 @@ public class Shoot extends OutliersCommand {
     private Turret _turret;
     private OI _oi;
 
-    private double _speed;
-
     private Long _endTime;
     public Shoot(Shooter shooter, Indexer indexer, Turret turret, OI oi) {
         _shooter = shooter;
@@ -33,7 +31,6 @@ public class Shoot extends OutliersCommand {
     @Override
     public void execute() {
         super.execute();
-
         boolean isOverridePressed = false;
         if (_oi!=null) {
             isOverridePressed = _oi.isOverridePressed();
@@ -51,6 +48,7 @@ public class Shoot extends OutliersCommand {
         if (_endTime == null) {
             return false;
         }
+        error("ending command");
         return System.currentTimeMillis() >= _endTime;
     }
 

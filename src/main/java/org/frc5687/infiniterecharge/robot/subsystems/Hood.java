@@ -107,15 +107,7 @@ public class Hood extends OutliersSubsystem {
     }
 
     public double getHoodDesiredAngle(double distance) {
-        return (13.909*Math.log(distance)) - 14.321;
-    }
-
-    public void zeroSensors() {
-        if (isHallTriggered()) {
-            _position = Constants.Hood.MIN_DEGREES / Constants.Hood.TICKS_TO_DEGREES;
-            _setPoint = Constants.Hood.MIN_DEGREES;
-        }
-        _hoodController.setSelectedSensorPosition((int) _position);
+        return (14.627*Math.log(distance)) - 17.059;
     }
 
     @Override
@@ -135,6 +127,14 @@ public class Hood extends OutliersSubsystem {
 //                setSpeed(0);
 //            }
 //        }
+    }
+
+    public void zeroSensors() {
+        if (isHallTriggered()) {
+            _position = Constants.Hood.MIN_DEGREES / Constants.Hood.TICKS_TO_DEGREES;
+            _setPoint = Constants.Hood.MIN_DEGREES;
+        }
+        _hoodController.setSelectedSensorPosition((int) _position);
     }
 
     public void setPipeline() {

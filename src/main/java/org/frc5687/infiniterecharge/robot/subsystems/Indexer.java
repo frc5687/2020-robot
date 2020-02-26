@@ -15,14 +15,13 @@ import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 public class Indexer extends OutliersSubsystem {
 
     private CANSparkMax _indexerNeo;
+    private VictorSPX _agitator;
 
-    private Servo _agitatorServo;
     private Servo _agitatorServo1;
     private Servo _agitatorServo2;
     private Servo _agitatorServo3;
     private Servo _agitatorServo4;
     private Servo _agitatorServo5;
-    private double _servoSpeed;
 
     private boolean _abort;
 
@@ -38,8 +37,10 @@ public class Indexer extends OutliersSubsystem {
         _indexerNeo = new CANSparkMax(RobotMap.CAN.SPARKMAX.INDEXER, CANSparkMaxLowLevel.MotorType.kBrushless);
         _indexerNeo.setInverted(Constants.Indexer.INVERTED);
         _indexerNeo.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        _agitator = new VictorSPX(RobotMap.CAN.VICTORSPX.AGITATOR);
+        _agitator.setInverted(false);
 
-        _agitatorServo = new Servo(RobotMap.PWM.AGITATOR);
+
         _agitatorServo1 = new Servo(RobotMap.PWM.AGITATOR1);
         _agitatorServo2 = new Servo(RobotMap.PWM.AGITATOR2);
         _agitatorServo3 = new Servo(RobotMap.PWM.AGITATOR3);
@@ -75,30 +76,17 @@ public class Indexer extends OutliersSubsystem {
         _abort =false;
     }
 
-    public void setAgitatorSpeed(double speed) {
-        if (speed < 0) {
-            _servoSpeed = Constants.Indexer.SERVO_FORWARD;
-//            error("Starting agitator.");
-        } else if (speed > 0) {
-            _servoSpeed = Constants.Indexer.SERVO_BACKWARDS;
-//            error("Reversing agitator.");
-        } else {
-            _servoSpeed = Constants.Indexer.SERVO_STOPPED;
-//            error("Stopping agitator.");
-        }
-    }
 
     @Override
     public void periodic() {
+        _agitator.set(ControlMode.PercentOutput, Constants.Indexer.AGITATOR_SPEED);
         if (_abort) {
-            _agitatorServo.set(Constants.Indexer.SERVO_STOPPED);
             _agitatorServo1.set(Constants.Indexer.SERVO_STOPPED);
             _agitatorServo2.set(Constants.Indexer.SERVO_STOPPED);
             _agitatorServo3.set(Constants.Indexer.SERVO_STOPPED);
             _agitatorServo4.set(Constants.Indexer.SERVO_STOPPED);
             _agitatorServo5.set(Constants.Indexer.SERVO_STOPPED);
         } else {
-            _agitatorServo.set(1.0);
             _agitatorServo1.set(0.00);
             _agitatorServo2.set(0.00);
             _agitatorServo3.set(0.00);
