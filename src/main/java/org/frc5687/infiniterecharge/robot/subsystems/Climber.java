@@ -41,8 +41,6 @@ public class Climber extends OutliersSubsystem {
         metric("CLIMBER POSITION", getPosition());
     }
 
-
-
     public void setElevatorSpeed(double speed) {
         _elevatorSpark.set(speed);
     }
@@ -52,6 +50,7 @@ public class Climber extends OutliersSubsystem {
     }
 
     public double getClimberPower() {return _elevatorSpark.get(); }
+
     public double getPosition() {return _elevatorEncoder.getPosition();}
 
 }

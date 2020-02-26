@@ -49,6 +49,11 @@ public class RobotMap {
             public static final int SHORT_LED_STRIP = 0;
             public static final int LONG_LED_STRIP = 1;
             public static final int AGITATOR = 2;
+            public static final int AGITATOR1 = 3;
+            public static final int AGITATOR2 = 4;
+            public static final int AGITATOR3 = 5;
+            public static final int AGITATOR4 = 6;
+            public static final int AGITATOR5 = 7;
         }
 
         /**
@@ -98,9 +103,11 @@ public class RobotMap {
             public static final int MID_IR = 1;
             public static final int BOTTOM_IR = 2;
             public static final int HOOD_HALL = 6;
-            public static final int UP_IR = 3;
+            public static final int UP_IR = 5;
             public static final int DOWN_IR = 4;
 
+            public static final int FRONT_SHARK = 3;
+            public static final int REAR_SHARK = 9;
         /* Example:
         public static final int ARM_FRONT_LIMIT = 0;
         */

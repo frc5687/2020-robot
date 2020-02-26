@@ -67,8 +67,6 @@ public class IdleIndexer extends OutliersCommand {
         }
         _indexer.setIndexerSpeed(speed);
 
-        _indexer.setAgitatorSpeed(Constants.Indexer.AGITATOR_SPEED);
-
         _lights.setIndexerBottom(_indexer.isBottomTriggered());
         _lights.setIndexerMiddle(_indexer.isMidTriggered());
         _lights.setIndexerTop(_indexer.isTopTriggered());

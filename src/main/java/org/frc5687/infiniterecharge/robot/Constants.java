@@ -8,12 +8,11 @@ public class Constants {
     public static final int  TICKS_PER_UPDATE = 10;
     public static final double METRIC_FLUSH_PERIOD = 1.0;
     public static final double UPDATE_PERIOD = 0.01;
-
     public static class Intake {
         public static final boolean INTAKE_MOTOR_INVERTED = true;
         public static final double INTAKE_SPEED = 1.0;
-    }
 
+    }
     public static class Climber {
         public static final boolean ELEVATOR_MOTOR_INVERTED = false;
         public static final boolean WINCH_MOTOR_INVERTED = true;
@@ -35,13 +34,14 @@ public class Constants {
     public static class DriveTrain {
         public static final double DEADBAND = 0.25;
         public static final double SPEED_SENSITIVITY = 0.9;
+        public static final double SPEED_SENSITIVITY_LOW = 1;
         public static final double ROTATION_SENSITIVITY = 0.5;
         public static final double CREEP_FACTOR = 0.25;
 
         public static final int CPR = 8192;
         public static final double ENCODER_CONVERSION = 6.85714286;
 
-        public static final double WIDTH = Units.inchesToMeters(30);
+        public static final double WIDTH = Units.inchesToMeters(29);
 
         public static final double KS_VOLTS = 0.172;
         public static final double KV_VOLTSPR = 2.46;
@@ -75,15 +75,16 @@ public class Constants {
         public static final double SLOW_SPEED_COMP = 0.4;
         public static final double MEDIUM_SPEED_COMP = 0.6;
 
-        public static final double kP = 0.03;
+        public static final double kP = 0.05;
         public static final double kI = 0.00;
-        public static final double kD = 0.001;
+        public static final double kD = 0.0015;
         public static final double ANGLE_TOLERANCE = 1.5;
         public static final double ROTATION_SENSITIVITY_HIGH_GEAR = .8;
-        public static final double ROTATION_SENSITIVITY_LOW_GEAR = .8;
+        public static final double ROTATION_SENSITIVITY_LOW_GEAR = .6;
         public static final double TURNING_SENSITIVITY_HIGH_GEAR = .5;
-        public static final double TURNING_SENSITIVITY_LOW_GEAR = .5;
-        public static final double SPEED_LIMIT = 0.85;
+        public static final double TURNING_SENSITIVITY_LOW_GEAR = .3;
+        public static final double SPEED_LIMIT = 0.9
+                ;
         public static final double DISTANCE_TOLERANCE = 2.0;
         public static final double LIMELIGHT_ODOMETRY_ZONE = 150; //inches, we are saying if our distance isnt within this range dont update pose
     }
@@ -145,7 +146,8 @@ public class Constants {
         public static final double FAR_TARGET_HOOD_ANGLE_DEGREES = Hood.MAX_DEGREES;
         public static final double HEIGHT_TO_DECK = 17.75;
         public static final double LIMELIGHT_OFFSET_DEGREES = 23;
-        public static final double ZEROING_SPEED = -0.75;
+        public static final double ZEROING_SPEED = -0.85;
+        public static final double STOW_DISTANCE = 24;
     }
 
     public static class OI {
@@ -194,6 +196,8 @@ public class Constants {
         public static Pose2d BACK_WHEEL_OF_FORTUNE = new Pose2d(0, MID_TRENCH, new Rotation2d(0));
         public static Pose2d FRONT_WHEEL_OF_FORTUNE = new Pose2d(AUTO_LINE, MID_TRENCH, new Rotation2d(0));
         public static Pose2d EIGHT_BALL_STARING = new Pose2d(-AUTO_LINE, TARGET_LINE, new Rotation2d(0));
+        public static Pose2d TRENCH_EDGE = new Pose2d(-AUTO_LINE + 1.5, TARGET_LINE + 1.5, new Rotation2d(0));
+        public static Pose2d TRENCH_STARTING = new Pose2d(-AUTO_LINE, TARGET_LINE + 1.8288, new Rotation2d(0));
 
     }
 
@@ -217,13 +221,13 @@ public class Constants {
         public static final boolean LEFT_INVERTED = false;
         public static final boolean RIGHT_INVERTED = true;
         public static final double DEADBAND = 0.1;
-        public static final double RPM_TOLERANCE = 100; //RPM
-        public static final double kP = 0.3;
-        public static final double kI = 0.002;
-        public static final double kD = 0.5;
+        public static final double RPM_TOLERANCE = 200; //RPM
+        public static final double kP = 0.4;
+        public static final double kI = 0.0025;
+        public static final double kD = 0.6;
         public static final double kF = 0.05;
         public static final int I_ZONE = 150;
-        public static final long TIMEOUT = 30;
+        public static final long TIMEOUT = 15;
 
         public static final double IDLE_SHOOTER_SPEED_PERCENT = 0.5;  /* TBD RPMs INSTEAD OF PERCENT */
         public static final double NEAR_TARGET_SHOOTER_SPEED_PERCENT = 4000;   /* TBD RPMs INSTEAD OF PERCENT */
@@ -243,7 +247,7 @@ public class Constants {
 
     public class Auto {
         public static final long AUTO_SHOOT_DELAY = 1000;
-        public static final long AUTO_SHOOT_RUNON = 3000;
+        public static final long AUTO_SHOOT_RUNON = 4000;
 
         public class Drive {
             public static final double SPEED = 1.0;
@@ -262,7 +266,7 @@ public class Constants {
     public class DriveStraight {
         public static final double kP = 0.1;
         public static final double kI = 0.0;
-        public static final double kD = 0.0;
+        public static final double kD = 0.001;
 
 
 
