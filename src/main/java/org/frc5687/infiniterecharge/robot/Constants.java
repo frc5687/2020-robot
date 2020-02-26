@@ -16,13 +16,16 @@ public class Constants {
     public static class Climber {
         public static final boolean ELEVATOR_MOTOR_INVERTED = false;
         public static final boolean WINCH_MOTOR_INVERTED = true;
-        public static final double ELEVATOR_EXTEND_SPEED = 0.5;
+        public static final double ELEVATOR_EXTEND_SPEED = 1.0;
         public static final double ELEVATOR_TENSION_SPEED = 0.0;
         public static final double WINCH_RETRACT_SPEED = 1;
         public static final double WINCH_TENSION_SPEED = 0.0;
-        public static final double ELEVATOR_RETRACT_SPEED = -0.50;
-        public static final double NEAR_BOTTOM = 2.0;
-        public static final double NEAR_TOP = 48.0;
+        public static final double ELEVATOR_RETRACT_SPEED = -0.75;
+        public static final double NEAR_BOTTOM = 30.0;
+        public static final double NEAR_TOP = 175.0;
+        public static final double ELEVATOR_EXTEND_SPEED_SLOW = 0.2;
+        public static final double ELEVATOR_RETRACT_SPEED_SLOW = -0.20;
+        public static final double EXTENDED = 60.0;
     }
 
     public static class Skywalker {
@@ -89,6 +92,7 @@ public class Constants {
                 ;
         public static final double DISTANCE_TOLERANCE = 2.0;
         public static final double LIMELIGHT_ODOMETRY_ZONE = 150; //inches, we are saying if our distance isnt within this range dont update pose
+        public static final double ELEVATOR_LIMIT = 0.3;
     }
 
     public static class Turret {
