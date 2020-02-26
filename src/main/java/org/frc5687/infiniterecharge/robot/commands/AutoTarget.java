@@ -17,6 +17,7 @@ public class AutoTarget extends OutliersCommand {
     private Shooter _shooter;
     private Hood _hood;
     private DriveTrain _driveTrain;
+    private Intake _intake;
     private Lights _lights;
     private Limelight _limelight;
     private PoseTracker _poseTracker;
@@ -33,6 +34,7 @@ public class AutoTarget extends OutliersCommand {
                       Hood hood,
                       Limelight limelight,
                       DriveTrain driveTrain,
+                      Intake intake,
                       PoseTracker poseTracker,
                       Lights lights,
                       OI oi,
@@ -43,6 +45,7 @@ public class AutoTarget extends OutliersCommand {
         _shooter = shooter;
         _hood = hood;
         _driveTrain = driveTrain;
+        _intake = intake;
         _limelight = limelight;
         _lights = lights;
         _poseTracker = poseTracker;
@@ -70,6 +73,10 @@ public class AutoTarget extends OutliersCommand {
 
     @Override
     public void execute() {
+        _intake.setSpeed(.3);
+        if (!_turret.isTargetInTolerance()) {
+            _filter.reset();
+        }
         if (!_override) {
             _hood.setPosition(_hood.getHoodDesiredAngle(Units.metersToInches(_driveTrain.distanceToTarget())));
             _shooter.setVelocitySpeed(_shooter.getDistanceSetpoint(Units.metersToInches(_driveTrain.distanceToTarget())));

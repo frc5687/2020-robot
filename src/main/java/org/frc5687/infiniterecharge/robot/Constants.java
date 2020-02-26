@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.util.Units;
 public class Constants {
     public static final int  TICKS_PER_UPDATE = 10;
     public static final double METRIC_FLUSH_PERIOD = 1.0;
-    public static final double UPDATE_PERIOD = 0.01;
+    public static final double UPDATE_PERIOD = 0.02;
     public static class Intake {
         public static final boolean INTAKE_MOTOR_INVERTED = true;
         public static final double INTAKE_SPEED = 1.0;
@@ -88,8 +88,7 @@ public class Constants {
         public static final double ROTATION_SENSITIVITY_LOW_GEAR = .6;
         public static final double TURNING_SENSITIVITY_HIGH_GEAR = .5;
         public static final double TURNING_SENSITIVITY_LOW_GEAR = .3;
-        public static final double SPEED_LIMIT = 0.9
-                ;
+        public static final double SPEED_LIMIT = 0.9;
         public static final double DISTANCE_TOLERANCE = 2.0;
         public static final double LIMELIGHT_ODOMETRY_ZONE = 150; //inches, we are saying if our distance isnt within this range dont update pose
         public static final double ELEVATOR_LIMIT = 0.3;
@@ -137,7 +136,7 @@ public class Constants {
         public static final double MIN_DEGREES = 20;
         public static final boolean INVERTED = false;
         public static final boolean SENSOR_PHASE_INVERTED = false;
-        public static final double MAX_DEGREES = 69;
+        public static final double MAX_DEGREES = 70;
         public static final double TICKS_TO_DEGREES = 0.0413080895008606;// 0.038332795242141;
         public static final int CRUISE_VELOCITY = 5000;
         public static final int ACCELERATION = 16000;
@@ -227,7 +226,7 @@ public class Constants {
         public static final boolean LEFT_INVERTED = false;
         public static final boolean RIGHT_INVERTED = true;
         public static final double DEADBAND = 0.1;
-        public static final double RPM_TOLERANCE = 200; //RPM
+        public static final double RPM_TOLERANCE = 150; //RPM
         public static final double kP = 0.4;
         public static final double kI = 0.0025;
         public static final double kD = 0.6;
@@ -252,7 +251,7 @@ public class Constants {
     }
 
     public class Auto {
-        public static final long AUTO_SHOOT_DELAY = 1000;
+        public static final long AUTO_SHOOT_DELAY = 1500;
         public static final long AUTO_SHOOT_RUNON = 4000;
 
         public class Drive {
@@ -273,9 +272,10 @@ public class Constants {
         public static final double kP = 0.1;
         public static final double kI = 0.0;
         public static final double kD = 0.001;
-
-
-
+        public static final double kP_ANGLE = 0.006;
+        public static final double kI_ANGLE = 0.000;
+        public static final double kD_ANGLE = 0.01;
+        public static final double ANGLE_TOLERANCE = 0.25;
     }
 
     public class Lights {

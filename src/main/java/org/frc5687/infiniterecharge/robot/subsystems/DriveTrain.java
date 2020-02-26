@@ -6,6 +6,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -41,6 +42,10 @@ public class DriveTrain extends OutliersSubsystem {
     private SimpleMotorFeedforward _driveFeedForward;
     private TrajectoryConfig _driveConfig;
 
+    private PIDController _angleController;
+    private double _targetAngle;
+    private double _previousRotation = 999;
+    private boolean _anglePIDEnabled = false;
 
     private OI _oi;
     private AHRS _imu;
@@ -121,6 +126,10 @@ public class DriveTrain extends OutliersSubsystem {
         _odometry = new DifferentialDriveOdometry(getHeading(), new Pose2d(0,0, new Rotation2d(0)));
         _driveFeedForward = new SimpleMotorFeedforward(KS_VOLTS, KV_VOLTSPR, KA_VOLTSQPR);
         _driveConfig = new TrajectoryConfig(MAX_ACCEL_MPS, MAX_ACCEL_MPS).setKinematics(_driveKinematics);
+
+        _angleController = new PIDController(Constants.DriveStraight.kP_ANGLE, Constants.DriveStraight.kI_ANGLE, Constants.DriveStraight.kD_ANGLE, Constants.UPDATE_PERIOD);
+        _angleController.enableContinuousInput(-180, 180);
+        _angleController.setTolerance(Constants.DriveStraight.ANGLE_TOLERANCE);
     }
 
     public void enableBrakeMode() {
@@ -137,15 +146,26 @@ public class DriveTrain extends OutliersSubsystem {
         _rightSlave.setIdleMode(CANSparkMax.IdleMode.kCoast);
     }
     public void cheesyDrive(double speed, double rotation, boolean creep, boolean override) {
-//        metric("Speed", speed);
-//        metric("Rotation", rotation);
+        metric("Speed", speed);
+        metric("Rotation", rotation);
+        if (rotation == 0 && !_anglePIDEnabled) {
+                // We've just started "driving straight"
+                // Initialize and enable the angle controller
+            _anglePIDEnabled = true;
+            _targetAngle = _imu.getYaw();
+            _angleController.setSetpoint(_targetAngle);
+            _angleController.reset();
+        } else if (rotation!=0 &&  _anglePIDEnabled || speed == 0) {
+            _anglePIDEnabled = false;
+        } else if (_anglePIDEnabled) {
+            // Get rotation from the angle controller
+            rotation = limit(_angleController.calculate(_imu.getYaw()), -.2, 0.2);
+        }
 
+        Shifter.Gear gear = _shifter.getGear();
         if (_shifter.getGear() == Shifter.Gear.HIGH) {
             speed = limit(speed, Constants.DriveTrain.SPEED_LIMIT);
         }
-        Shifter.Gear gear = _shifter.getGear();
-
-
         rotation = limit(rotation, 1);
 
         double leftMotorOutput;
@@ -155,13 +175,15 @@ public class DriveTrain extends OutliersSubsystem {
 
         if (speed < Constants.DriveTrain.DEADBAND && speed > -Constants.DriveTrain.DEADBAND) {
             // Turning in place
-            if (!override) {
-                rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.ROTATION_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.ROTATION_SENSITIVITY_LOW_GEAR);
-            }
-            if (creep) {
-                rotation = rotation * CREEP_FACTOR;
-            } else {
-                rotation = rotation * 0.8;
+            if (!_anglePIDEnabled) {
+                if (!override) {
+                    rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.ROTATION_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.ROTATION_SENSITIVITY_LOW_GEAR);
+                }
+                if (creep) {
+                    rotation = rotation * CREEP_FACTOR;
+                } else {
+                    rotation = rotation * 0.8;
+                }
             }
             leftMotorOutput = rotation;
             rightMotorOutput = -rotation;
@@ -169,11 +191,11 @@ public class DriveTrain extends OutliersSubsystem {
             // Square the inputs (while preserving the sign) to increase fine control
             // while permitting full power.
             speed = Math.copySign(applySensitivityFactor(speed, Constants.DriveTrain.SPEED_SENSITIVITY), speed);
-            if (!override) {
+            if (!override && !_anglePIDEnabled) {
                 rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.TURNING_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.TURNING_SENSITIVITY_LOW_GEAR);
             }
             // rotation = applySensitivityFactor(rotation, Constants.DriveTrain.ROTATION_SENSITIVITY);
-            double delta = override ? rotation : rotation * Math.abs(speed);
+            double delta = (override || _anglePIDEnabled) ? rotation : rotation * Math.abs(speed);
             if (override) {
                 // speed = Math.copySign(limit(Math.abs(speed), 1-Math.abs(delta)), speed);
 
@@ -253,12 +275,16 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        metric("X", getPose().getTranslation().getX());
-        metric("Y", getPose().getTranslation().getY());
-        metric("leftDistane", getLeftDistance());
-        metric("rightDistance", getRightDistance());
+//        metric("X", getPose().getTranslation().getX());
+//        metric("Y", getPose().getTranslation().getY());
+//        metric("leftDistane", getLeftDistance());
+//        metric("rightDistance", getRightDistance());
         metric("angle to target", getAngleToTarget());
         metric("distance to taget", distanceToTarget());
+        metric("using pid", _anglePIDEnabled);
+        metric("heading", _imu.getYaw());
+        metric("target angle", _targetAngle);
+
     }
 
     public DifferentialDriveKinematics getKinematics() {
