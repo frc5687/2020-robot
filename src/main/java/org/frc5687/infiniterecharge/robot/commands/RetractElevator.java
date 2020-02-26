@@ -18,7 +18,11 @@ public class RetractElevator extends OutliersCommand {
 
     @Override
     public void execute() {
-        _climber.setElevatorSpeed(Constants.Climber.ELEVATOR_RETRACT_SPEED);
+        if (_climber.isNearBottom()) {
+            _climber.setElevatorSpeed(Constants.Climber.ELEVATOR_RETRACT_SPEED_SLOW);
+        } else {
+            _climber.setElevatorSpeed(Constants.Climber.ELEVATOR_RETRACT_SPEED);
+        }
         // _climber.setWinchSpeed(Constants.Climber.WINCH_TENSION_SPEED);
     }
 

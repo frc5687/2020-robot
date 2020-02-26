@@ -19,7 +19,11 @@ public class ExtendElevator extends OutliersCommand {
 
     @Override
     public void execute() {
-        _climber.setElevatorSpeed(Constants.Climber.ELEVATOR_EXTEND_SPEED);
+        if (_climber.isNearTop()) {
+            _climber.setElevatorSpeed(Constants.Climber.ELEVATOR_EXTEND_SPEED_SLOW);
+        } else {
+            _climber.setElevatorSpeed(Constants.Climber.ELEVATOR_EXTEND_SPEED);
+        }
         _climber.setWinchSpeed(Constants.Climber.WINCH_TENSION_SPEED);
     }
 
