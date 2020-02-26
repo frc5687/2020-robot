@@ -74,6 +74,9 @@ public class AutoTarget extends OutliersCommand {
     @Override
     public void execute() {
         _intake.setSpeed(.3);
+        if (!_turret.isTargetInTolerance()) {
+            _filter.reset();
+        }
         if (!_override) {
             _hood.setPosition(_hood.getHoodDesiredAngle(Units.metersToInches(_driveTrain.distanceToTarget())));
             _shooter.setVelocitySpeed(_shooter.getDistanceSetpoint(Units.metersToInches(_driveTrain.distanceToTarget())));

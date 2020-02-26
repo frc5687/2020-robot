@@ -127,7 +127,7 @@ public class DriveTrain extends OutliersSubsystem {
         _driveFeedForward = new SimpleMotorFeedforward(KS_VOLTS, KV_VOLTSPR, KA_VOLTSQPR);
         _driveConfig = new TrajectoryConfig(MAX_ACCEL_MPS, MAX_ACCEL_MPS).setKinematics(_driveKinematics);
 
-        _angleController = new PIDController(Constants.DriveStraight.kP, Constants.DriveStraight.kI, Constants.DriveStraight.kD, Constants.UPDATE_PERIOD);
+        _angleController = new PIDController(Constants.DriveStraight.kP_ANGLE, Constants.DriveStraight.kI_ANGLE, Constants.DriveStraight.kD_ANGLE, Constants.UPDATE_PERIOD);
         _angleController.enableContinuousInput(-180, 180);
         _angleController.setTolerance(Constants.DriveStraight.ANGLE_TOLERANCE);
     }
@@ -146,22 +146,20 @@ public class DriveTrain extends OutliersSubsystem {
         _rightSlave.setIdleMode(CANSparkMax.IdleMode.kCoast);
     }
     public void cheesyDrive(double speed, double rotation, boolean creep, boolean override) {
-//        metric("Speed", speed);
-//        metric("Rotation", rotation);
-        if (rotation==0 && !_anglePIDEnabled) {
+        metric("Speed", speed);
+        metric("Rotation", rotation);
+        if (rotation == 0 && !_anglePIDEnabled) {
                 // We've just started "driving straight"
                 // Initialize and enable the angle controller
-                _anglePIDEnabled = true;
-                _targetAngle = _imu.getYaw();
-                _angleController.setSetpoint(_targetAngle);
-                error("Hold angle : " + _targetAngle);
-                _angleController.reset();
-        } else if (rotation!=0 &&  _anglePIDEnabled) {
+            _anglePIDEnabled = true;
+            _targetAngle = _imu.getYaw();
+            _angleController.setSetpoint(_targetAngle);
+            _angleController.reset();
+        } else if (rotation!=0 &&  _anglePIDEnabled || speed == 0) {
             _anglePIDEnabled = false;
         } else if (_anglePIDEnabled) {
             // Get rotation from the angle controller
-            error("Using PID");
-            rotation = limit(_angleController.calculate(_imu.getYaw()), -.1, 0.1);
+            rotation = limit(_angleController.calculate(_imu.getYaw()), -.2, 0.2);
         }
 
         Shifter.Gear gear = _shifter.getGear();
@@ -277,12 +275,16 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        metric("X", getPose().getTranslation().getX());
-        metric("Y", getPose().getTranslation().getY());
-        metric("leftDistane", getLeftDistance());
-        metric("rightDistance", getRightDistance());
+//        metric("X", getPose().getTranslation().getX());
+//        metric("Y", getPose().getTranslation().getY());
+//        metric("leftDistane", getLeftDistance());
+//        metric("rightDistance", getRightDistance());
         metric("angle to target", getAngleToTarget());
         metric("distance to taget", distanceToTarget());
+        metric("using pid", _anglePIDEnabled);
+        metric("heading", _imu.getYaw());
+        metric("target angle", _targetAngle);
+
     }
 
     public DifferentialDriveKinematics getKinematics() {
