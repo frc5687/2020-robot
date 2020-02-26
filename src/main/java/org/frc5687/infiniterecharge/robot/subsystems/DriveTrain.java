@@ -5,7 +5,6 @@ import com.revrobotics.AlternateEncoderType;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -13,7 +12,6 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.util.Units;
 import org.frc5687.infiniterecharge.robot.Constants;
@@ -41,6 +39,8 @@ public class DriveTrain extends OutliersSubsystem {
     private SimpleMotorFeedforward _driveFeedForward;
     private TrajectoryConfig _driveConfig;
 
+
+    private double _previousSpeed = 0;
 
     private OI _oi;
     private AHRS _imu;
@@ -155,6 +155,7 @@ public class DriveTrain extends OutliersSubsystem {
 
         if (speed < Constants.DriveTrain.DEADBAND && speed > -Constants.DriveTrain.DEADBAND) {
             // Turning in place
+            _previousSpeed = speed;
             if (!override) {
                 rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.ROTATION_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.ROTATION_SENSITIVITY_LOW_GEAR);
             }
@@ -174,6 +175,19 @@ public class DriveTrain extends OutliersSubsystem {
             }
             // rotation = applySensitivityFactor(rotation, Constants.DriveTrain.ROTATION_SENSITIVITY);
             double delta = override ? rotation : rotation * Math.abs(speed);
+
+            // If in low gear, apply ramping.
+            if (_shifter.getGear() == Shifter.Gear.LOW) {
+                if (_previousSpeed > 0) {
+                    speed = limit(speed, 0, _previousSpeed + Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR);
+                } else if (_previousSpeed < 0) {
+                    speed = limit(speed, _previousSpeed - Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR, 0);
+                } else {
+                    speed = limit(speed, Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR, Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR);
+                }
+
+            }
+            _previousSpeed = speed;
             if (override) {
                 // speed = Math.copySign(limit(Math.abs(speed), 1-Math.abs(delta)), speed);
 
