@@ -21,6 +21,7 @@ public class AutoDrive extends PIDCommand {
         getController().setTolerance(Constants.DriveTrain.DISTANCE_TOLERANCE);
         _driveTrain = driveTrain;
     }
+
     @Override
     public boolean isFinished() {
         return getController().atSetpoint();
