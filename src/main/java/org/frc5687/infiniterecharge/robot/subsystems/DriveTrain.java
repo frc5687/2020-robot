@@ -140,8 +140,11 @@ public class DriveTrain extends OutliersSubsystem {
 //        metric("Speed", speed);
 //        metric("Rotation", rotation);
 
-        speed = limit(speed, Constants.DriveTrain.SPEED_LIMIT);
+        if (_shifter.getGear() == Shifter.Gear.HIGH) {
+            speed = limit(speed, Constants.DriveTrain.SPEED_LIMIT);
+        }
         Shifter.Gear gear = _shifter.getGear();
+
 
         rotation = limit(rotation, 1);
 
@@ -252,6 +255,8 @@ public class DriveTrain extends OutliersSubsystem {
     public void updateDashboard() {
         metric("X", getPose().getTranslation().getX());
         metric("Y", getPose().getTranslation().getY());
+        metric("leftDistane", getLeftDistance());
+        metric("rightDistance", getRightDistance());
         metric("angle to target", getAngleToTarget());
         metric("distance to taget", distanceToTarget());
     }
@@ -285,11 +290,6 @@ public class DriveTrain extends OutliersSubsystem {
         _odometry.resetPosition(pose, getHeading());
     }
 
-    public void tankDriveVolts(double leftVolts, double rightVolts) {
-        _leftMaster.set(leftVolts/12);
-        _rightMaster.set(rightVolts/12);
-    }
-
     public void resetDriveEncoders() {
         _leftEncoder.setPosition(0);
         _rightEncoder.setPosition(0);
@@ -307,13 +307,15 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getAngleToTarget() {
         double angle = 0;
+        metric("xLength", _xLength);
+        metric("ylength", _yLength);
         if (_yLength > 0) {
             angle = (90 + Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + getHeading().getDegrees());
             if (!Double.isNaN(angle)) {
                 _prevAngle = angle;
             }
         } else if (_yLength < 0){
-            angle =  (Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + 90) + getHeading().getDegrees();
+            angle = -(Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + 90) + getHeading().getDegrees();
             if (!Double.isNaN(angle)) {
                 _prevAngle = angle;
             }

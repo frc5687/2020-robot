@@ -33,6 +33,8 @@ public class Turret extends OutliersSubsystem {
     private double _positionABS;
     private double _position;
 
+    private double _setpoint;
+
     private double _manualOffset = 0;
 
     public Turret(OutliersContainer container, DriveTrain driveTrain, Hood hood, Limelight limelight, OI oi) {
@@ -101,11 +103,13 @@ public class Turret extends OutliersSubsystem {
             angle = angle + 360;
         }
         angle = Helpers.limit(angle, Constants.Turret.MIN_DEGREES, Constants.Turret.MAX_DEGREES);
-        _turretController.set(ControlMode.MotionMagic, (angle/Constants.Turret.TICKS_TO_DEGREES));
+        _setpoint = angle;
+        _turretController.set(ControlMode.MotionMagic, (_setpoint/Constants.Turret.TICKS_TO_DEGREES));
     }
 
     public boolean isAtSetpoint() {
-        return _turretController.isMotionProfileFinished();
+        return Math.abs(getPositionDegrees() - _setpoint) < Constants.Turret.TOLERANCE;
+
     }
 
     public void enableBreakMode() {
