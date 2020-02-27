@@ -19,7 +19,7 @@ public class ShootSpeedSetpoint extends OutliersCommand {
     @Override
     public void initialize() {
         super.initialize();
-        _shooter.setVelocitySpeed(_speed);
+        _shooter.setVelocitySpeed(_speed, true);
     }
 
     @Override

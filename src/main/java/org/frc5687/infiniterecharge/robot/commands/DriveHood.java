@@ -27,12 +27,12 @@ public class DriveHood extends OutliersCommand {
         if (_zeroing) {
             _hood.setSpeed(Constants.Hood.ZEROING_SPEED);
             if (_hood.isHallTriggered()) {
-                _hood.setPosition(Constants.Hood.MIN_DEGREES);
+                _hood.setPosition(Constants.Hood.MIN_DEGREES, false);
                 _zeroing = false;
             }
         } else {
             double speed = _oi.getHoodSpeed();
-            _hood.setPosition(_hood.getSetPoint() + speed * Constants.Hood.SENSITIVITY);
+            _hood.setPosition(_hood.getSetPoint() + speed * Constants.Hood.SENSITIVITY, false);
         }
     }
 

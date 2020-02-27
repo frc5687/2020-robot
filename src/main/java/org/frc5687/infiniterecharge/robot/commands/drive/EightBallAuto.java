@@ -22,7 +22,7 @@ public class EightBallAuto extends SequentialCommandGroup {
                 , new AutoDrivePath(driveTrain, imu, "HalfTrench", 0, true)
                 ,  new AutoAlign(driveTrain, 0)
                 , new SetPose(driveTrain, Constants.AutoPositions.TRENCH_EDGE)
-                ,new AutoTurretSetpoint(turret, -10)
+                ,new AutoTurretSetpoint(turret, -10, false)
                 ,new ParallelDeadlineGroup(
                         new AutoShoot(shooter, indexer, turret, null)
                         ,new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,null,4700, 62.5, true) //TODO: Tune

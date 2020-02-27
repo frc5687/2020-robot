@@ -14,7 +14,7 @@ import org.frc5687.infiniterecharge.robot.util.Helpers;
 import org.frc5687.infiniterecharge.robot.util.Limelight;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
-public class Hood extends OutliersSubsystem {
+public class Hood extends OutliersSubsystem implements ISupportsTrim {
 
     private TalonSRX _hoodController;
     private Limelight _limelight;
@@ -25,6 +25,8 @@ public class Hood extends OutliersSubsystem {
 
     private double _position;
     private double _setPoint;
+
+    private double _trim;
 
     private Limelight.Pipeline _pipeline = Limelight.Pipeline.Wide;
 
@@ -66,7 +68,10 @@ public class Hood extends OutliersSubsystem {
         _hoodController.set(ControlMode.PercentOutput, speed);
     }
 
-    public void setPosition(double angle) {
+    public void setPosition(double angle, boolean allowTrim) {
+        if (allowTrim) {
+            angle += _trim;
+        }
         _setPoint = Helpers.limit(angle, Constants.Hood.MIN_DEGREES, Constants.Hood.MAX_DEGREES);
         _hoodController.set(ControlMode.MotionMagic, _setPoint / Constants.Hood.TICKS_TO_DEGREES);
     }
@@ -164,4 +169,25 @@ public class Hood extends OutliersSubsystem {
     }
 
 
+    @Override
+    public double getOffset() {
+        return _trim;
+    }
+
+    @Override
+    public void setOffset(double value) {
+        _trim = value;
+    }
+
+    @Override
+    public void trim(double increment) {
+        _trim += increment;
+        error("Hood trim set to " + _trim);
+        metric("Trim", _trim);
+        // If we are already tracking a setpoint, pass it in again so that the new trim is reflected.
+        if (!isHallTriggered()) {
+            setPosition(_setPoint, true);
+        }
+
+    }
 }

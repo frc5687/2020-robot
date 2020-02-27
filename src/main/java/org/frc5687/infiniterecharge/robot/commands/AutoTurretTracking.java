@@ -34,7 +34,7 @@ public class AutoTurretTracking extends OutliersCommand {
     @Override
     public void execute() {
         double position = _driveTrain.getAngleToTarget();
-       _turret.setMotionMagicSetpoint(position);
+       _turret.setMotionMagicSetpoint(position, true);
     }
     @Override
     public boolean isFinished() {

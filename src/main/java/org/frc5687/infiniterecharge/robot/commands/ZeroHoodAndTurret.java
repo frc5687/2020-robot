@@ -8,6 +8,6 @@ public class ZeroHoodAndTurret extends SequentialCommandGroup {
     public ZeroHoodAndTurret(Hood hood, Turret turret) {
         addCommands(
         new ZeroSensors(hood, turret),
-        new AutoTurretSetpoint(turret, 0));
+        new AutoTurretSetpoint(turret, 0, false));
     }
 }

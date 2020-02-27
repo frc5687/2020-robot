@@ -1,9 +1,6 @@
 package org.frc5687.infiniterecharge.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.StatusFrame;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
@@ -11,7 +8,7 @@ import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.util.Helpers;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
-public class Shooter extends OutliersSubsystem {
+public class Shooter extends OutliersSubsystem implements ISupportsTrim {
 
     private DriveTrain _driveTrain;
     private TalonFX _shooterRight;
@@ -20,6 +17,7 @@ public class Shooter extends OutliersSubsystem {
     private boolean _shooting = false;
     private double _targetRPM;
 
+    private double _trim;
 
 
     public Shooter(OutliersContainer container, OI oi, DriveTrain driveTrain) {
@@ -59,8 +57,11 @@ public class Shooter extends OutliersSubsystem {
         _shooterRight.set(TalonFXControlMode.PercentOutput, speed);
     }
 
-    public void setVelocitySpeed(double RPM) {
+    public void setVelocitySpeed(double RPM, boolean allowTrim) {
         _targetRPM = RPM;
+        if (allowTrim) {
+            _targetRPM += _trim;
+        }
         _targetRPM = Helpers.limit(_targetRPM, 0, 7200);
         _shooterRight.set(TalonFXControlMode.Velocity, (_targetRPM * Constants.Shooter.TICKS_TO_ROTATIONS / 600 / 1.25));
     }
@@ -98,4 +99,26 @@ public class Shooter extends OutliersSubsystem {
     }
 
 
+    @Override
+    public double getOffset() {
+        return _trim;
+    }
+
+    @Override
+    public void setOffset(double value) {
+        _trim = value;
+    }
+
+    @Override
+    public void trim(double increment) {
+        _trim += increment;
+        error("Shooter trim set to " + _trim);
+        metric("Trim", _trim);
+
+        // If we are already tracking a setpoint, pass it in again so that the new trim is reflected.
+        if (_targetRPM!=0) {
+            setVelocitySpeed(_targetRPM, true);
+        }
+
+    }
 }

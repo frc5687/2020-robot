@@ -109,6 +109,7 @@ public class Constants {
         public static final int ACCELERATION = 16000; // in ticks
         public static final double ABS_OFFSET = 239;// if the turret coasts this value changes, need to find a way to set this position.
         public static final double MANUAL_OFFSET = -1.0;
+        public static final double TRIM_INCREMENT = 1.0; // TODO: Need a real value!  Number of degrees to trim per press.
 
 
         public static class Position {
@@ -155,6 +156,7 @@ public class Constants {
         public static final double LIMELIGHT_OFFSET_DEGREES = 23;
         public static final double ZEROING_SPEED = -0.85;
         public static final double STOW_DISTANCE = 24;
+        public static final double TRIM_INCREMENT = 0.5; // Trim increment in degrees
     }
 
     public static class OI {
@@ -241,6 +243,7 @@ public class Constants {
         public static final double FAR_TARGET_SHOOTER_SPEED_PERCENT = 5500;   /* TBD RPMs INSTEAD OF PERCENT */
         public static final double TICKS_TO_ROTATIONS = 2048;
         public static final double GEAR_RATIO = 1.25;
+        public static final double TRIM_INCREMENT = 100; // TODO: Need a real value.  Trims the speed up or down by this amount.
     }
 
     public class Indexer {

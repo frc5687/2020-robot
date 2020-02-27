@@ -19,7 +19,7 @@ import org.frc5687.infiniterecharge.robot.util.TurretPose;
 import java.lang.annotation.Target;
 
 
-public class Turret extends OutliersSubsystem {
+public class Turret extends OutliersSubsystem implements ISupportsTrim {
 
     private TalonSRX _turretController;
     private Limelight _limelight;
@@ -34,8 +34,8 @@ public class Turret extends OutliersSubsystem {
     private double _position;
 
     private double _setpoint;
+    private double _trim;
 
-    private double _manualOffset = 0;
 
     public Turret(OutliersContainer container, DriveTrain driveTrain, Hood hood, Limelight limelight, OI oi) {
         super(container);
@@ -96,7 +96,10 @@ public class Turret extends OutliersSubsystem {
         }
     }
 
-    public void setMotionMagicSetpoint(double angle) {
+    public void setMotionMagicSetpoint(double angle, boolean allowTrim) {
+        if (allowTrim) {
+            angle += _trim;
+        }
         if (angle > Constants.Turret.MAX_DEGREES) {
             angle =  angle - 360;
         } else if (angle < Constants.Turret.MIN_DEGREES) {
@@ -163,9 +166,6 @@ public class Turret extends OutliersSubsystem {
         _turretController.setSelectedSensorPosition((int) _position);
     }
 
-    public void adjustOffset(double amount) {
-        _manualOffset += amount;
-    }
 
     public int getPositionTicks() {
         return _turretController.getSelectedSensorPosition(0);
@@ -198,8 +198,26 @@ public class Turret extends OutliersSubsystem {
         return new TurretPose(getPositionDegrees());
     }
 
-    public double getManualOffset() {
-        return _manualOffset;
+    @Override
+    public double getOffset() {
+        return _trim;
+    }
+
+    @Override
+    public void setOffset(double value) {
+        _trim = value;
+    }
+
+    @Override
+    public void trim(double increment) {
+        _trim += increment;
+        error("Turret trim set to " + _trim);
+        metric("Trim", _trim);
+
+        // If we are already tracking a setpoint, pass it in again so that the new trim is reflected.
+        if (_turretController.getControlMode()==ControlMode.MotionMagic) {
+            setMotionMagicSetpoint(_setpoint, true);
+        }
     }
 
     public enum Control {

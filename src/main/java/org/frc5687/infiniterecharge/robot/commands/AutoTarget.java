@@ -64,8 +64,8 @@ public class AutoTarget extends OutliersCommand {
         _limelight.enableLEDs();
         _filter.reset();
         if (_override) {
-            _hood.setPosition(_angle);
-            _shooter.setVelocitySpeed(_speed);
+            _hood.setPosition(_angle, true);
+            _shooter.setVelocitySpeed(_speed, true);
         }
         _lights.setTargeting(true);
         _mode = Mode.Rough;
@@ -78,13 +78,13 @@ public class AutoTarget extends OutliersCommand {
             _filter.reset();
         }
         if (!_override) {
-            _hood.setPosition(_hood.getHoodDesiredAngle(Units.metersToInches(_driveTrain.distanceToTarget())));
-            _shooter.setVelocitySpeed(_shooter.getDistanceSetpoint(Units.metersToInches(_driveTrain.distanceToTarget())));
+            _hood.setPosition(_hood.getHoodDesiredAngle(Units.metersToInches(_driveTrain.distanceToTarget())), true);
+            _shooter.setVelocitySpeed(_shooter.getDistanceSetpoint(Units.metersToInches(_driveTrain.distanceToTarget())), true);
         }
         switch (_mode) {
             case Rough:
                 error("Targeting to rough");
-                _turret.setMotionMagicSetpoint(_driveTrain.getAngleToTarget());
+                _turret.setMotionMagicSetpoint(_driveTrain.getAngleToTarget(), false);
                 if (_turret.isAtSetpoint()) {
                     error("Going To Limelight");
                     _mode = Mode.Limelighting;
@@ -92,10 +92,7 @@ public class AutoTarget extends OutliersCommand {
                 break;
             case Limelighting:
                 if (!_shooter.isShooting()) {
-                    _turret.setMotionMagicSetpoint(_filter.calculate(_limelight.getHorizontalAngle()) + _turret.getPositionDegrees());
-                }
-                if (!_shooter.isShooting()) {
-                    _turret.setMotionMagicSetpoint(_filter.calculate(_limelight.getHorizontalAngle()) + _turret.getPositionDegrees() + _turret.getManualOffset());
+                    _turret.setMotionMagicSetpoint(_filter.calculate(_limelight.getHorizontalAngle()) + _turret.getPositionDegrees(), true);
                 }
                 _lights.setReadyToshoot(_shooter.isAtTargetVelocity() && _turret.isTargetInTolerance());
                 break;
@@ -126,7 +123,7 @@ public class AutoTarget extends OutliersCommand {
         super.end(interrupted);
         _lights.setTargeting(false);
         _lights.setReadyToshoot(false);
-        _hood.setPosition(Constants.Hood.MIN_DEGREES);
+        _hood.setPosition(Constants.Hood.MIN_DEGREES, false);
         _limelight.disableLEDs();
         Command hoodCommand = _hood.getDefaultCommand();
         if (hoodCommand instanceof DriveHood) {

@@ -46,8 +46,11 @@ public class OI extends OutliersProxy {
 
     private AxisButton _driverRightYAxisUpButton;
 
-    private AxisButton _operatorRightXAxisUpButton;
-    private AxisButton _operatorRightXAxisDownButton;
+    private AxisButton _operatorRightYAxisUpButton;
+    private AxisButton _operatorRightYAxisDownButton;
+
+    private AxisButton _operatorRightXAxisLeftButton;
+    private AxisButton _operatorRightXAxisRightButton;
 
     private AxisButton _operatorLeftYAxisUpButton;
     private AxisButton _operatorLeftYAxisDownButton;
@@ -75,8 +78,14 @@ public class OI extends OutliersProxy {
 
 
         _driverRightYAxisUpButton = new AxisButton(_driverGamepad,Gamepad.Axes.RIGHT_Y.getNumber(), -.75);
-        _operatorRightXAxisDownButton = new AxisButton(_operatorGamepad,Gamepad.Axes.RIGHT_Y.getNumber(), -.5);
-        _operatorRightXAxisUpButton = new AxisButton(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber(), .5);
+
+        _operatorRightYAxisDownButton = new AxisButton(_operatorGamepad,Gamepad.Axes.RIGHT_Y.getNumber(), -.5);
+        _operatorRightYAxisUpButton = new AxisButton(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber(), .5);
+        _operatorRightXAxisLeftButton = new AxisButton(_operatorGamepad,Gamepad.Axes.RIGHT_X.getNumber(), -.5);
+        _operatorRightXAxisRightButton = new AxisButton(_operatorGamepad, Gamepad.Axes.RIGHT_X.getNumber(), .5);
+
+        _operatorLeftYAxisDownButton = new AxisButton(_operatorGamepad,Gamepad.Axes.LEFT_Y.getNumber(), -.5);
+        _operatorLeftYAxisUpButton = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_Y.getNumber(), .5);
         _operatorLeftXAxisLeft = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber(), .5);
         _operatorLeftXAxisRight = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber(), -.5);
 
@@ -101,6 +110,15 @@ public class OI extends OutliersProxy {
     public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber, Hood hood, Skywalker skywalker, Lights lights, AHRS imu){
         _operatorLeftXAxisLeft.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,this,3200, 52, true));
         _operatorLeftXAxisRight.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,this,5000, 70, true));
+
+        _operatorRightYAxisUpButton.whenPressed(new Trim(shooter, Constants.Shooter.TRIM_INCREMENT));
+        _operatorRightYAxisDownButton.whenPressed(new Trim(shooter,- Constants.Shooter.TRIM_INCREMENT));
+
+        _operatorRightXAxisLeftButton.whenPressed(new Trim(turret, -Constants.Turret.TRIM_INCREMENT));
+        _operatorRightXAxisRightButton.whenPressed(new Trim(turret, -Constants.Turret.TRIM_INCREMENT));
+
+        _operatorLeftYAxisUpButton.whenPressed(new Trim(hood, Constants.Hood.TRIM_INCREMENT));
+        _operatorLeftYAxisDownButton.whenPressed(new Trim(hood,- Constants.Hood.TRIM_INCREMENT));
 
 //        _operatorRightTrigger.whileHeld(new Shoot(shooter, indexer, turret, this));
         _driverRightTrigger.whileHeld(new Shoot(shooter, indexer, turret, this));

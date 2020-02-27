@@ -12,17 +12,19 @@ public class AutoTurretSetpoint extends OutliersCommand {
     private Limelight _limelight;
     private OI _oi;
     private double _angle;
+    private boolean _allowTrim;
 
-    public AutoTurretSetpoint(Turret turret, double angle) {
+    public AutoTurretSetpoint(Turret turret, double angle, boolean allowTrim) {
         _turret = turret;
         _angle = angle;
+        _allowTrim = allowTrim;
         addRequirements(_turret);
     }
 
     @Override
     public void initialize() {
         _turret.setControlMode(Turret.Control.MotionMagic);
-        _turret.setMotionMagicSetpoint(_angle);
+        _turret.setMotionMagicSetpoint(_angle, _allowTrim);
     }
 
     @Override
