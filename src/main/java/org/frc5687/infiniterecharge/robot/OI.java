@@ -120,8 +120,8 @@ public class OI extends OutliersProxy {
         _operatorYButton.whileHeld(new AutoTarget(turret, shooter,hood,limelight,driveTrain,intake,poseTracker,lights,this, 0,20,false));
         _operatorLeftTrigger.whileHeld(new AutoIntake(intake, lights, false));
 
-        _operatorBButton.whileHeld(new AutoSpinToColor(spinner, this, skywalker));
-        _driverBButton.whenPressed(new AutoSpinRotations(spinner, this, skywalker));
+        _driverBButton.whileHeld(new AutoSpinToColor(spinner, this, skywalker));
+        _operatorBButton.whileHeld(new AutoSpinRotations(spinner, this, skywalker));
     }
 
     public boolean isAutoTargetPressed() {
