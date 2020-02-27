@@ -49,7 +49,7 @@ public class AutoTarget extends OutliersCommand {
         _limelight = limelight;
         _lights = lights;
         _poseTracker = poseTracker;
-        _filter = new MedianFilter(10);
+        _filter = new MedianFilter(15);
         _oi = oi;
         _speed = speed;
         _angle = angle;
@@ -73,7 +73,7 @@ public class AutoTarget extends OutliersCommand {
 
     @Override
     public void execute() {
-        _intake.setSpeed(.3);
+        _intake.setSpeed(.4);
         if (!_turret.isTargetInTolerance()) {
             _filter.reset();
         }

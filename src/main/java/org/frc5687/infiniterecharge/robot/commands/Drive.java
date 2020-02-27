@@ -186,7 +186,7 @@ public class Drive extends OutliersCommand {
         RobotPose pose = (RobotPose)_poseTracker.get(timeKey);
 
         // Get the angle from the pose if one was found--otherwise use yaw
-        double poseAngle = pose == null ? -yaw : -pose.getDrivePose().getAngle();
+        double poseAngle = pose == null ? -yaw : pose.getDrivePose().getAngle();
 
         // Now adjust the limelight angle based on the change in yaw from when the picture was taken to now
         double offsetCompensation = -yaw - poseAngle;
