@@ -159,7 +159,7 @@ public class DriveTrain extends OutliersSubsystem {
             _anglePIDEnabled = false;
         } else if (_anglePIDEnabled) {
             // Get rotation from the angle controller
-            rotation = limit(_angleController.calculate(_imu.getYaw()), -.2, 0.2);
+            rotation = limit(_angleController.calculate(_imu.getYaw()), -.15, 0.15);
         }
 
         Shifter.Gear gear = _shifter.getGear();
@@ -208,8 +208,9 @@ public class DriveTrain extends OutliersSubsystem {
                 } else {
                     speed = limit(speed, Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR, Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR);
                 }
-
             }
+            metric("previousSPeed", _previousSpeed);
+            metric("speed", speed);
             _previousSpeed = speed;
             if (override) {
                 // speed = Math.copySign(limit(Math.abs(speed), 1-Math.abs(delta)), speed);

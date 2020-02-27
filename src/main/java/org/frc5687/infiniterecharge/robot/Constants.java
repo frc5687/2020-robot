@@ -70,7 +70,7 @@ public class Constants {
         public static final double MAX_ACCEL_MPS = Units.inchesToMeters(MAX_ACCELERATION_IPSS);
         public static final double MAX_JERK_IPSSS = CAP_SPEED_IPS;
         public static final double RAMP_RATE = 0.1;
-        public static final double RAMP_RATE_LOWGEAR = 0.75; // Seconds from 0 to full in low gear
+        public static final double RAMP_RATE_LOWGEAR = 1.0; // Seconds from 0 to full in low gear
         public static final double RAMP_INCREMENT_LOWGEAR =  UPDATE_PERIOD / RAMP_RATE_LOWGEAR; // Speed increment allowed per cycle
         public static final int STALL_CURRENT_LIMIT = 50;
         public static final int FREE_CURRENT_LIMIT = 60;
@@ -87,7 +87,7 @@ public class Constants {
         public static final double kD = 0.0015;
         public static final double ANGLE_TOLERANCE = 1.5;
         public static final double ROTATION_SENSITIVITY_HIGH_GEAR = .8;
-        public static final double ROTATION_SENSITIVITY_LOW_GEAR = .6;
+        public static final double ROTATION_SENSITIVITY_LOW_GEAR = .5;
         public static final double TURNING_SENSITIVITY_HIGH_GEAR = .5;
         public static final double TURNING_SENSITIVITY_LOW_GEAR = .3;
         public static final double SPEED_LIMIT = 0.9;
@@ -261,7 +261,7 @@ public class Constants {
             public static final double MIN_SPEED = 0.25;
             public static final double MIN_TRACK_DISTANCE = 2.0;
             public static final int MAX_GARBAGE = 5;
-            public static final double STEER_K = 0.01;
+            public static final double STEER_K = 0.015;
             public static final double MAX_IMU_ANGLE = 180.0;
             public static final double MIN_IMU_ANGLE = -MAX_IMU_ANGLE;
         }
@@ -274,7 +274,7 @@ public class Constants {
         public static final double kP = 0.1;
         public static final double kI = 0.0;
         public static final double kD = 0.001;
-        public static final double kP_ANGLE = 0.006;
+        public static final double kP_ANGLE = 0.001;
         public static final double kI_ANGLE = 0.000;
         public static final double kD_ANGLE = 0.01;
         public static final double ANGLE_TOLERANCE = 0.25;
