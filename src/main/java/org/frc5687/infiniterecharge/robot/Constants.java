@@ -109,6 +109,7 @@ public class Constants {
         public static final int ACCELERATION = 16000; // in ticks
         public static final double ABS_OFFSET = 239;// if the turret coasts this value changes, need to find a way to set this position.
         public static final double MANUAL_OFFSET = -1.0;
+        public static final double SPIT_ANGLE = 15.0;  // TODO: I chose 15 degrees pretty randomly.
 
 
         public static class Position {
@@ -241,6 +242,8 @@ public class Constants {
         public static final double FAR_TARGET_SHOOTER_SPEED_PERCENT = 5500;   /* TBD RPMs INSTEAD OF PERCENT */
         public static final double TICKS_TO_ROTATIONS = 2048;
         public static final double GEAR_RATIO = 1.25;
+        public static final double SPIT_SPEED = 0;  // TODO: @Dennis what should the spit RPMs be?
+        public static final long SPIT_TIMEOUT =  100;  // TODO: We just need time for the ball to clear the bot
     }
 
     public class Indexer {

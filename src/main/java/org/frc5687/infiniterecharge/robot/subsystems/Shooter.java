@@ -98,4 +98,7 @@ public class Shooter extends OutliersSubsystem {
     }
 
 
+    public double getVelocitySetpoint() {
+        return _targetRPM;
+    }
 }
