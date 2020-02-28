@@ -33,6 +33,8 @@ public class OI extends OutliersProxy {
     private Button _operatorStartButton;
     private Button _operatorEndButton;
 
+    private Button _driverStartButton;
+    private Button _driverEndButton;
 
     private Button _driverAButton;
     private Button _driverBButton;
@@ -93,6 +95,7 @@ public class OI extends OutliersProxy {
 
         _operatorStartButton = new JoystickButton(_operatorGamepad, Gamepad.Buttons.START.getNumber());
         _operatorEndButton = new JoystickButton(_operatorGamepad, Gamepad.Buttons.BACK.getNumber());
+        
 
         _operatorLeftYAxisDownButton = new AxisButton(_operatorGamepad,Gamepad.Axes.LEFT_Y.getNumber(), -.5);
         _operatorLeftYAxisUpButton = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_Y.getNumber(), .5);
@@ -101,7 +104,8 @@ public class OI extends OutliersProxy {
 
     public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber, Hood hood, Skywalker skywalker, Lights lights, AHRS imu){
         _operatorLeftXAxisLeft.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,this,3200, 52, true));
-        _operatorLeftXAxisRight.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,this,5000, 70, true));
+        _operatorLeftXAxisRight.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,this,5000, 69.8, true));
+        _operatorLeftBumper.whileHeld(new AutoTarget(turret, shooter,hood, limelight, driveTrain,intake, poseTracker, lights, this, 5200, 69.8, true));
 
         _operatorRightTrigger.whileHeld(new Shoot(shooter, indexer, turret, this));
         _driverRightTrigger.whileHeld(new Shoot(shooter, indexer, turret, this));
@@ -114,6 +118,7 @@ public class OI extends OutliersProxy {
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
 
+        _driverYButton.whileHeld(new ReverseAgitator(indexer));
         _driverAButton.whenHeld(new SetPose(driveTrain, Constants.AutoPositions.LOADING_STATION_POSE));
 
         _operatorAButton.whenPressed(new ZeroHoodAndTurret(hood, turret));
