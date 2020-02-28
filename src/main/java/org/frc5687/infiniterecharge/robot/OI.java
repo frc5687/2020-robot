@@ -105,7 +105,7 @@ public class OI extends OutliersProxy {
     public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber, Hood hood, Skywalker skywalker, Lights lights, AHRS imu){
         _operatorLeftXAxisLeft.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,this,3200, 52, true));
         _operatorLeftXAxisRight.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,this,5000, 69.8, true));
-        _operatorLeftBumper.whileHeld(new AutoTarget(turret, shooter,hood, limelight, driveTrain,intake, poseTracker, lights, this, 5200, 69.8, true));
+        _operatorLeftBumper.whileHeld(new AutoTarget(turret, shooter,hood, limelight, driveTrain,intake, poseTracker, lights, this, 5300, 69.8, true));
 
         _operatorRightTrigger.whileHeld(new Shoot(shooter, indexer, turret, this));
         _driverRightTrigger.whileHeld(new Shoot(shooter, indexer, turret, this));
@@ -131,6 +131,10 @@ public class OI extends OutliersProxy {
 
     public boolean isAutoTargetPressed() {
         return false;
+    }
+
+    public boolean isTurretLockPressed() {
+        return _operatorRightBumper.get();
     }
     public boolean isAutoTargetDrivePressed() {return _driverRightYAxisUpButton.get();}
 

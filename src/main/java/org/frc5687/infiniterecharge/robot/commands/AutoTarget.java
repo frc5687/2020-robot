@@ -92,14 +92,23 @@ public class AutoTarget extends OutliersCommand {
                 break;
             case Limelighting:
                 if (!_shooter.isShooting()) {
-                    _turret.setMotionMagicSetpoint(_filter.calculate(_limelight.getHorizontalAngle()) + _turret.getPositionDegrees());
+                    if (_oi.isTurretLockPressed()) {
+                        _turret.setMotionMagicSetpoint(_turret.getSetpoint());
+                    } else {
+                        _turret.setMotionMagicSetpoint(_filter.calculate(_limelight.getHorizontalAngle()) + _turret.getPositionDegrees());
+                    }
                 }
                 if (!_shooter.isShooting()) {
-                    _turret.setMotionMagicSetpoint(_filter.calculate(_limelight.getHorizontalAngle()) + _turret.getPositionDegrees() + _turret.getManualOffset());
+                    if (_oi.isTurretLockPressed()) {
+                        _turret.setMotionMagicSetpoint(_turret.getSetpoint());
+                    } else {
+                        _turret.setMotionMagicSetpoint(_filter.calculate(_limelight.getHorizontalAngle()) + _turret.getPositionDegrees() + _turret.getManualOffset());
+                    }
                 }
                 _lights.setReadyToshoot(_shooter.isAtTargetVelocity() && _turret.isTargetInTolerance());
                 break;
         }
+
     }
 
 
