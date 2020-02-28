@@ -81,11 +81,13 @@ public class OI extends OutliersProxy {
 
         _operatorRightYAxisDownButton = new AxisButton(_operatorGamepad,Gamepad.Axes.RIGHT_Y.getNumber(), -.5);
         _operatorRightYAxisUpButton = new AxisButton(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber(), .5);
+
         _operatorRightXAxisLeftButton = new AxisButton(_operatorGamepad,Gamepad.Axes.RIGHT_X.getNumber(), -.5);
         _operatorRightXAxisRightButton = new AxisButton(_operatorGamepad, Gamepad.Axes.RIGHT_X.getNumber(), .5);
 
         _operatorLeftYAxisDownButton = new AxisButton(_operatorGamepad,Gamepad.Axes.LEFT_Y.getNumber(), -.5);
         _operatorLeftYAxisUpButton = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_Y.getNumber(), .5);
+
         _operatorLeftXAxisLeft = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber(), .5);
         _operatorLeftXAxisRight = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber(), -.5);
 
