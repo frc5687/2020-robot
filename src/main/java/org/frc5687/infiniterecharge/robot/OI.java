@@ -112,10 +112,10 @@ public class OI extends OutliersProxy {
         _operatorLeftXAxisRight.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,this,5000, 70, true));
 
         _operatorRightYAxisUpButton.whenPressed(new Trim(shooter, Constants.Shooter.TRIM_INCREMENT));
-        _operatorRightYAxisDownButton.whenPressed(new Trim(shooter,- Constants.Shooter.TRIM_INCREMENT));
+        _operatorRightYAxisDownButton.whenPressed(new Trim(shooter, -Constants.Shooter.TRIM_INCREMENT));
 
         _operatorRightXAxisLeftButton.whenPressed(new Trim(turret, -Constants.Turret.TRIM_INCREMENT));
-        _operatorRightXAxisRightButton.whenPressed(new Trim(turret, -Constants.Turret.TRIM_INCREMENT));
+        _operatorRightXAxisRightButton.whenPressed(new Trim(turret, Constants.Turret.TRIM_INCREMENT));
 
         _operatorLeftYAxisUpButton.whenPressed(new Trim(hood, Constants.Hood.TRIM_INCREMENT));
         _operatorLeftYAxisDownButton.whenPressed(new Trim(hood,- Constants.Hood.TRIM_INCREMENT));
@@ -125,7 +125,7 @@ public class OI extends OutliersProxy {
 
         _operatorStartButton.whileHeld(new SequentialCommandGroup(new ZeroHoodAndTurret(hood, turret), new ExtendElevator(climber)));
 //        _operatorStartButton.whileHeld(new ExtendElevator(climber));
-         _operatorXButton.whileHeld(new RetractElevator(climber));
+        _operatorXButton.whileHeld(new RetractElevator(climber));
         _operatorEndButton.whileHeld(new RetractWinch(climber));
 
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
