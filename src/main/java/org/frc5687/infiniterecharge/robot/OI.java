@@ -39,6 +39,7 @@ public class OI extends OutliersProxy {
     private Button _driverXButton;
     private Button _driverYButton;
 
+
     private Button _operatorAButton;
     private Button _operatorBButton;
     private Button _operatorXButton;
@@ -119,9 +120,8 @@ public class OI extends OutliersProxy {
         _operatorYButton.whileHeld(new AutoTarget(turret, shooter,hood,limelight,driveTrain,intake,poseTracker,lights,this, 0,20,false));
         _operatorLeftTrigger.whileHeld(new AutoIntake(intake, lights, false));
 
-        _operatorBButton.whileHeld(new AutoSpinToColor(spinner, this, skywalker));
-        //_operatorYButton.whenPressed(new AutoSpinRotations(spinner, this, skywalker));  // <~ When we're ready, this works!
-        //_operatorYButton.whenPressed(new AutoSpinToColor(spinner, this, skywalker));  // <~ When we're ready, this *should* work!
+        _driverBButton.whileHeld(new AutoSpinToColor(spinner, this, skywalker));
+        _operatorBButton.whileHeld(new AutoSpinRotations(spinner, this, skywalker));
     }
 
     public boolean isAutoTargetPressed() {
