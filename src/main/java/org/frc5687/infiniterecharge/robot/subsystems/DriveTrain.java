@@ -176,7 +176,6 @@ public class DriveTrain extends OutliersSubsystem {
         if (speed < Constants.DriveTrain.DEADBAND && speed > -Constants.DriveTrain.DEADBAND) {
             // Turning in place
             error("turn speed");
-            _previousSpeed = speed;
 
             if (!_anglePIDEnabled) {
                 if (!override) {
@@ -215,7 +214,6 @@ public class DriveTrain extends OutliersSubsystem {
                     speed = limit(speed, Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR, Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR);
                 }
             }
-            _previousSpeed = speed;
 
             if (override) {
                 // speed = Math.copySign(limit(Math.abs(speed), 1-Math.abs(delta)), speed);
@@ -228,6 +226,9 @@ public class DriveTrain extends OutliersSubsystem {
                     speed = -1 + Math.abs(delta);
                 }
             }
+
+            _previousSpeed = speed;
+
             leftMotorOutput = speed + delta;
             rightMotorOutput = speed - delta;
 //            metric("Str/LeftMotor", leftMotorOutput);
