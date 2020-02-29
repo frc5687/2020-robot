@@ -47,7 +47,7 @@ public class IdleIndexer extends OutliersCommand {
 //        } else {
 //            _indexer.setAgitatorSpeed(Constants.Indexer.AGITATO SPEED);
 //        }
-        _indexer.setAgitatorSpeed(Constants.Indexer.AGITATOR_SPEED);
+//        _indexer.setAgitatorSpeed(Constants.Indexer.AGITATOR_SPEED);
         double speed = 0;
         // State machine logic below:
         if (_indexer.isTopTriggered()) {

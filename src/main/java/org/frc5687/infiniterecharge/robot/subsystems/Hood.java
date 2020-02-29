@@ -107,7 +107,7 @@ public class Hood extends OutliersSubsystem {
     }
 
     public double getHoodDesiredAngle(double distance) {
-        return (14.627*Math.log(distance)) - 17.059;
+        return (11.285*Math.log(distance)) + 3.0224;
     }
 
     @Override
