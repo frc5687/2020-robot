@@ -33,11 +33,14 @@ public class OI extends OutliersProxy {
     private Button _operatorStartButton;
     private Button _operatorEndButton;
 
+    private Button _driverStartButton;
+    private Button _driverEndButton;
 
     private Button _driverAButton;
     private Button _driverBButton;
     private Button _driverXButton;
     private Button _driverYButton;
+
 
     private Button _operatorAButton;
     private Button _operatorBButton;
@@ -92,6 +95,7 @@ public class OI extends OutliersProxy {
 
         _operatorStartButton = new JoystickButton(_operatorGamepad, Gamepad.Buttons.START.getNumber());
         _operatorEndButton = new JoystickButton(_operatorGamepad, Gamepad.Buttons.BACK.getNumber());
+        
 
         _operatorLeftYAxisDownButton = new AxisButton(_operatorGamepad,Gamepad.Axes.LEFT_Y.getNumber(), -.5);
         _operatorLeftYAxisUpButton = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_Y.getNumber(), .5);
@@ -100,9 +104,10 @@ public class OI extends OutliersProxy {
 
     public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber, Hood hood, Skywalker skywalker, Lights lights, AHRS imu){
         _operatorLeftXAxisLeft.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,this,3200, 52, true));
-        _operatorLeftXAxisRight.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,this,5000, 70, true));
+        _operatorLeftXAxisRight.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,this,5000, 69.8, true));
+        _operatorLeftBumper.whileHeld(new AutoTarget(turret, shooter,hood, limelight, driveTrain,intake, poseTracker, lights, this, 5300, 69.8, true));
 
-//        _operatorRightTrigger.whileHeld(new Shoot(shooter, indexer, turret, this));
+        _operatorRightTrigger.whileHeld(new Shoot(shooter, indexer, turret, this));
         _driverRightTrigger.whileHeld(new Shoot(shooter, indexer, turret, this));
 
         _operatorStartButton.whileHeld(new SequentialCommandGroup(new ZeroHoodAndTurret(hood, turret), new ExtendElevator(climber)));
@@ -113,19 +118,23 @@ public class OI extends OutliersProxy {
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
 
+        _driverYButton.whileHeld(new ReverseAgitator(indexer));
         _driverAButton.whenHeld(new SetPose(driveTrain, Constants.AutoPositions.LOADING_STATION_POSE));
 
         _operatorAButton.whenPressed(new ZeroHoodAndTurret(hood, turret));
         _operatorYButton.whileHeld(new AutoTarget(turret, shooter,hood,limelight,driveTrain,intake,poseTracker,lights,this, 0,20,false));
         _operatorLeftTrigger.whileHeld(new AutoIntake(intake, lights, false));
 
-        _operatorBButton.whileHeld(new AutoSpinToColor(spinner, this, skywalker));
-        //_operatorYButton.whenPressed(new AutoSpinRotations(spinner, this, skywalker));  // <~ When we're ready, this works!
-        //_operatorYButton.whenPressed(new AutoSpinToColor(spinner, this, skywalker));  // <~ When we're ready, this *should* work!
+        _driverBButton.whileHeld(new AutoSpinToColor(spinner, this, skywalker));
+        _operatorBButton.whileHeld(new AutoSpinRotations(spinner, this, skywalker));
     }
 
     public boolean isAutoTargetPressed() {
         return false;
+    }
+
+    public boolean isTurretLockPressed() {
+        return _operatorRightBumper.get();
     }
     public boolean isAutoTargetDrivePressed() {return _driverRightYAxisUpButton.get();}
 

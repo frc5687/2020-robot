@@ -175,7 +175,7 @@ public class DriveTrain extends OutliersSubsystem {
 
         if (speed < Constants.DriveTrain.DEADBAND && speed > -Constants.DriveTrain.DEADBAND) {
             // Turning in place
-            _previousSpeed = speed;
+//            _previousSpeed = speed;
 
             if (!_anglePIDEnabled) {
                 if (!override) {
@@ -200,18 +200,21 @@ public class DriveTrain extends OutliersSubsystem {
             double delta = (override || _anglePIDEnabled) ? rotation : rotation * Math.abs(speed);
 
             // If in low gear, apply ramping.
-            if (_shifter.getGear() == Shifter.Gear.LOW) {
-                if (_previousSpeed > 0) {
-                    speed = limit(speed, 0, _previousSpeed + Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR);
-                } else if (_previousSpeed < 0) {
-                    speed = limit(speed, _previousSpeed - Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR, 0);
-                } else {
-                    speed = limit(speed, Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR, Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR);
-                }
-            }
-            metric("previousSPeed", _previousSpeed);
-            metric("speed", speed);
-            _previousSpeed = speed;
+
+//            if (_shifter.getGear() == Shifter.Gear.LOW) {
+//                if (_previousSpeed > 0) {
+//                    error("prev speed greater than 0");
+//                    speed = limit(speed, 0, _previousSpeed + Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR);
+//                } else if (_previousSpeed < 0 || speed < 0) {
+//                    error("prev speed less than 0");
+//                    speed = limit(speed, _previousSpeed - Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR, 0);
+//                } else {
+//                    error("else increment");
+//                    speed = limit(speed, Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR, Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR);
+//                }
+//            }
+//            _previousSpeed = speed;
+
             if (override) {
                 // speed = Math.copySign(limit(Math.abs(speed), 1-Math.abs(delta)), speed);
 

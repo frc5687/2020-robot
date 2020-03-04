@@ -76,10 +76,14 @@ public class Indexer extends OutliersSubsystem {
         _abort =false;
     }
 
+    public void setAgitatorSpeed(double speed) {
+        _agitator.set(ControlMode.PercentOutput, speed);
+    }
+
 
     @Override
     public void periodic() {
-        _agitator.set(ControlMode.PercentOutput, Constants.Indexer.AGITATOR_SPEED);
+        setAgitatorSpeed(Constants.Indexer.AGITATOR_SPEED);
         if (_abort) {
             _agitatorServo1.set(Constants.Indexer.SERVO_STOPPED);
             _agitatorServo2.set(Constants.Indexer.SERVO_STOPPED);

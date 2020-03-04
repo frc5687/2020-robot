@@ -70,7 +70,7 @@ public class Constants {
         public static final double MAX_ACCEL_MPS = Units.inchesToMeters(MAX_ACCELERATION_IPSS);
         public static final double MAX_JERK_IPSSS = CAP_SPEED_IPS;
         public static final double RAMP_RATE = 0.1;
-        public static final double RAMP_RATE_LOWGEAR = 1.0; // Seconds from 0 to full in low gear
+        public static final double RAMP_RATE_LOWGEAR = 1.25; // Seconds from 0 to full in low gear
         public static final double RAMP_INCREMENT_LOWGEAR =  UPDATE_PERIOD / RAMP_RATE_LOWGEAR; // Speed increment allowed per cycle
         public static final int STALL_CURRENT_LIMIT = 50;
         public static final int FREE_CURRENT_LIMIT = 60;
@@ -228,7 +228,7 @@ public class Constants {
         public static final boolean LEFT_INVERTED = false;
         public static final boolean RIGHT_INVERTED = true;
         public static final double DEADBAND = 0.1;
-        public static final double RPM_TOLERANCE = 150; //RPM
+        public static final double RPM_TOLERANCE = 100; //RPM
         public static final double kP = 0.4;
         public static final double kI = 0.0025;
         public static final double kD = 0.6;
