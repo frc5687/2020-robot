@@ -96,6 +96,5 @@ public class Shooter extends OutliersSubsystem {
     public void setShooting(boolean shooting) {
         _shooting = shooting;
     }
-v
 
 }
