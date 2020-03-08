@@ -118,7 +118,7 @@ public class OI extends OutliersProxy {
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
 
-        _driverYButton.whileHeld(new ReverseAgitator(indexer));
+        _driverYButton.whenPressed(new MidIntake(intake));
         _driverAButton.whenHeld(new SetPose(driveTrain, Constants.AutoPositions.LOADING_STATION_POSE));
 
         _operatorAButton.whenPressed(new ZeroHoodAndTurret(hood, turret));

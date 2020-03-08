@@ -108,6 +108,7 @@ public class RobotMap {
 
             public static final int FRONT_SHARK = 3;
             public static final int REAR_SHARK = 9;
+            public static final int SOLENOID_HALL = 8;
         /* Example:
         public static final int ARM_FRONT_LIMIT = 0;
         */

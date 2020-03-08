@@ -9,18 +9,21 @@ import org.frc5687.infiniterecharge.robot.RobotMap;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.commands.IntakeSpin;
 import org.frc5687.infiniterecharge.robot.subsystems.OutliersSubsystem;
+import org.frc5687.infiniterecharge.robot.util.HallEffect;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 public class Intake extends OutliersSubsystem {
 
     private CANSparkMax _intakeSpark;
     private DoubleSolenoid _intakeSolenoid;
+    private HallEffect _hallEffect;
     private OI _oi;
 
     public Intake(OutliersContainer container, OI oi) {
         super(container);
         _oi = oi;
         _intakeSolenoid = new DoubleSolenoid(RobotMap.PCM.INTAKE_HIGH, RobotMap.PCM.INTAKE_LOW);//check if shifter high and shifter low should be changed
+        _hallEffect = new HallEffect(RobotMap.DIO.SOLENOID_HALL);
 
         _intakeSpark = new CANSparkMax(RobotMap.CAN.SPARKMAX.INTAKE_NEO, CANSparkMaxLowLevel.MotorType.kBrushless);
         _intakeSpark.setInverted(Constants.Intake.INTAKE_MOTOR_INVERTED);
@@ -77,6 +80,21 @@ public class Intake extends OutliersSubsystem {
     public void raiseIntake() { _intakeSolenoid.set(DoubleSolenoid.Value.kReverse); }
 
     public void lowerIntake() { _intakeSolenoid.set(DoubleSolenoid.Value.kForward); }
+
+    public void midIntake() {
+        if (getPosition() == Position.HIGH) {
+            _intakeSolenoid.set(DoubleSolenoid.Value.kReverse);
+            if (_hallEffect.get()) {
+                _intakeSolenoid.set(DoubleSolenoid.Value.kOff);
+            }
+        } else if (getPosition() == Position.LOW) {
+            _intakeSolenoid.set(DoubleSolenoid.Value.kForward);
+            if (_hallEffect.get()) {
+                _intakeSolenoid.set(DoubleSolenoid.Value.kOff);
+            }
+        }
+    }
+
 
     /*public void updateDashboard() {
         metric("Intake Position", getPosition()== Intake.Position.HIGH ? "Intake from Human Player" : (getPosition() == Intake.Position.LOW ? "Intake from Ground" : "Unknown"));
