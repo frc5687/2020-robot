@@ -2,8 +2,6 @@ package org.frc5687.infiniterecharge.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -85,20 +83,19 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
             _oi.initializeButtons(_shifter, _driveTrain, _turret, _limelight, _poseTracker, _intake, _shooter, _indexer, _spinner, _climber, _hood, _skywalker, _lights, _imu);
 
             // Initialize the other stuff
-            // Initialize the other stuff
             _driveTrain.enableBrakeMode();
-//            _driveTrain.resetOdometry(new Pose2d(0,0,new Rotation2d(0)));
-            _driveTrain.resetOdometry(Constants.AutoPositions.EIGHT_BALL_STARING);
+//            _driveTrain.resetOdometry(Constants.AutoPositions.EIGHT_BALL_STARING);
+            _driveTrain.resetOdometry(Constants.AutoPositions.TRENCH_STARTING);
 
             // Now setup the default commands:
             setDefaultCommand(_hood, new DriveHood(_hood, _oi));
-            setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi, _intake, _driveLimelight, _poseTracker, _imu));
+            setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi, _intake,_climber, _driveLimelight, _poseTracker, _imu));
             setDefaultCommand(_climber, new IdleClimber(_climber));
              setDefaultCommand(_skywalker, new DriveSkywalker(_skywalker, _spinner, _oi));
             setDefaultCommand(_intake, new IntakeSpin(_intake, _oi));
             setDefaultCommand(_indexer, new IdleIndexer(_indexer, _intake, _lights));
             setDefaultCommand(_shooter, new DriveShooter(_shooter, _oi));
-//            setDefaultCommand(_turret, new DriveTurret(_turret, _driveTrain, _limelight, _oi));
+//            setDefaultCommand(_turret, new AutoTurretTracking(_turret, _driveTrain, _limelight, _oi,  _poseTracker));
             _limelight.enableLEDs();
         }
     }
@@ -162,15 +159,17 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
         switch (autoMode) {
             case ShootAndGo:
-                return wrapCommand(new AutoShootAndGo(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer, _lights));
+                return wrapCommand(new AutoShootAndGo(_turret, _shooter, _hood, _limelight, _driveTrain, _intake, _poseTracker, _indexer, _lights));
             case ShootAndNearTrench:
                 return wrapCommand(new AutoShootAndNearTrench(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer, _intake, _lights));
             case ShootAndFarTrench:
                 return wrapCommand(new AutoShootAndFarTrench(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer, _intake, _lights));
+            case Generator2NearTrench:
+                return wrapCommand(new EightBallAuto(_driveTrain, _turret, _shooter,_hood,_intake, _imu, _indexer,_lights, _limelight, _poseTracker));
             default:
                 return new SequentialCommandGroup(
-                        new ZeroHood(_hood, _turret),
-                        new AutoShootAndGo(_turret, _shooter, _hood, _limelight, _driveTrain, _poseTracker, _indexer, _lights)
+                        new ZeroSensors(_hood, _turret),
+                        new AutoShootAndGo(_turret, _shooter, _hood, _limelight, _driveTrain, _intake, _poseTracker, _indexer, _lights)
 //                        new EightBallAuto(_driveTrain, _turret, _shooter,_hood,_intake, _imu, _indexer,_lights, _limelight, _poseTracker)
                 );
         }
@@ -178,7 +177,7 @@ public class RobotContainer extends OutliersContainer implements IPoseTrackable 
 
     private Command wrapCommand(Command command) {
         return new SequentialCommandGroup(
-                new ZeroHood(_hood, _turret),
+                new ZeroSensors(_hood, _turret),
                 command
         );
     }

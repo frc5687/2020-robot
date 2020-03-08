@@ -3,12 +3,10 @@ package org.frc5687.infiniterecharge.robot;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.frc5687.infiniterecharge.robot.commands.*;
-import org.frc5687.infiniterecharge.robot.commands.drive.EightBallAuto;
-import org.frc5687.infiniterecharge.robot.commands.drive.TenBallAuto;
-import org.frc5687.infiniterecharge.robot.util.*;
 import org.frc5687.infiniterecharge.robot.subsystems.*;
 import org.frc5687.infiniterecharge.robot.util.*;
 
@@ -35,11 +33,14 @@ public class OI extends OutliersProxy {
     private Button _operatorStartButton;
     private Button _operatorEndButton;
 
+    private Button _driverStartButton;
+    private Button _driverEndButton;
 
     private Button _driverAButton;
     private Button _driverBButton;
     private Button _driverXButton;
     private Button _driverYButton;
+
 
     private Button _operatorAButton;
     private Button _operatorBButton;
@@ -53,6 +54,9 @@ public class OI extends OutliersProxy {
 
     private AxisButton _operatorLeftYAxisUpButton;
     private AxisButton _operatorLeftYAxisDownButton;
+
+    private AxisButton _operatorLeftXAxisLeft;
+    private AxisButton _operatorLeftXAxisRight;
 
 
     public OI(){
@@ -76,6 +80,8 @@ public class OI extends OutliersProxy {
         _driverRightYAxisUpButton = new AxisButton(_driverGamepad,Gamepad.Axes.RIGHT_Y.getNumber(), -.75);
         _operatorRightXAxisDownButton = new AxisButton(_operatorGamepad,Gamepad.Axes.RIGHT_Y.getNumber(), -.5);
         _operatorRightXAxisUpButton = new AxisButton(_operatorGamepad, Gamepad.Axes.RIGHT_Y.getNumber(), .5);
+        _operatorLeftXAxisLeft = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber(), .5);
+        _operatorLeftXAxisRight = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_X.getNumber(), -.5);
 
         _driverAButton = new JoystickButton(_driverGamepad,Gamepad.Buttons.A.getNumber());
         _driverBButton = new JoystickButton(_driverGamepad,Gamepad.Buttons.B.getNumber());
@@ -89,6 +95,7 @@ public class OI extends OutliersProxy {
 
         _operatorStartButton = new JoystickButton(_operatorGamepad, Gamepad.Buttons.START.getNumber());
         _operatorEndButton = new JoystickButton(_operatorGamepad, Gamepad.Buttons.BACK.getNumber());
+        
 
         _operatorLeftYAxisDownButton = new AxisButton(_operatorGamepad,Gamepad.Axes.LEFT_Y.getNumber(), -.5);
         _operatorLeftYAxisUpButton = new AxisButton(_operatorGamepad, Gamepad.Axes.LEFT_Y.getNumber(), .5);
@@ -96,42 +103,38 @@ public class OI extends OutliersProxy {
     }
 
     public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber, Hood hood, Skywalker skywalker, Lights lights, AHRS imu){
-        _operatorRightBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,this,3200, 52.5));
-        _operatorLeftBumper.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,this,5400, 68.5));
+        _operatorLeftXAxisLeft.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,this,3200, 52, true));
+        _operatorLeftXAxisRight.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,this,5000, 69.8, true));
+        _operatorLeftBumper.whileHeld(new AutoTarget(turret, shooter,hood, limelight, driveTrain,intake, poseTracker, lights, this, 5300, 69.8, true));
 
-        _operatorRightTrigger.whenHeld(new Shoot(shooter, indexer, turret, this));
+        _operatorRightTrigger.whileHeld(new Shoot(shooter, indexer, turret, this));
+        _driverRightTrigger.whileHeld(new Shoot(shooter, indexer, turret, this));
 
-        _operatorStartButton.whileHeld(new ExtendElevator(climber));
+        _operatorStartButton.whileHeld(new SequentialCommandGroup(new ZeroHoodAndTurret(hood, turret), new ExtendElevator(climber)));
+//        _operatorStartButton.whileHeld(new ExtendElevator(climber));
          _operatorXButton.whileHeld(new RetractElevator(climber));
         _operatorEndButton.whileHeld(new RetractWinch(climber));
 
-//        _operatorXButton.whenPressed(new AdjustTurret(turret, -1));
-        _operatorBButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 4600));
-//        _operatorAButton.whenPressed(new ShootSpeedSetpoint(shooter, this, 4800));
-//        _operatorXButton.whileHeld(new AutoBalance(skywalker, spinner, this));
         _driverLeftBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.HIGH, false));
         _driverRightBumper.whenPressed(new Shift(driveTrain, shifter, Shifter.Gear.LOW, false));
 
+        _driverYButton.whileHeld(new ReverseAgitator(indexer));
+        _driverAButton.whenHeld(new SetPose(driveTrain, Constants.AutoPositions.LOADING_STATION_POSE));
 
-        _operatorAButton.whenPressed(new ZeroHood(hood, turret));
-//        _driverAButton.whenPressed(new AutoAlign(driveTrain, 0));
-//        _driverAButton.whenPressed(new AutoAlign(driveTrain, 90));
+        _operatorAButton.whenPressed(new ZeroHoodAndTurret(hood, turret));
+        _operatorYButton.whileHeld(new AutoTarget(turret, shooter,hood,limelight,driveTrain,intake,poseTracker,lights,this, 0,20,false));
+        _operatorLeftTrigger.whileHeld(new AutoIntake(intake, lights, false));
 
-        _driverYButton.whenPressed(new AutoTurretTracking(turret, driveTrain, limelight, this, poseTracker));
-
-
-
-//        _operatorYButton.whenPressed(new MoveHoodToAngle(hood, 67));
-//        _driverRightBumper.whenPressed(new AutoTurretTracking(turret, driveTrain,limelight,this, poseTracker));
-        _operatorLeftTrigger.whileHeld(new AutoIntake(intake, lights));
-
-//        _operatorYButton.whileHeld(new DriveSpinner(spinner, this));
-        //_operatorYButton.whenPressed(new AutoSpinRotations(spinner, this, skywalker));  // <~ When we're ready, this w
-        // orks!
+        _driverBButton.whileHeld(new AutoSpinToColor(spinner, this, skywalker));
+        _operatorBButton.whileHeld(new AutoSpinRotations(spinner, this, skywalker));
     }
 
     public boolean isAutoTargetPressed() {
         return false;
+    }
+
+    public boolean isTurretLockPressed() {
+        return _operatorRightBumper.get();
     }
     public boolean isAutoTargetDrivePressed() {return _driverRightYAxisUpButton.get();}
 

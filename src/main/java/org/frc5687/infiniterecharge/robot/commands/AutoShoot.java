@@ -9,11 +9,13 @@ import org.frc5687.infiniterecharge.robot.subsystems.Turret;
 
 public class AutoShoot extends Shoot {
 
+    private Indexer _indexer;
     private long _delayMillis;
     private long _endMillis = 0;
 
     public AutoShoot(Shooter shooter, Indexer indexer, Turret turret, OI oi) {
         super(shooter, indexer, turret, oi);
+        _indexer = indexer;
     }
 
     @Override
@@ -36,11 +38,12 @@ public class AutoShoot extends Shoot {
 
     @Override
     public boolean isFinished() {
-        return _endMillis > 0 &&  System.currentTimeMillis() > _endMillis;
+        return (_endMillis > 0 &&  System.currentTimeMillis() > _endMillis);
     }
 
     public void end(boolean interrupted) {
         super.end(interrupted);
+        _indexer.setIndexerSpeed(0);
     }
 
 }

@@ -5,7 +5,7 @@ import com.revrobotics.AlternateEncoderType;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.util.Units;
 import org.frc5687.infiniterecharge.robot.Constants;
@@ -41,6 +40,12 @@ public class DriveTrain extends OutliersSubsystem {
     private SimpleMotorFeedforward _driveFeedForward;
     private TrajectoryConfig _driveConfig;
 
+    private PIDController _angleController;
+    private double _targetAngle;
+    private double _previousRotation = 999;
+    private boolean _anglePIDEnabled = false;
+
+    private double _previousSpeed = 0;
 
     private OI _oi;
     private AHRS _imu;
@@ -57,6 +62,7 @@ public class DriveTrain extends OutliersSubsystem {
     private double _oldRightSpeedFront;
     private double _oldRightSpeedBack;
     private boolean _isPaused = false;
+    private double _prevAngle;
 
     public DriveTrain(OutliersContainer container, OI oi, AHRS imu, Shifter shifter, Limelight driveLimelight)  {
         super(container);
@@ -120,6 +126,10 @@ public class DriveTrain extends OutliersSubsystem {
         _odometry = new DifferentialDriveOdometry(getHeading(), new Pose2d(0,0, new Rotation2d(0)));
         _driveFeedForward = new SimpleMotorFeedforward(KS_VOLTS, KV_VOLTSPR, KA_VOLTSQPR);
         _driveConfig = new TrajectoryConfig(MAX_ACCEL_MPS, MAX_ACCEL_MPS).setKinematics(_driveKinematics);
+
+        _angleController = new PIDController(Constants.DriveStraight.kP_ANGLE, Constants.DriveStraight.kI_ANGLE, Constants.DriveStraight.kD_ANGLE, Constants.UPDATE_PERIOD);
+        _angleController.enableContinuousInput(-180, 180);
+        _angleController.setTolerance(Constants.DriveStraight.ANGLE_TOLERANCE);
     }
 
     public void enableBrakeMode() {
@@ -138,10 +148,24 @@ public class DriveTrain extends OutliersSubsystem {
     public void cheesyDrive(double speed, double rotation, boolean creep, boolean override) {
         metric("Speed", speed);
         metric("Rotation", rotation);
+        if (rotation == 0 && !_anglePIDEnabled) {
+                // We've just started "driving straight"
+                // Initialize and enable the angle controller
+            _anglePIDEnabled = true;
+            _targetAngle = _imu.getYaw();
+            _angleController.setSetpoint(_targetAngle);
+            _angleController.reset();
+        } else if (rotation!=0 &&  _anglePIDEnabled || speed == 0) {
+            _anglePIDEnabled = false;
+        } else if (_anglePIDEnabled) {
+            // Get rotation from the angle controller
+            rotation = limit(_angleController.calculate(_imu.getYaw()), -.15, 0.15);
+        }
 
-        speed = limit(speed, Constants.DriveTrain.SPEED_LIMIT);
         Shifter.Gear gear = _shifter.getGear();
-
+        if (_shifter.getGear() == Shifter.Gear.HIGH) {
+            speed = limit(speed, Constants.DriveTrain.SPEED_LIMIT);
+        }
         rotation = limit(rotation, 1);
 
         double leftMotorOutput;
@@ -151,13 +175,17 @@ public class DriveTrain extends OutliersSubsystem {
 
         if (speed < Constants.DriveTrain.DEADBAND && speed > -Constants.DriveTrain.DEADBAND) {
             // Turning in place
-            if (!override) {
-                rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.ROTATION_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.ROTATION_SENSITIVITY_LOW_GEAR);
-            }
-            if (creep) {
-                rotation = rotation * CREEP_FACTOR;
-            } else {
-                rotation = rotation * 0.8;
+//            _previousSpeed = speed;
+
+            if (!_anglePIDEnabled) {
+                if (!override) {
+                    rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.ROTATION_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.ROTATION_SENSITIVITY_LOW_GEAR);
+                }
+                if (creep) {
+                    rotation = rotation * CREEP_FACTOR;
+                } else {
+                    rotation = rotation * 0.8;
+                }
             }
             leftMotorOutput = rotation;
             rightMotorOutput = -rotation;
@@ -165,11 +193,28 @@ public class DriveTrain extends OutliersSubsystem {
             // Square the inputs (while preserving the sign) to increase fine control
             // while permitting full power.
             speed = Math.copySign(applySensitivityFactor(speed, Constants.DriveTrain.SPEED_SENSITIVITY), speed);
-            if (!override) {
+            if (!override && !_anglePIDEnabled) {
                 rotation = applySensitivityFactor(rotation, _shifter.getGear() == Shifter.Gear.HIGH ? Constants.DriveTrain.TURNING_SENSITIVITY_HIGH_GEAR : Constants.DriveTrain.TURNING_SENSITIVITY_LOW_GEAR);
             }
             // rotation = applySensitivityFactor(rotation, Constants.DriveTrain.ROTATION_SENSITIVITY);
-            double delta = override ? rotation : rotation * Math.abs(speed);
+            double delta = (override || _anglePIDEnabled) ? rotation : rotation * Math.abs(speed);
+
+            // If in low gear, apply ramping.
+
+//            if (_shifter.getGear() == Shifter.Gear.LOW) {
+//                if (_previousSpeed > 0) {
+//                    error("prev speed greater than 0");
+//                    speed = limit(speed, 0, _previousSpeed + Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR);
+//                } else if (_previousSpeed < 0 || speed < 0) {
+//                    error("prev speed less than 0");
+//                    speed = limit(speed, _previousSpeed - Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR, 0);
+//                } else {
+//                    error("else increment");
+//                    speed = limit(speed, Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR, Constants.DriveTrain.RAMP_INCREMENT_LOWGEAR);
+//                }
+//            }
+//            _previousSpeed = speed;
+
             if (override) {
                 // speed = Math.copySign(limit(Math.abs(speed), 1-Math.abs(delta)), speed);
 
@@ -183,8 +228,8 @@ public class DriveTrain extends OutliersSubsystem {
             }
             leftMotorOutput = speed + delta;
             rightMotorOutput = speed - delta;
-            metric("Str/LeftMotor", leftMotorOutput);
-            metric("Str/RightMotor", rightMotorOutput);
+//            metric("Str/LeftMotor", leftMotorOutput);
+//            metric("Str/RightMotor", rightMotorOutput);
         }
 
         setPower(limit(leftMotorOutput), limit(rightMotorOutput), true);
@@ -194,8 +239,8 @@ public class DriveTrain extends OutliersSubsystem {
         _rightMaster.set(rightSpeed);
         _leftSlave.set(leftSpeed);
         _rightSlave.set(rightSpeed);
-        metric("Power/Right", rightSpeed);
-        metric("Power/Left", leftSpeed);
+//        metric("Power/Right", rightSpeed);
+//        metric("Power/Left", leftSpeed);
     }
     public double getRawLeftEncoder() {
         return _leftEncoder.getPosition();
@@ -245,24 +290,23 @@ public class DriveTrain extends OutliersSubsystem {
     public void periodic() {
 //        updatePose();
         _pose = _odometry.update(getHeading(), Units.inchesToMeters(getLeftDistance()), Units.inchesToMeters(getRightDistance()));
-//        if (_driveLimelight.isTargetSighted() && _oi.isAutoTargetDrivePressed() && _driveLimelight.getTargetDistance() < Constants.DriveTrain.LIMELIGHT_ODOMETRY_ZONE) {
-////            resetOdometry(updatePose());
-//        }
+        if (_driveLimelight.isTargetSighted() && _oi.isAutoTargetDrivePressed() && _driveLimelight.getTargetDistance() < Constants.DriveTrain.LIMELIGHT_ODOMETRY_ZONE) {
+            resetOdometry(updatePose());
+        }
     }
 
     @Override
     public void updateDashboard() {
-
-//        SmartDashboard.putBoolean("MetricTracker/Drive", true);
 //        metric("X", getPose().getTranslation().getX());
 //        metric("Y", getPose().getTranslation().getY());
-//        metric("Distance/Left", getLeftDistance());
-//        metric("Distance/Right", getRightDistance());
-//        metric("Distance/RawLeft", getRawLeftEncoder());
-//        metric("Distance/RawRight", getRawRightEncoder());
-//        metric("Heading", getPose().getRotation().getDegrees());
+//        metric("leftDistane", getLeftDistance());
+//        metric("rightDistance", getRightDistance());
         metric("angle to target", getAngleToTarget());
         metric("distance to taget", distanceToTarget());
+        metric("using pid", _anglePIDEnabled);
+        metric("heading", _imu.getYaw());
+        metric("target angle", _targetAngle);
+
     }
 
     public DifferentialDriveKinematics getKinematics() {
@@ -294,11 +338,6 @@ public class DriveTrain extends OutliersSubsystem {
         _odometry.resetPosition(pose, getHeading());
     }
 
-    public void tankDriveVolts(double leftVolts, double rightVolts) {
-        _leftMaster.set(leftVolts/12);
-        _rightMaster.set(rightVolts/12);
-    }
-
     public void resetDriveEncoders() {
         _leftEncoder.setPosition(0);
         _rightEncoder.setPosition(0);
@@ -309,10 +348,6 @@ public class DriveTrain extends OutliersSubsystem {
         double y = _pose.getTranslation().getY();
         double targetX = Constants.AutoPositions.TARGET_POSE.getTranslation().getX();
         double targetY = Constants.AutoPositions.TARGET_POSE.getTranslation().getY();
-        metric("yTar", _yLength);
-        metric("xTar", _xLength);
-        metric("x",x);
-        metric("y", y);
         _xLength = targetX - x;
         _yLength = targetY - y;
         return Math.sqrt((_xLength * _xLength) + (_yLength * _yLength));
@@ -320,12 +355,24 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getAngleToTarget() {
         double angle = 0;
+        metric("xLength", _xLength);
+        metric("ylength", _yLength);
         if (_yLength > 0) {
             angle = (90 + Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + getHeading().getDegrees());
+            if (!Double.isNaN(angle)) {
+                _prevAngle = angle;
+            }
         } else if (_yLength < 0){
-            angle =  (Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + 90) + getHeading().getDegrees();
+            angle = -(Math.toDegrees(Math.asin(_xLength / distanceToTarget())) + 90) + getHeading().getDegrees();
+            if (!Double.isNaN(angle)) {
+                _prevAngle = angle;
+            }
         }
-        return angle;
+        if (Double.isNaN(angle)) {
+            return _prevAngle;
+        } else {
+            return angle;
+        }
     }
 
     public BasicPose getDrivePose() {
@@ -337,10 +384,6 @@ public class DriveTrain extends OutliersSubsystem {
         double alpha = 90 - Math.abs(_driveLimelight.getHorizontalAngle());
         double x = Math.sin(Math.toRadians(alpha)) * distance;
         double y = Math.cos(Math.toRadians(alpha)) * distance;
-        metric("Angle", alpha);
-        metric("distance", distance);
-        metric("X", x);
-        metric("Y", y);
         double poseX = Constants.AutoPositions.LOADING_STATION_POSE.getTranslation().getX() - x;
         double poseY = 0;
         if (prevPose.getTranslation().getY() < Constants.AutoPositions.LOADING_STATION_POSE.getTranslation().getY()) {
@@ -348,8 +391,6 @@ public class DriveTrain extends OutliersSubsystem {
         } else if (prevPose.getTranslation().getY() > Constants.AutoPositions.LOADING_STATION_POSE.getTranslation().getY()) {
             poseY = Constants.AutoPositions.LOADING_STATION_POSE.getTranslation().getY() + y;
         }
-        metric("New Pose X", poseX);
-        metric("New Pose Y", poseY);
         return new Pose2d(poseX, poseY, getHeading());
     }
 }

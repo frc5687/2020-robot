@@ -42,6 +42,12 @@ public class IdleIndexer extends OutliersCommand {
     @Override
     public void execute() {
         super.execute();
+//        if (_indexer.isTopTriggered()) {
+//            _indexer.setAgitatorSpeed(0);
+//        } else {
+//            _indexer.setAgitatorSpeed(Constants.Indexer.AGITATO SPEED);
+//        }
+//        _indexer.setAgitatorSpeed(Constants.Indexer.AGITATOR_SPEED);
         double speed = 0;
         // State machine logic below:
         if (_indexer.isTopTriggered()) {
@@ -66,8 +72,6 @@ public class IdleIndexer extends OutliersCommand {
             speed = Constants.Indexer.ADVANCE_SPEED;
         }
         _indexer.setIndexerSpeed(speed);
-
-        _indexer.setAgitatorSpeed(Constants.Indexer.AGITATOR_SPEED);
 
         _lights.setIndexerBottom(_indexer.isBottomTriggered());
         _lights.setIndexerMiddle(_indexer.isMidTriggered());

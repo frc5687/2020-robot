@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
+import org.frc5687.infiniterecharge.robot.util.Helpers;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 public class Shooter extends OutliersSubsystem {
@@ -42,9 +43,6 @@ public class Shooter extends OutliersSubsystem {
         _shooterRight.getStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10);
         _shooterRight.configClosedloopRamp(1);
         _shooterRight.selectProfileSlot(0,0);
-
-        logMetrics("Velocity/Ticks", "Position", "Velocity/RPM", "Speed", "Shooting");
-        enableMetrics();
     }
 
     @Override
@@ -63,6 +61,7 @@ public class Shooter extends OutliersSubsystem {
 
     public void setVelocitySpeed(double RPM) {
         _targetRPM = RPM;
+        _targetRPM = Helpers.limit(_targetRPM, 0, 7200);
         _shooterRight.set(TalonFXControlMode.Velocity, (_targetRPM * Constants.Shooter.TICKS_TO_ROTATIONS / 600 / 1.25));
     }
 
@@ -75,7 +74,7 @@ public class Shooter extends OutliersSubsystem {
     }
 
     public double getBallVelocity() {
-        return (getRPM() * Math.PI * Constants.Shooter.WHEEL_RADIUS) / 60; //inches per second.
+        return (Constants.Shooter.DRAG_CONSTANT* 2.0 * getRPM() * Math.PI * Constants.Shooter.WHEEL_RADIUS) / 60; //inches per second.
     }
 
     public double getRPM() {
@@ -91,7 +90,7 @@ public class Shooter extends OutliersSubsystem {
     }
 
     public double getDistanceSetpoint(double distance) {
-        return (7.2272 * distance) + 2200.9;
+        return (-0.0106*(distance * distance)) + (11.52 * distance) + 2210.3;
     }
 
     public boolean isShooting() {
@@ -101,6 +100,5 @@ public class Shooter extends OutliersSubsystem {
     public void setShooting(boolean shooting) {
         _shooting = shooting;
     }
-
 
 }

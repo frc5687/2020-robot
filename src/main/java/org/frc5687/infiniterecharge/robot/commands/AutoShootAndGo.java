@@ -12,12 +12,13 @@ import java.lang.module.FindException;
 
 public class AutoShootAndGo extends SequentialCommandGroup {
 
-    public AutoShootAndGo(Turret turret, Shooter shooter, Hood hood, Limelight limelight, DriveTrain driveTrain, PoseTracker poseTracker, Indexer indexer, Lights lights) {
+    public AutoShootAndGo(Turret turret, Shooter shooter, Hood hood, Limelight limelight, DriveTrain driveTrain, Intake intake, PoseTracker poseTracker, Indexer indexer, Lights lights) {
         addCommands(
+                new ZeroSensors(hood, turret),
             new ParallelDeadlineGroup(
                     new AutoShoot(shooter, indexer, turret, null),
-                    new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null,3200, 52.5)),
-            new AutoDrive(driveTrain, 36)
+                    new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,null,3250, 53, true)),
+            new AutoDrive(driveTrain, 36, 1.0)
         );
    }
 

@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import edu.wpi.first.wpilibj.MedianFilter;
+import com.cuforge.libcu.Lasershark;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
@@ -21,6 +21,8 @@ public class Hood extends OutliersSubsystem {
     private HallEffect _hoodHall;
     private OI _oi;
 
+    private Lasershark _laserShark;
+
     private double _position;
     private double _setPoint;
 
@@ -31,6 +33,7 @@ public class Hood extends OutliersSubsystem {
         _limelight = limelight;
         _oi = oi;
         _hoodHall = new HallEffect(RobotMap.DIO.HOOD_HALL);
+        _laserShark = new Lasershark(RobotMap.DIO.FRONT_SHARK);
         try {
             debug("Allocating hood motor");
             _hoodController = new TalonSRX(RobotMap.CAN.TALONSRX.HOOD);
@@ -65,8 +68,6 @@ public class Hood extends OutliersSubsystem {
 
     public void setPosition(double angle) {
         _setPoint = Helpers.limit(angle, Constants.Hood.MIN_DEGREES, Constants.Hood.MAX_DEGREES);
-        metric("Setpoint", _setPoint);
-        metric("Setpoint Ticks", _setPoint / Constants.Hood.TICKS_TO_DEGREES);
         _hoodController.set(ControlMode.MotionMagic, _setPoint / Constants.Hood.TICKS_TO_DEGREES);
     }
 
@@ -92,8 +93,8 @@ public class Hood extends OutliersSubsystem {
         metric("Position", getPosition());
         metric("Raw Ticks", getPositionTicks());
         metric("Output Percent", getMotorOutput());
-        metric("Limelight Lens Height", getLimelightHeight());
-        metric("Limelight Lens Angle", getLimelightAngle());
+        metric("laser distance", _laserShark.getDistanceInches());
+        metric("stow?", needsToStow());
     }
 
 
@@ -106,15 +107,7 @@ public class Hood extends OutliersSubsystem {
     }
 
     public double getHoodDesiredAngle(double distance) {
-        return (13.138*Math.log(distance)) - 12.634;
-    }
-
-    public void zeroSensors() {
-        if (isHallTriggered()) {
-            _position = Constants.Hood.MIN_DEGREES / Constants.Hood.TICKS_TO_DEGREES;
-            _setPoint = Constants.Hood.MIN_DEGREES;
-        }
-        _hoodController.setSelectedSensorPosition((int) _position);
+        return (11.285*Math.log(distance)) + 3.0224;
     }
 
     @Override
@@ -126,6 +119,22 @@ public class Hood extends OutliersSubsystem {
             _hoodController.setSelectedSensorPosition((int) _position);
             _position = Constants.Hood.MIN_DEGREES / Constants.Hood.TICKS_TO_DEGREES;
         }
+//        if (needsToStow()) {
+//            setSpeed(Constants.Hood.ZEROING_SPEED);
+//            zeroSensors();
+//            _setPoint = Constants.Hood.MIN_DEGREES;
+//            if (isHallTriggered()) {
+//                setSpeed(0);
+//            }
+//        }
+    }
+
+    public void zeroSensors() {
+        if (isHallTriggered()) {
+            _position = Constants.Hood.MIN_DEGREES / Constants.Hood.TICKS_TO_DEGREES;
+            _setPoint = Constants.Hood.MIN_DEGREES;
+        }
+        _hoodController.setSelectedSensorPosition((int) _position);
     }
 
     public void setPipeline() {
@@ -149,5 +158,10 @@ public class Hood extends OutliersSubsystem {
     public boolean isHallTriggered() {
         return _hoodHall.get();
     }
+
+    public boolean needsToStow() {
+        return _laserShark.getDistanceInches() < Constants.Hood.STOW_DISTANCE;
+    }
+
 
 }

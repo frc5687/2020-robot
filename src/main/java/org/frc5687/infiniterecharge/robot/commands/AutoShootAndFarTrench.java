@@ -11,18 +11,26 @@ public class AutoShootAndFarTrench extends SequentialCommandGroup {
 
     public AutoShootAndFarTrench(Turret turret, Shooter shooter, Hood hood, Limelight limelight, DriveTrain driveTrain, PoseTracker poseTracker, Indexer indexer, Intake intake, Lights lights) {
         addCommands(
+                new ZeroSensors(hood, turret),
+                new ParallelDeadlineGroup(
+                        new AutoDrive(driveTrain, 150, 0.65),
+                        new AutoIntake(intake, lights, false)
+                ),
+            new AutoAlign(driveTrain, 0),
             new ParallelDeadlineGroup(
                     new AutoShoot(shooter, indexer, turret, null),
-                    new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null, Constants.Shooter.NEAR_TARGET_SHOOTER_SPEED_PERCENT, 52)
+                    new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,null, 4700, 65, true)
             ),
-            new MoveHoodToAngle(hood, Constants.Hood.MIN_DEGREES),
+            new ZeroHoodAndTurret(hood, turret),
+            new AutoAlign(driveTrain, 0),
             new ParallelDeadlineGroup(
-                new AutoDrive(driveTrain, 250),
-                new AutoIntake(intake, lights)
+                new AutoDrive(driveTrain, 175, 0.6),
+                new AutoIntake(intake, lights, false)
             ),
+            new AutoAlign(driveTrain, 0),
             new ParallelDeadlineGroup(
                     new AutoShoot(shooter, indexer, turret, null),
-                    new AutoTarget(turret, shooter, hood, limelight, driveTrain, poseTracker, lights,null, 5000, 60)
+                    new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,null, 5000, 70, true)
             )
         );
    }

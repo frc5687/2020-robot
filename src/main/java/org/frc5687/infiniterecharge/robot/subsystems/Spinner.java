@@ -7,6 +7,7 @@ import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.util.Color;
@@ -16,6 +17,7 @@ import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.lang.String;
 
 public class Spinner extends OutliersSubsystem {
     // TODO(mike): Move to Constants somehow?
@@ -30,8 +32,29 @@ public class Spinner extends OutliersSubsystem {
     private ColorMatch _revColorMatcher = new ColorMatch();
     private Map<MatchedColor, Color> _swatches = new HashMap<>();
     private MatchedColor _previouslyMatchedColor = MatchedColor.unknown;
+    private Map<MatchedColor, MatchedColor> _fieldToRobotColorMap = new HashMap<>();
     private Notifier _sampleTask;
     private int _wedgeCount = 0;
+
+    public MatchedColor getTargetColorFromField() {
+        String gameData;
+        gameData = DriverStation.getInstance().getGameSpecificMessage();
+        if(gameData.length() > 0) {
+            switch (gameData.charAt(0)) {
+                case 'B':
+                    return MatchedColor.blue;
+                case 'G':
+                    return  MatchedColor.green;
+                case 'R':
+                    return MatchedColor.red;
+                case 'Y':
+                    return MatchedColor.yellow;
+                default:
+                    error("Corrupt/unknown color returned from field: " + gameData);
+            }
+        }
+        return MatchedColor.unknown;
+    }
 
     public Spinner(OutliersContainer container) {
         super(container);
@@ -67,12 +90,19 @@ public class Spinner extends OutliersSubsystem {
         // color that we expected to see next. We start this task when we start spinning, and stop it when we
         // stop spinning, so we don't steal too many CPU cycles when thw robot is busy doing other stuff.
         _sampleTask = new Notifier(() -> {
+            info("Sampling color");
             MatchedColor newMatchedColor = senseColor();
             if (!newMatchedColor.equals(_previouslyMatchedColor) && !newMatchedColor.equals(MatchedColor.unknown)) {
                 _wedgeCount++;
                 _previouslyMatchedColor = newMatchedColor;
             }
         });
+        _sampleTask.startPeriodic(Constants.Spinner.SENSOR_SAMPLE_PERIOD_SECONDS);
+
+        _fieldToRobotColorMap.put(MatchedColor.yellow, MatchedColor.green);
+        _fieldToRobotColorMap.put(MatchedColor.red, MatchedColor.blue);
+        _fieldToRobotColorMap.put(MatchedColor.green, MatchedColor.yellow);
+        _fieldToRobotColorMap.put(MatchedColor.blue, MatchedColor.red);
 
         setupColorMatchingAlgorithms();
     }
@@ -100,6 +130,19 @@ public class Spinner extends OutliersSubsystem {
     public MatchedColor senseColor() {
         Color sensorReading = _colorSensor.getColor();
         return matchColor(sensorReading);
+    }
+
+    /**
+     * The field's sensor is not in the same place as the robot's sensor... it's about 90 degrees away and thus
+     * is looking at a completely different color/wedge. This method determines what color the robot will see
+     * for a given color that the field sees (incidentally, this function also just happens to work for the
+     * inverse case: getting the color the field sees for the provided color the robot sees, because of how
+     * the pattern on the control panel works).
+     * @param seenByField The color seen by the field's sensor.
+     * @return The color the robot should see when the field sees _seenByField_
+     */
+    public MatchedColor getColorTheRobotSeesForColorTheFieldSees(MatchedColor seenByField) {
+        return _fieldToRobotColorMap.getOrDefault(seenByField, MatchedColor.unknown);
     }
 
     /**
@@ -144,20 +187,36 @@ public class Spinner extends OutliersSubsystem {
      * Spins the spinner motor at regular speed.
      */
     public void spin() {
+        info("Spinning forward at full speed.");
         setSpeed(Constants.Spinner.MOTOR_PERCENT_SPEED);
     }
 
     /**
      * Spins the spinner motor at low speed.
      */
-    public void slow() {
+    public void spinSlowly() {
+        info("Spinning forward at low speed.");
         setSpeed(Constants.Spinner.MOTOR_SLOW_PERCENT_SPEED);
+    }
+
+    /**
+     * Spins the spinner motor backwards at full speed.
+     */
+    public void spinBackwards() {
+        info("Spinning backwards at full speed.");
+        _motorController.set(ControlMode.PercentOutput, -1 * Constants.Spinner.MOTOR_PERCENT_SPEED);
+    }
+
+    public void spinBackwardsSlowly() {
+        info("Spinning backwards at low speed.");
+        _motorController.set(ControlMode.PercentOutput, -1 * Constants.Spinner.MOTOR_SLOW_PERCENT_SPEED);
     }
 
     /**
      * Stops the spinner motor.
      */
     public void stop() {
+        info("Stopping the spinner.");
         _motorController.set(ControlMode.PercentOutput, 0);
     }
 
@@ -230,6 +289,7 @@ public class Spinner extends OutliersSubsystem {
     @Override
     public void updateDashboard() {
         if (_colorSensor != null) {
+            metric("Spinner/ColorTheFieldSees", getColorTheRobotSeesForColorTheFieldSees(getColor()).toString());
             metric("Spinner/RawRed", _colorSensor.getRed());
             metric("Spinner/RawGreen", _colorSensor.getGreen());
             metric("Spinner/RawBlue", _colorSensor.getBlue());
