@@ -103,15 +103,17 @@ public class OI extends OutliersProxy {
     }
 
     public void initializeButtons(Shifter shifter, DriveTrain driveTrain, Turret turret, Limelight limelight, PoseTracker poseTracker, Intake intake, Shooter shooter, Indexer indexer, Spinner spinner, Climber climber, Hood hood, Skywalker skywalker, Lights lights, AHRS imu){
-        _operatorLeftXAxisLeft.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,this,3200, 52, true));
+        _operatorLeftXAxisLeft.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,this,4400, 68.5, true));
         _operatorLeftXAxisRight.whileHeld(new AutoTarget(turret, shooter, hood, limelight, driveTrain,intake, poseTracker, lights,this,5000, 69.8, true));
-        _operatorLeftBumper.whileHeld(new AutoTarget(turret, shooter,hood, limelight, driveTrain,intake, poseTracker, lights, this, 5300, 69.8, true));
+        _operatorLeftBumper.whileHeld(new AutoTarget(turret, shooter,hood, limelight, driveTrain,intake, poseTracker, lights, this, 6000, 69.8, true));
 
         _operatorRightTrigger.whileHeld(new Shoot(shooter, indexer, turret, this));
         _driverRightTrigger.whileHeld(new Shoot(shooter, indexer, turret, this));
 
         _operatorStartButton.whileHeld(new SequentialCommandGroup(new ZeroHoodAndTurret(hood, turret), new ExtendElevator(climber)));
-//        _operatorStartButton.whileHeld(new ExtendElevator(climber));
+//        _operatorStartButton.whileHeld(new ExtendElevator(climber));\[]
+
+
          _operatorXButton.whileHeld(new RetractElevator(climber));
         _operatorEndButton.whileHeld(new RetractWinch(climber));
 

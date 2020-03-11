@@ -148,6 +148,12 @@ public class Limelight extends OutliersProxy {
         return distance;
     }
 
+    public double getTargetDistance(double height, double angle) {
+        double heightOffset = (TARGET_HEIGHT - height);
+        double targetDistance = Math.abs(heightOffset / Math.tan(Math.toRadians(angle + getVerticalAngle())));
+        return targetDistance;
+    }
+
     @Override
     public void updateDashboard() {
         metric("tx",_tx.getDouble(0.0));

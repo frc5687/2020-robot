@@ -60,6 +60,7 @@ public class AutoTarget extends OutliersCommand {
 
     @Override
     public void initialize() {
+
         error("starting auto");
         super.initialize();
         _turret.setControlMode(Turret.Control.MotionMagic);
@@ -99,6 +100,7 @@ public class AutoTarget extends OutliersCommand {
                 if (_lock) {
                     _turret.setMotionMagicSetpoint(_turret.getSetpoint());
                 } else {
+                    if ()
                     _turret.setMotionMagicSetpoint(_filter.calculate(_limelight.getHorizontalAngle()) + _turret.getPositionDegrees());
                 }
                 _lights.setReadyToshoot(_shooter.isAtTargetVelocity() && _turret.isTargetInTolerance());

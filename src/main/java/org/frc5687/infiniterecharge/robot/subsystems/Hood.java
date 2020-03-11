@@ -94,6 +94,9 @@ public class Hood extends OutliersSubsystem {
         metric("Raw Ticks", getPositionTicks());
         metric("Output Percent", getMotorOutput());
         metric("laser distance", _laserShark.getDistanceInches());
+        metric("Limelight lens height", getLimelightHeight());
+        metric("Limelight lens angle", getLimelightAngle());
+        metric("Limelight Distance Calc", _limelight.getTargetDistance(getLimelightHeight(), getLimelightAngle()));
         metric("stow?", needsToStow());
     }
 

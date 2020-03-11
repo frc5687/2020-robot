@@ -125,7 +125,7 @@ public class Turret extends OutliersSubsystem {
 
     public Pose2d updatePose() {
         Pose2d prevPose = _driveTrain.getPose();
-        double distance = Units.inchesToMeters(20);
+        double distance = Units.inchesToMeters(_limelight.getTargetDistance());
         // big dumb turret angle doesn't effect pose.
 //        double alpha = (90 -(getPositionDegrees() + _limelight.getHorizontalAngle())) - _driveTrain.getHeading().getDegrees();
         double alpha = 90 - Math.abs(_limelight.getHorizontalAngle());

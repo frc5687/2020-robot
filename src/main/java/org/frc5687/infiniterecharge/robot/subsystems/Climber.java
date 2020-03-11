@@ -16,6 +16,8 @@ public class Climber extends OutliersSubsystem {
     private CANSparkMax _winchSpark;
     private CANEncoder _winchEncoder;
 
+    private double _prevTime;
+
     private OI _oi;
 
     public Climber(OutliersContainer container, OI oi) {
@@ -31,11 +33,15 @@ public class Climber extends OutliersSubsystem {
         _winchEncoder = _winchSpark.getEncoder();
     }
 
-
+    @Override
+    public void periodic() {
+        double time = System.currentTimeMillis();
+        error("loop time is : " + (time - _prevTime));
+        _prevTime = time;
+    }
 
     @Override
-    public void updateDashboard()
-    {
+    public void updateDashboard() {
         metric("CLIMBER POWER", getClimberPower());
         metric("CLIMBER POSITION", getPosition());
         metric("Climber near top", isNearTop());
