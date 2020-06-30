@@ -10,11 +10,13 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.util.Units;
+
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
@@ -297,10 +299,8 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-//        metric("X", getPose().getTranslation().getX());
-//        metric("Y", getPose().getTranslation().getY());
-//        metric("leftDistane", getLeftDistance());
-//        metric("rightDistance", getRightDistance());
+        metric("Y", getPose().getTranslation().getY());
+        metric("X", getPose().getTranslation().getX());
         metric("angle to target", getAngleToTarget());
         metric("distance to taget", distanceToTarget());
         metric("using pid", _anglePIDEnabled);
@@ -317,6 +317,11 @@ public class DriveTrain extends OutliersSubsystem {
         return Rotation2d.fromDegrees(-_imu.getYaw());
     }
 
+    public double getFusedHeading(){
+        return _imu.getFusedHeading();
+    }
+
+
     public double getYaw() {return _imu.getYaw();}
 
     public Pose2d getPose() {
@@ -324,6 +329,16 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() { return new DifferentialDriveWheelSpeeds(Units.inchesToMeters(getLeftVelocity()), Units.inchesToMeters(getRightDistance())); }
+
+    public ChassisSpeeds getChassisSpeeds(){
+        return _driveKinematics.toChassisSpeeds(getWheelSpeeds());
+    }
+    public double getLinearVelocity(){
+        return getChassisSpeeds().vxMetersPerSecond;
+    }
+    public double getAngularVelocity(){
+        return getChassisSpeeds().omegaRadiansPerSecond; //in radians per second
+    }
 
     public SimpleMotorFeedforward getDriveTrainFeedForward() {
         return _driveFeedForward;

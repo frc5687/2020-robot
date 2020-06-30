@@ -151,11 +151,11 @@ public class Hood extends OutliersSubsystem {
     }
 
     public double getLimelightHeight() {
-        return Constants.Hood.HEIGHT_TO_DECK + ((-0.0014*Math.pow(getPositionDegrees(), 2)) + (0.284*getPositionDegrees()) + 4.1184); //constants taken from excel formula
+        return (int) (Constants.Hood.HEIGHT_TO_DECK + ((-0.0014*Math.pow(getPositionDegrees(), 2)) + (0.284*getPositionDegrees()) + 4.1184)); //constants taken from excel formula
     }
 
     public double getLimelightAngle() {
-        return 90 - (getPositionDegrees() + Constants.Hood.LIMELIGHT_OFFSET_DEGREES);
+        return (int) (90 - (getPositionDegrees() + Constants.Hood.LIMELIGHT_OFFSET_DEGREES));
     }
 
     public boolean isHallTriggered() {

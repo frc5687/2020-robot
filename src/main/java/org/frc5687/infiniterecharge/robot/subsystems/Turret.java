@@ -4,11 +4,9 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.util.Units;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frc5687.infiniterecharge.robot.Constants;
 import org.frc5687.infiniterecharge.robot.OI;
 import org.frc5687.infiniterecharge.robot.RobotMap;
-import org.frc5687.infiniterecharge.robot.commands.DriveTurret;
 import org.frc5687.infiniterecharge.robot.util.Helpers;
 import org.frc5687.infiniterecharge.robot.util.Limelight;
 import org.frc5687.infiniterecharge.robot.util.OutliersContainer;
@@ -125,7 +123,7 @@ public class Turret extends OutliersSubsystem {
 
     public Pose2d updatePose() {
         Pose2d prevPose = _driveTrain.getPose();
-        double distance = Units.inchesToMeters(_limelight.getTargetDistance());
+        double distance = Units.inchesToMeters( _limelight.getTargetDistance(_hood.getLimelightHeight(), _hood.getLimelightAngle()));
         // big dumb turret angle doesn't effect pose.
 //        double alpha = (90 -(getPositionDegrees() + _limelight.getHorizontalAngle())) - _driveTrain.getHeading().getDegrees();
         double alpha = 90 - Math.abs(_limelight.getHorizontalAngle());
@@ -133,10 +131,13 @@ public class Turret extends OutliersSubsystem {
         double y = Math.cos(Math.toRadians(alpha)) * distance;
         double poseX = Constants.AutoPositions.TARGET_POSE.getTranslation().getX() - x;
         double poseY = 0;
+        metric("PoseX", poseX);
         if (prevPose.getTranslation().getY() < Constants.AutoPositions.TARGET_POSE.getTranslation().getY()) {
             poseY = Constants.AutoPositions.TARGET_POSE.getTranslation().getY() - y;
+            metric("PoseY", poseY);
         } else if (prevPose.getTranslation().getY() > Constants.AutoPositions.TARGET_POSE.getTranslation().getY()) {
             poseY = Constants.AutoPositions.TARGET_POSE.getTranslation().getY() + y;
+            metric("PoseY", poseY);
         }
         return new Pose2d(poseX, poseY, _driveTrain.getHeading());
     }
@@ -201,6 +202,7 @@ public class Turret extends OutliersSubsystem {
         _positionABS = (getAbsoluteEncoderRawPosition() * Constants.Turret.TICKS_TO_DEGREES) - Constants.Turret.ABS_OFFSET;
         return _positionABS;
     }
+
 
     public boolean isTargetInTolerance() {
         return _limelight.isTargetCentered();

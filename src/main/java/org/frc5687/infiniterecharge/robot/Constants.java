@@ -152,7 +152,7 @@ public class Constants {
         public static final double NEAR_TARGET_HOOD_ANGLE_DEGREES = 58;
         public static final double FAR_TARGET_HOOD_ANGLE_DEGREES = Hood.MAX_DEGREES;
         public static final double HEIGHT_TO_DECK = 17;
-        public static final double LIMELIGHT_OFFSET_DEGREES = 23;
+        public static final double LIMELIGHT_OFFSET_DEGREES = 22;
         public static final double ZEROING_SPEED = -0.85;
         public static final double STOW_DISTANCE = 24;
     }
@@ -194,7 +194,7 @@ public class Constants {
         public static double MID_WIDTH_FIELD = WIDTH_FIELD / 2;
         public static double LENGTH_FIELD = Units.inchesToMeters(629.25);
         public static double MID_LENGTH_FIELD = LENGTH_FIELD / 2;
-        public static double TARGET_LINE = MID_LENGTH_FIELD - Units.inchesToMeters(94.66);
+        public static double TARGET_LINE = MID_WIDTH_FIELD - Units.inchesToMeters(94.66);
         public static double MID_TRENCH = TARGET_LINE + Units.inchesToMeters(66.91);
         public static double AUTO_LINE = Units.inchesToMeters(194.63);
         public static Pose2d TARGET_POSE = new Pose2d(-MID_LENGTH_FIELD, TARGET_LINE, new Rotation2d(0));
@@ -205,7 +205,6 @@ public class Constants {
         public static Pose2d EIGHT_BALL_STARING = new Pose2d(-AUTO_LINE, TARGET_LINE, new Rotation2d(0));
         public static Pose2d TRENCH_EDGE = new Pose2d(-AUTO_LINE + 1.5, TARGET_LINE + 1.5, new Rotation2d(0));
         public static Pose2d TRENCH_STARTING = new Pose2d(-AUTO_LINE, TARGET_LINE + 1.8288, new Rotation2d(0));
-
     }
 
     public class Spinner {

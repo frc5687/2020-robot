@@ -4,10 +4,15 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.MedianFilter;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import org.frc5687.infiniterecharge.robot.Constants;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 import static org.frc5687.infiniterecharge.robot.Constants.Limelight.*;
 
@@ -26,11 +31,19 @@ public class Limelight extends OutliersProxy {
     NetworkTableEntry _thor;
     NetworkTableEntry _getpipe;
     NetworkTableEntry _camtran;
+    NetworkTableEntry _tcornx;
+    NetworkTableEntry _tcorny;
 
     NetworkTableEntry _ledmode;
     NetworkTableEntry _cammode;
     NetworkTableEntry _pipeline;
     NetworkTableEntry _stream;
+
+    private Boolean _isTargetSeen;
+    private double[] _zeroArray = new double[]{0, 0, 0, 0, 0, 0, 0, 0};
+
+
+    private MedianFilter _filter;
 
 //    public Limelight() {
 //        this("limelight");
@@ -55,6 +68,10 @@ public class Limelight extends OutliersProxy {
         _cammode = _table.getEntry("camMode");
         _pipeline = _table.getEntry("pipeline");
         _stream = _table.getEntry("stream");
+        _tcornx = _table.getEntry("tcornx");
+        _tcorny = _table.getEntry("tcorny");
+
+        _filter = new MedianFilter(100);
     }
 
     public void enableVision() {
@@ -149,8 +166,11 @@ public class Limelight extends OutliersProxy {
     }
 
     public double getTargetDistance(double height, double angle) {
+        if (!areLEDsOn()) {
+            _filter.reset();
+        }
         double heightOffset = (TARGET_HEIGHT - height);
-        double targetDistance = Math.abs(heightOffset / Math.tan(Math.toRadians(angle + getVerticalAngle())));
+        double targetDistance = Math.abs(heightOffset / Math.tan(Math.toRadians(angle + _filter.calculate(getVerticalAngle()))));
         return targetDistance;
     }
 
@@ -176,6 +196,7 @@ public class Limelight extends OutliersProxy {
     public boolean areLEDsOn() {
         return _ledmode.getNumber(0).doubleValue() == 3.0;
     }
+
 
     public enum StreamMode {
         SIDE_BY_SIDE(0),

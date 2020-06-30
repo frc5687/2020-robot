@@ -35,9 +35,9 @@ public class Climber extends OutliersSubsystem {
 
     @Override
     public void periodic() {
-        double time = System.currentTimeMillis();
-        error("loop time is : " + (time - _prevTime));
-        _prevTime = time;
+//        double time = System.currentTimeMillis();
+//        error("loop time is : " + (time - _prevTime));
+//        _prevTime = time;
     }
 
     @Override

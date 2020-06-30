@@ -56,11 +56,12 @@ public class AutoTarget extends OutliersCommand {
         _angle = angle;
         _override = override;
         addRequirements(_turret, _shooter, _hood);
+        enableMetrics();
+        logMetrics("RPM", "Hood Angle");
     }
 
     @Override
     public void initialize() {
-
         error("starting auto");
         super.initialize();
         _turret.setControlMode(Turret.Control.MotionMagic);
@@ -97,15 +98,25 @@ public class AutoTarget extends OutliersCommand {
                 }
                 break;
             case Limelighting:
-                if (_lock) {
-                    _turret.setMotionMagicSetpoint(_turret.getSetpoint());
-                } else {
-                    if ()
-                    _turret.setMotionMagicSetpoint(_filter.calculate(_limelight.getHorizontalAngle()) + _turret.getPositionDegrees());
+                if (!_shooter.isShooting()) {
+                    if (_lock) {
+                        _turret.setMotionMagicSetpoint(_turret.getSetpoint());
+                    } else {
+                        _turret.setMotionMagicSetpoint(_filter.calculate(_limelight.getHorizontalAngle()) + _turret.getPositionDegrees());
+                    }
+                }
+                if (!_shooter.isShooting()) {
+                    if (_lock) {
+                        _turret.setMotionMagicSetpoint(_turret.getSetpoint());
+                    } else {
+                        _turret.setMotionMagicSetpoint(_filter.calculate(_limelight.getHorizontalAngle()) + _turret.getPositionDegrees() + _turret.getManualOffset());
+                    }
                 }
                 _lights.setReadyToshoot(_shooter.isAtTargetVelocity() && _turret.isTargetInTolerance());
                 break;
         }
+        metric("RPM", _shooter.getRPM());
+        metric("Hood Angle", _hood.getPositionDegrees());
     }
 
 
