@@ -337,4 +337,10 @@ public class Constants {
         public static final double WHITE_SHOT = -0.81;
         public static final double SOLID_WHITE = 0.93;
     }
+    public class Proxy {
+        public static final int PERIOD = 10;
+        public static final int JETSONPORT = 27002;
+        public static final int ROBORIOPORT = 27001;
+        public static final int PACKET_SIZE = 1024;
+    }
 }
